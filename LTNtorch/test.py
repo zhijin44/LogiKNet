@@ -2,8 +2,8 @@ import torch
 import pandas as pd
 
 # 假设这里是你的新数据集路径
-processed_train_file = '../CIC_IoMT/6classes/processed_train_data_6classes.csv'
-processed_test_file = '../CIC_IoMT/6classes/processed_test_data_6classes.csv'
+processed_train_file = 'datasets/reduce_6classes_train.csv'
+processed_test_file = 'datasets/reduce_6classes_test.csv'
 
 # 加载数据集
 train_data = pd.read_csv(processed_train_file)
