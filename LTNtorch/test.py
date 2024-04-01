@@ -43,7 +43,6 @@ l_E = ltn.Constant(torch.tensor([0, 0, 0, 0, 1, 0]).to(device))
 l_F = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 1]).to(device))
 
 
-
 # we define predicate P
 class MLP(torch.nn.Module):
     """
@@ -199,7 +198,7 @@ test_loader = DataLoader(test_data, test_labels, 64, shuffle=False)
 # Learning
 optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
 
-for epoch in range(500):
+for epoch in range(1):
     train_loss = 0.0
     for batch_idx, (data, labels) in enumerate(train_loader):
         optimizer.zero_grad()
@@ -210,24 +209,23 @@ for epoch in range(500):
         x_D = ltn.Variable("x_D", data[labels == 3])
         x_E = ltn.Variable("x_E", data[labels == 4])
         x_F = ltn.Variable("x_F", data[labels == 5])
-        ###############################################################
-        # 在SatAgg()调用之前检查
-        variables = [x_A, x_B, x_C, x_D, x_E, x_F]
-        labels = [l_A, l_B, l_C, l_D, l_E, l_F]
-        for var, lbl in zip(variables, labels):
-            pred_output = P(var, lbl, training=True).value  # 访问.value获取torch.Tensor
-            if torch.isnan(var.value).any() or torch.isnan(pred_output).any():
-                print(f"NaN detected in variable {var.latent_var} or its predicate output")
-                continue  # 或者采取其他适当的操作
-        ###############################################################
-        sat_agg = SatAgg(
-            Forall(x_A, P(x_A, l_A, training=True)),
-            Forall(x_B, P(x_B, l_B, training=True)),
-            Forall(x_C, P(x_C, l_C, training=True)),
-            Forall(x_D, P(x_D, l_D, training=True)),
-            Forall(x_E, P(x_E, l_E, training=True)),
-            Forall(x_F, P(x_F, l_F, training=True))
-        )
+        ######################################################
+        # List to hold valid Forall expressions
+        valid_forall_expressions = []
+        variables_labels = [(x_A, l_A),
+                            (x_B, l_B),
+                            (x_C, l_C),
+                            (x_D, l_D),
+                            (x_E, l_E),
+                            (x_F, l_F),
+        ]
+        for variable, label in variables_labels:
+            if variable.value.size(0) != 0:
+                valid_forall_expressions.append(Forall(variable, P(variable, label, training=True)))
+            else:
+                print(f"{variable.free_vars[0]} is empty, no this class in batch {batch_idx}")
+        #########################################################
+        sat_agg = SatAgg(*valid_forall_expressions)
         loss = 1. - sat_agg
         loss.backward()
         optimizer.step()
@@ -235,7 +233,7 @@ for epoch in range(500):
     train_loss = train_loss / len(train_loader)
 
     # we print metrics every 20 epochs of training
-    if epoch % 20 == 0:
+    if epoch % 1 == 0:
         print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f"
               % (epoch, train_loss, compute_sat_level(train_loader), compute_sat_level(test_loader),
                  compute_accuracy(train_loader), compute_accuracy(test_loader)))
