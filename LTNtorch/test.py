@@ -12,9 +12,11 @@ test_data = pd.read_csv(processed_test_file)
 # 假设数据集中的标签列名为"label"
 train_labels = train_data.pop("label")
 test_labels = test_data.pop("label")
+# print(train_labels.head())
+# print(test_labels.head())
 
 # 将标签映射到整数，适用于6个类别的场景
-label_mapping = {"ARP_Spoofing": 0, "Benign": 1, "MQTT": 2, "Recon": 3, "TCP_IP-DDoS": 4, "TCP_IP-DoS": 5}
+label_mapping = {"ARP_Spoofing": 0, "Benign": 1, "MQTT": 2, "Recon": 3, "TCP_IP-DDOS": 4, "TCP_IP-DOS": 5}
 train_labels = train_labels.map(label_mapping)
 test_labels = test_labels.map(label_mapping)
 
@@ -23,6 +25,7 @@ train_data = torch.tensor(train_data.to_numpy()).float()
 test_data = torch.tensor(test_data.to_numpy()).float()
 train_labels = torch.tensor(train_labels.to_numpy()).long()
 test_labels = torch.tensor(test_labels.to_numpy()).long()
+
 
 # 定义设备并移动数据和标签到设备
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -207,6 +210,16 @@ for epoch in range(500):
         x_D = ltn.Variable("x_D", data[labels == 3])
         x_E = ltn.Variable("x_E", data[labels == 4])
         x_F = ltn.Variable("x_F", data[labels == 5])
+        ###############################################################
+        # 在SatAgg()调用之前检查
+        variables = [x_A, x_B, x_C, x_D, x_E, x_F]
+        labels = [l_A, l_B, l_C, l_D, l_E, l_F]
+        for var, lbl in zip(variables, labels):
+            pred_output = P(var, lbl, training=True).value  # 访问.value获取torch.Tensor
+            if torch.isnan(var.value).any() or torch.isnan(pred_output).any():
+                print(f"NaN detected in variable {var.latent_var} or its predicate output")
+                continue  # 或者采取其他适当的操作
+        ###############################################################
         sat_agg = SatAgg(
             Forall(x_A, P(x_A, l_A, training=True)),
             Forall(x_B, P(x_B, l_B, training=True)),
