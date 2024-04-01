@@ -2,8 +2,10 @@ import torch
 import pandas as pd
 
 # import the dataset.
-train_data = pd.read_csv("datasets/iris_training.csv")
-test_data = pd.read_csv("datasets/iris_test.csv")
+# train_data = pd.read_csv("datasets/iris_training.csv")
+# test_data = pd.read_csv("datasets/iris_test.csv")
+train_data = pd.read_csv("datasets/iris_training_withzero.csv")
+test_data = pd.read_csv("datasets/iris_test_withzero.csv")
 
 train_labels = train_data.pop("species")
 test_labels = test_data.pop("species")

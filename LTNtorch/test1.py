@@ -1,8 +1,8 @@
 import pandas as pd
 
 # 定义文件路径
-training_file = 'iris_training_withzero.csv'
-test_file = 'iris_test_withzero.csv'
+training_file = 'datasets/iris_training_withzero.csv'
+test_file = 'datasets/iris_test_withzero.csv'
 
 # 处理训练数据集
 train_data = pd.read_csv(training_file)
