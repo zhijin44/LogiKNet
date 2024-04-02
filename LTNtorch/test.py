@@ -234,6 +234,8 @@ for epoch in range(1):
 
     # we print metrics every 20 epochs of training
     if epoch % 1 == 0:
-        print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f"
-              % (epoch, train_loss, compute_sat_level(train_loader), compute_sat_level(test_loader),
-                 compute_accuracy(train_loader), compute_accuracy(test_loader)))
+        # print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f"
+        #       % (epoch, train_loss, compute_sat_level(train_loader), compute_sat_level(test_loader),
+        #          compute_accuracy(train_loader), compute_accuracy(test_loader)))
+        print(" epoch %d | loss %.4f | Train Acc %.3f | Test Acc %.3f"
+              % (epoch, train_loss, compute_accuracy(train_loader), compute_accuracy(test_loader)))

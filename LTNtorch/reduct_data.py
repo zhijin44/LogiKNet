@@ -12,7 +12,7 @@ test_data = pd.read_csv(processed_test_file)
 # print("Training data shape:", train_data.shape)
 # print("Test data shape:", test_data.shape)
 
-
+#########################################################################
 def reduce_instances(df, labels_to_reduce, reduction_fraction=0.01):
     """
     减少特定标签类别的实例至原数据的一定比例。
@@ -41,8 +41,30 @@ def reduce_instances(df, labels_to_reduce, reduction_fraction=0.01):
 
 
 # 调用函数
-reduced_train_data = reduce_instances(train_data, ["TCP_IP-DDOS", "TCP_IP-DOS"], 0.01)
-reduced_test_data = reduce_instances(test_data, ["TCP_IP-DDOS", "TCP_IP-DOS"], 0.01)
+# reduced_train_data = reduce_instances(train_data, ["TCP_IP-DDOS", "TCP_IP-DOS"], 0.01)
+# reduced_test_data = reduce_instances(test_data, ["TCP_IP-DDOS", "TCP_IP-DOS"], 0.01)
+###############################################################################
+
+def create_reduced_dataset(file_path, n_samples=64):
+    # Load the dataset
+    data = pd.read_csv(file_path)
+
+    # Get the unique labels
+    labels = data['label'].unique()  # Assuming 'label' is the name of your label column
+
+    reduced_data = pd.DataFrame()  # Initialize an empty DataFrame to store the reduced dataset
+
+    for label in labels:
+        # For each label, randomly select n_samples
+        sampled_data = data[data['label'] == label].sample(n=n_samples, random_state=42)
+        reduced_data = pd.concat([reduced_data, sampled_data], ignore_index=True)
+
+    return reduced_data
+
+
+# Create reduced datasets
+reduced_train_data = create_reduced_dataset(processed_train_file)
+reduced_test_data = create_reduced_dataset(processed_test_file)
 
 print("Training data shape:", reduced_train_data.shape)
 print("Test data shape:", reduced_test_data.shape)
