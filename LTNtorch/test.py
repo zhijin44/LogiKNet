@@ -154,14 +154,20 @@ def compute_sat_level(loader):
         x_D = ltn.Variable("x_D", data[labels == 3])
         x_E = ltn.Variable("x_E", data[labels == 4])
         x_F = ltn.Variable("x_F", data[labels == 5])
-        mean_sat += SatAgg(
-            Forall(x_A, P(x_A, l_A)),
-            Forall(x_B, P(x_B, l_B)),
-            Forall(x_C, P(x_C, l_C)),
-            Forall(x_D, P(x_D, l_D)),
-            Forall(x_E, P(x_E, l_E)),
-            Forall(x_F, P(x_F, l_F))
-        )
+        ###########################################################
+        valid_forall_expressions = []
+        variables_labels = [(x_A, l_A),
+                            (x_B, l_B),
+                            (x_C, l_C),
+                            (x_D, l_D),
+                            (x_E, l_E),
+                            (x_F, l_F),
+                            ]
+        for variable, label in variables_labels:
+            if variable.value.size(0) != 0:
+                valid_forall_expressions.append(Forall(variable, P(variable, label, training=True)))
+        mean_sat += SatAgg(*valid_forall_expressions)
+        ##############################################################
     mean_sat /= len(loader)
     return mean_sat
 
@@ -198,7 +204,7 @@ test_loader = DataLoader(test_data, test_labels, 64, shuffle=False)
 # Learning
 optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
 
-for epoch in range(1):
+for epoch in range(100):
     train_loss = 0.0
     for batch_idx, (data, labels) in enumerate(train_loader):
         optimizer.zero_grad()
@@ -234,8 +240,8 @@ for epoch in range(1):
 
     # we print metrics every 20 epochs of training
     if epoch % 1 == 0:
-        # print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f"
-        #       % (epoch, train_loss, compute_sat_level(train_loader), compute_sat_level(test_loader),
-        #          compute_accuracy(train_loader), compute_accuracy(test_loader)))
-        print(" epoch %d | loss %.4f | Train Acc %.3f | Test Acc %.3f"
-              % (epoch, train_loss, compute_accuracy(train_loader), compute_accuracy(test_loader)))
+        print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f"
+              % (epoch, train_loss, compute_sat_level(train_loader), compute_sat_level(test_loader),
+                 compute_accuracy(train_loader), compute_accuracy(test_loader)))
+        # print(" epoch %d | loss %.4f | Train Sat %.3f |Train Acc %.3f | Test Acc %.3f"
+        #       % (epoch, train_loss, compute_sat_level(train_loader), compute_accuracy(train_loader), compute_accuracy(test_loader)))
