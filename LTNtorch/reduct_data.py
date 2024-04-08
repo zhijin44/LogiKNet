@@ -3,6 +3,8 @@ import pandas as pd
 # 读取训练集和测试集文件
 processed_train_file = '../CIC_IoMT/6classes/processed_train_data_6classes.csv'
 processed_test_file = '../CIC_IoMT/6classes/processed_test_data_6classes.csv'
+# processed_train_file = '../CIC_IoMT/6classes/reduce_6classes_train.csv'
+# processed_test_file = '../CIC_IoMT/6classes/reduce_6classes_test.csv'
 
 # 加载数据
 train_data = pd.read_csv(processed_train_file)
@@ -11,6 +13,30 @@ test_data = pd.read_csv(processed_test_file)
 # 输出数据信息
 # print("Training data shape:", train_data.shape)
 # print("Test data shape:", test_data.shape)
+
+
+def print_label_counts(df):
+    """
+    Print the counts of each label in the given DataFrame.
+
+    Parameters:
+    df (pandas.DataFrame): The DataFrame containing the data and labels.
+
+    Returns:
+    None
+    """
+    if 'label' in df.columns:
+        label_counts = df['label'].value_counts()
+        print("Label Counts:")
+        for label, count in label_counts.items():
+            print(f"Label {label}: {count} entries")
+    else:
+        print("The DataFrame does not have a 'label' column.")
+
+
+# print_label_counts(train_data)
+# print_label_counts(test_data)
+
 
 #########################################################################
 def reduce_instances(df, labels_to_reduce, reduction_fraction=0.01):
@@ -43,12 +69,11 @@ def reduce_instances(df, labels_to_reduce, reduction_fraction=0.01):
 # 调用函数
 # reduced_train_data = reduce_instances(train_data, ["TCP_IP-DDOS", "TCP_IP-DOS"], 0.01)
 # reduced_test_data = reduce_instances(test_data, ["TCP_IP-DDOS", "TCP_IP-DOS"], 0.01)
+
+
 ###############################################################################
 
-def create_reduced_dataset(file_path, n_samples=64):
-    # Load the dataset
-    data = pd.read_csv(file_path)
-
+def create_reduced_dataset(data, n_samples=64):
     # Get the unique labels
     labels = data['label'].unique()  # Assuming 'label' is the name of your label column
 
@@ -63,11 +88,13 @@ def create_reduced_dataset(file_path, n_samples=64):
 
 
 # Create reduced datasets
-reduced_train_data = create_reduced_dataset(processed_train_file)
-reduced_test_data = create_reduced_dataset(processed_test_file)
+reduced_train_data = create_reduced_dataset(train_data, 15000)
+reduced_test_data = create_reduced_dataset(test_data, 1700)
 
 print("Training data shape:", reduced_train_data.shape)
 print("Test data shape:", reduced_test_data.shape)
 
-reduced_train_data.to_csv("../CIC_IoMT/6classes/reduce_6classes_train.csv", index=False)
-reduced_test_data.to_csv("../CIC_IoMT/6classes/reduce_6classes_test.csv", index=False)
+reduced_train_data.to_csv("../CIC_IoMT/6classes/6classes_15k_train.csv", index=False)
+reduced_test_data.to_csv("../CIC_IoMT/6classes/6classes_1700_test.csv", index=False)
+
+#####################################################################################

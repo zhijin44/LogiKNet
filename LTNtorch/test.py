@@ -2,8 +2,10 @@ import torch
 import pandas as pd
 
 # 假设这里是你的新数据集路径
-processed_train_file = 'datasets/reduce_6classes_train.csv'
-processed_test_file = 'datasets/reduce_6classes_test.csv'
+# processed_train_file = 'datasets/reduce_6classes_train.csv'
+# processed_test_file = 'datasets/reduce_6classes_test.csv'
+processed_train_file = '../CIC_IoMT/6classes/6classes_15k_train.csv'
+processed_test_file = '../CIC_IoMT/6classes/6classes_1700_test.csv'
 
 # 加载数据集
 train_data = pd.read_csv(processed_train_file)
@@ -52,7 +54,7 @@ class MLP(torch.nn.Module):
     to understand it.
     """
 
-    def __init__(self, layer_sizes=(45, 32, 32, 6)):
+    def __init__(self, layer_sizes=(45, 32, 64, 32, 6)):
         super(MLP, self).__init__()
         self.elu = torch.nn.ELU()
         self.dropout = torch.nn.Dropout(0.2)
@@ -198,11 +200,12 @@ def compute_accuracy(loader):
 
 
 # create train and test loader
-train_loader = DataLoader(train_data, train_labels, 64, shuffle=True)
-test_loader = DataLoader(test_data, test_labels, 64, shuffle=False)
+batch_size = 512
+train_loader = DataLoader(train_data, train_labels, batch_size, shuffle=True)
+test_loader = DataLoader(test_data, test_labels, batch_size, shuffle=False)
 
 # Learning
-optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
+optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
 
 for epoch in range(100):
     train_loss = 0.0
