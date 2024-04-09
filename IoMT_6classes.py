@@ -13,8 +13,10 @@ from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_sc
 TRAIN_DIR = 'CIC_IoMT/train/'
 TEST_DIR = 'CIC_IoMT/test/'
 
-processed_train_file = 'CIC_IoMT/6classes/processed_train_data_6classes.csv'
-processed_test_file = 'CIC_IoMT/6classes/processed_test_data_6classes.csv'
+# processed_train_file = 'CIC_IoMT/6classes/processed_train_data_6classes.csv'
+# processed_test_file = 'CIC_IoMT/6classes/processed_test_data_6classes.csv'
+processed_train_file = 'CIC_IoMT/6classes/6classes_15k_train.csv'
+processed_test_file = 'CIC_IoMT/6classes/6classes_1700_test.csv'
 
 # 特征列名称
 X_columns = [
@@ -84,12 +86,14 @@ scaler.fit(training_data[X_columns])
 training_data[X_columns] = scaler.transform(training_data[X_columns])
 test_data[X_columns] = scaler.transform(test_data[X_columns])
 # After scaling your training data in the training script
-scaler_save_path = 'CIC_IoMT/6classes/scaler_6classes.joblib'
+# scaler_save_path = 'CIC_IoMT/6classes/scaler_6classes.joblib'
+scaler_save_path = 'CIC_IoMT/6classes/scaler_6classes_reduced.joblib'
 dump(scaler, scaler_save_path)
 print("Data scaled.")
 
 # Check if the model already exists
-model_save_path = 'CIC_IoMT/6classes/mlp_classifier_model_6classes.joblib'
+# model_save_path = 'CIC_IoMT/6classes/mlp_classifier_model_6classes.joblib'
+model_save_path = 'CIC_IoMT/6classes/mlp_classifier_model_6classes_reduced.joblib'
 if os.path.exists(model_save_path):
     print("Loading existing model...")
     model = load(model_save_path)
@@ -112,7 +116,7 @@ print("Evaluating model...")
 # 计算和打印评估指标
 print('Accuracy Score:', accuracy_score(y_test, y_pred))
 print('Recall Score (Macro):', recall_score(y_test, y_pred, average='macro'))
-print('Precision Score (cMacro):', precision_score(y_test, y_pred, average='macro'))
+print('Precision Score (Macro):', precision_score(y_test, y_pred, average='macro'))
 print('F1 Score (Macro):', f1_score(y_test, y_pred, average='macro'))
 # print('Recall Scores by Class:', recall_score(y_test, y_pred, average=None))
 # print('Precision Scores by Class:', precision_score(y_test, y_pred, average=None))

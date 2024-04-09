@@ -17,14 +17,17 @@ X_columns = [
 ]
 
 # Load the saved model and scaler
-model_path = 'CIC_IoMT/6classes/mlp_classifier_model_6classes.joblib'
-scaler_path = 'CIC_IoMT/6classes/scaler_6classes.joblib'
+# model_path = 'CIC_IoMT/6classes/mlp_classifier_model_6classes.joblib'
+# scaler_path = 'CIC_IoMT/6classes/scaler_6classes.joblib'
+model_path = 'CIC_IoMT/6classes/mlp_classifier_model_6classes_reduced.joblib'
+scaler_path = 'CIC_IoMT/6classes/scaler_6classes_reduced.joblib'
 model = load(model_path)
 scaler = load(scaler_path)
 print("Model and scaler loaded.")
 
 # Load the processed test data
-test_data_path = 'CIC_IoMT/6classes/processed_test_data_6classes.csv'
+# test_data_path = 'CIC_IoMT/6classes/processed_test_data_6classes.csv'
+test_data_path = 'CIC_IoMT/6classes/6classes_1700_test.csv'
 test_data = pd.read_csv(test_data_path)
 X_test = test_data[X_columns]
 y_test = test_data['label']
@@ -68,7 +71,7 @@ def plot_confusion_matrix(cm, class_labels, output_file):
 # Compute the confusion matrix
 cm = confusion_matrix(y_test, y_pred, labels=np.unique(y_test))
 # Plot the confusion matrix
-plot_confusion_matrix(cm, np.unique(y_test), output_file='confusion_matrix_6classes.png')
+plot_confusion_matrix(cm, np.unique(y_test), output_file='reduce_confusion_matrix_6classes.png')
 
 # Compute scores for each class
 recall_scores = recall_score(y_test, y_pred, average=None, labels=np.unique(y_test), zero_division=0)

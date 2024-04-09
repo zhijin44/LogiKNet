@@ -1,5 +1,19 @@
 import torch
 import pandas as pd
+import ltn
+
+
+class CustomStandardScaler:
+    def fit(self, data):
+        self.mean = torch.mean(data, dim=0)
+        self.std = torch.std(data, dim=0)
+
+    def transform(self, data):
+        return (data - self.mean) / self.std
+
+    def inverse_transform(self, data):
+        return (data * self.std) + self.mean
+
 
 # 假设这里是你的新数据集路径
 # processed_train_file = 'datasets/reduce_6classes_train.csv'
@@ -28,13 +42,20 @@ test_data = torch.tensor(test_data.to_numpy()).float()
 train_labels = torch.tensor(train_labels.to_numpy()).long()
 test_labels = torch.tensor(test_labels.to_numpy()).long()
 
+# Scaling
+scaler = CustomStandardScaler()
+# Fit the scaler on the training data
+scaler.fit(train_data)
+# Transform both training and test data
+train_data_scaled = scaler.transform(train_data)
+test_data_scaled = scaler.transform(test_data)
 
 # 定义设备并移动数据和标签到设备
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+# train_data, test_data = train_data_scaled.to(device), test_data_scaled.to(device)
 train_data, test_data = train_data.to(device), test_data.to(device)
 train_labels, test_labels = train_labels.to(device), test_labels.to(device)
 
-import ltn
 
 # 定义常量并移动到设备，适用于6个类别
 l_A = ltn.Constant(torch.tensor([1, 0, 0, 0, 0, 0]).to(device))
@@ -54,7 +75,7 @@ class MLP(torch.nn.Module):
     to understand it.
     """
 
-    def __init__(self, layer_sizes=(45, 32, 64, 32, 6)):
+    def __init__(self, layer_sizes=(45, 32, 32, 6)):
         super(MLP, self).__init__()
         self.elu = torch.nn.ELU()
         self.dropout = torch.nn.Dropout(0.2)
