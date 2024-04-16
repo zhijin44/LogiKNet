@@ -1,18 +1,7 @@
 import torch
 import pandas as pd
 import ltn
-
-
-class CustomStandardScaler:
-    def fit(self, data):
-        self.mean = torch.mean(data, dim=0)
-        self.std = torch.std(data, dim=0)
-
-    def transform(self, data):
-        return (data - self.mean) / self.std
-
-    def inverse_transform(self, data):
-        return (data * self.std) + self.mean
+from sklearn.preprocessing import StandardScaler
 
 
 # 假设这里是你的新数据集路径
@@ -36,24 +25,21 @@ label_mapping = {"ARP_Spoofing": 0, "Benign": 1, "MQTT": 2, "Recon": 3, "TCP_IP-
 train_labels = train_labels.map(label_mapping)
 test_labels = test_labels.map(label_mapping)
 
-# 转换数据和标签为Tensor
-train_data = torch.tensor(train_data.to_numpy()).float()
-test_data = torch.tensor(test_data.to_numpy()).float()
+# 使用 StandardScaler 对数据进行缩放
+scaler = StandardScaler()
+train_data_scaled = scaler.fit_transform(train_data)
+test_data_scaled = scaler.transform(test_data)
+
+# 将缩放后的数据和标签转换为Tensor
+train_data_scaled = torch.tensor(train_data_scaled).float()
+test_data_scaled = torch.tensor(test_data_scaled).float()
 train_labels = torch.tensor(train_labels.to_numpy()).long()
 test_labels = torch.tensor(test_labels.to_numpy()).long()
 
-# Scaling
-scaler = CustomStandardScaler()
-# Fit the scaler on the training data
-scaler.fit(train_data)
-# Transform both training and test data
-train_data_scaled = scaler.transform(train_data)
-test_data_scaled = scaler.transform(test_data)
-
 # 定义设备并移动数据和标签到设备
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-# train_data, test_data = train_data_scaled.to(device), test_data_scaled.to(device)
-train_data, test_data = train_data.to(device), test_data.to(device)
+train_data, test_data = train_data_scaled.to(device), test_data_scaled.to(device)
+# train_data, test_data = train_data.to(device), test_data.to(device)
 train_labels, test_labels = train_labels.to(device), test_labels.to(device)
 
 

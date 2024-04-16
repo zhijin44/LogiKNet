@@ -87,3 +87,46 @@ for i, label in enumerate(unique_labels):
     print(f"Class {label}: Recall: {recall_scores[i]}, Precision: {precision_scores[i]}, F1: {f1_scores[i]}")
 
 print("Model evaluation complete.")
+
+# Import necessary modules for ROC and AUC calculation
+from sklearn.metrics import roc_curve, auc
+from sklearn.preprocessing import label_binarize
+from scipy import interp
+from itertools import cycle
+
+# Binarize the output labels for multi-class ROC curve
+y_test_bin = label_binarize(y_test, classes=unique_labels)
+n_classes = y_test_bin.shape[1]
+
+# Predict probabilities for each class
+y_score = model.predict_proba(X_test_scaled)
+
+# Compute ROC curve and ROC area for each class
+fpr = dict()
+tpr = dict()
+roc_auc = dict()
+for i in range(n_classes):
+    fpr[i], tpr[i], _ = roc_curve(y_test_bin[:, i], y_score[:, i])
+    roc_auc[i] = auc(fpr[i], tpr[i])
+
+# Compute micro-average ROC curve and ROC area
+fpr["micro"], tpr["micro"], _ = roc_curve(y_test_bin.ravel(), y_score.ravel())
+roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
+
+# Plot ROC curves for each class
+plt.figure(figsize=(12, 8))
+lw = 2  # Line width
+colors = cycle(['aqua', 'darkorange', 'cornflowerblue', 'green', 'red', 'purple'])
+for i, color in zip(range(n_classes), colors):
+    plt.plot(fpr[i], tpr[i], color=color, lw=lw,
+             label='ROC curve of class {0} (area = {1:0.2f})'
+                   ''.format(class_labels_dict[unique_labels[i]], roc_auc[i]))
+
+plt.plot([0, 1], [0, 1], 'k--', lw=lw)
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Multi-class ROC')
+plt.legend(loc="lower right")
+plt.show()
