@@ -206,6 +206,10 @@ def compute_accuracy(loader):
     return mean_accuracy / len(loader)
 
 
+from torch.utils.data import DataLoader
+import torch
+import torchmetrics
+
 # create train and test loader
 batch_size = 512
 train_loader = DataLoader(train_data, train_labels, batch_size, shuffle=True)
@@ -213,6 +217,10 @@ test_loader = DataLoader(test_data, test_labels, batch_size, shuffle=False)
 
 # Learning
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
+# Initialize metrics
+precision_metric = torchmetrics.Precision(num_classes=6, average='macro')
+recall_metric = torchmetrics.Recall(num_classes=6, average='macro')
+f1_metric = torchmetrics.F1(num_classes=6, average='macro')
 
 for epoch in range(100):
     train_loss = 0.0
@@ -253,5 +261,3 @@ for epoch in range(100):
         print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f"
               % (epoch, train_loss, compute_sat_level(train_loader), compute_sat_level(test_loader),
                  compute_accuracy(train_loader), compute_accuracy(test_loader)))
-        # print(" epoch %d | loss %.4f | Train Sat %.3f |Train Acc %.3f | Test Acc %.3f"
-        #       % (epoch, train_loss, compute_sat_level(train_loader), compute_accuracy(train_loader), compute_accuracy(test_loader)))

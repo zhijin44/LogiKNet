@@ -88,45 +88,50 @@ for i, label in enumerate(unique_labels):
 
 print("Model evaluation complete.")
 
-# Import necessary modules for ROC and AUC calculation
-from sklearn.metrics import roc_curve, auc
+from sklearn.metrics import precision_recall_curve, average_precision_score, auc
 from sklearn.preprocessing import label_binarize
-from scipy import interp
+import matplotlib.pyplot as plt
 from itertools import cycle
 
-# Binarize the output labels for multi-class ROC curve
+# Assuming y_test, X_test_scaled, model, and unique_labels are already defined
+
+# Binarize the output labels for multi-class precision-recall curve calculation
 y_test_bin = label_binarize(y_test, classes=unique_labels)
 n_classes = y_test_bin.shape[1]
 
 # Predict probabilities for each class
 y_score = model.predict_proba(X_test_scaled)
 
-# Compute ROC curve and ROC area for each class
-fpr = dict()
-tpr = dict()
-roc_auc = dict()
+# Compute Precision-Recall and plot curve
+precision = dict()
+recall = dict()
+average_precision = dict()
 for i in range(n_classes):
-    fpr[i], tpr[i], _ = roc_curve(y_test_bin[:, i], y_score[:, i])
-    roc_auc[i] = auc(fpr[i], tpr[i])
+    precision[i], recall[i], _ = precision_recall_curve(y_test_bin[:, i],
+                                                        y_score[:, i])
+    average_precision[i] = average_precision_score(y_test_bin[:, i], y_score[:, i])
 
-# Compute micro-average ROC curve and ROC area
-fpr["micro"], tpr["micro"], _ = roc_curve(y_test_bin.ravel(), y_score.ravel())
-roc_auc["micro"] = auc(fpr["micro"], tpr["micro"])
+# Compute micro-average Precision-Recall curve and area
+precision["micro"], recall["micro"], _ = precision_recall_curve(y_test_bin.ravel(),
+                                                                y_score.ravel())
+average_precision["micro"] = average_precision_score(y_test_bin, y_score,
+                                                     average="micro")
 
-# Plot ROC curves for each class
+# Plotting Precision-Recall curves for each class
 plt.figure(figsize=(12, 8))
 lw = 2  # Line width
 colors = cycle(['aqua', 'darkorange', 'cornflowerblue', 'green', 'red', 'purple'])
 for i, color in zip(range(n_classes), colors):
-    plt.plot(fpr[i], tpr[i], color=color, lw=lw,
-             label='ROC curve of class {0} (area = {1:0.2f})'
-                   ''.format(class_labels_dict[unique_labels[i]], roc_auc[i]))
+    plt.plot(recall[i], precision[i], color=color, lw=lw,
+             label='Precision-Recall curve of class {0} (area = {1:0.2f})'
+                   ''.format(class_labels_dict[unique_labels[i]], average_precision[i]))
 
-plt.plot([0, 1], [0, 1], 'k--', lw=lw)
+plt.plot([0, 1], [0.1, 0.1], 'k--', lw=lw)  # Random classifier line
 plt.xlim([0.0, 1.0])
 plt.ylim([0.0, 1.05])
-plt.xlabel('False Positive Rate')
-plt.ylabel('True Positive Rate')
-plt.title('Multi-class ROC')
-plt.legend(loc="lower right")
+plt.xlabel('Recall')
+plt.ylabel('Precision')
+plt.title('Multi-class Precision-Recall')
+plt.legend(loc="lower left")
 plt.show()
+
