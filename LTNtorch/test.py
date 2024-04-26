@@ -2,7 +2,9 @@ import torch
 import pandas as pd
 import ltn
 from sklearn.preprocessing import StandardScaler
-
+import numpy as np
+from sklearn.metrics import precision_recall_fscore_support, accuracy_score
+import matplotlib.pyplot as plt
 
 # 假设这里是你的新数据集路径
 # processed_train_file = 'datasets/reduce_6classes_train.csv'
@@ -41,7 +43,6 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 train_data, test_data = train_data_scaled.to(device), test_data_scaled.to(device)
 # train_data, test_data = train_data.to(device), test_data.to(device)
 train_labels, test_labels = train_labels.to(device), test_labels.to(device)
-
 
 # 定义常量并移动到设备，适用于6个类别
 l_A = ltn.Constant(torch.tensor([1, 0, 0, 0, 0, 0]).to(device))
@@ -115,7 +116,6 @@ P = ltn.Predicate(LogitsToPredicate(mlp))
 # we define the connectives, quantifiers, and the SatAgg
 Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
 SatAgg = ltn.fuzzy_ops.SatAgg()
-
 
 # define utility classes and functions
 from sklearn.metrics import accuracy_score
@@ -206,9 +206,32 @@ def compute_accuracy(loader):
     return mean_accuracy / len(loader)
 
 
-from torch.utils.data import DataLoader
-import torch
-import torchmetrics
+def compute_metrics(loader, model):
+    all_labels = []
+    all_predictions = []
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model = model.to(device)
+
+    with torch.no_grad():
+        for data, labels in loader:
+            data = data.to(device)
+            labels = labels.to(device)
+
+            # 进行预测
+            predictions = model(data).detach()
+            predictions = predictions.cpu().numpy()
+            predicted_classes = np.argmax(predictions, axis=1)
+
+            # 收集所有的标签和预测结果
+            all_labels.extend(labels.cpu().numpy())
+            all_predictions.extend(predicted_classes)
+
+    # 计算 precision, recall 和 f1-score
+    precision, recall, f1_score, _ = precision_recall_fscore_support(
+        all_labels, all_predictions, average='macro')
+
+    return precision, recall, f1_score
+
 
 # create train and test loader
 batch_size = 512
@@ -217,10 +240,6 @@ test_loader = DataLoader(test_data, test_labels, batch_size, shuffle=False)
 
 # Learning
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
-# Initialize metrics
-precision_metric = torchmetrics.Precision(num_classes=6, average='macro')
-recall_metric = torchmetrics.Recall(num_classes=6, average='macro')
-f1_metric = torchmetrics.F1(num_classes=6, average='macro')
 
 for epoch in range(100):
     train_loss = 0.0
@@ -233,6 +252,7 @@ for epoch in range(100):
         x_D = ltn.Variable("x_D", data[labels == 3])
         x_E = ltn.Variable("x_E", data[labels == 4])
         x_F = ltn.Variable("x_F", data[labels == 5])
+
         ######################################################
         # List to hold valid Forall expressions
         valid_forall_expressions = []
@@ -242,7 +262,7 @@ for epoch in range(100):
                             (x_D, l_D),
                             (x_E, l_E),
                             (x_F, l_F),
-        ]
+                            ]
         for variable, label in variables_labels:
             if variable.value.size(0) != 0:
                 valid_forall_expressions.append(Forall(variable, P(variable, label, training=True)))
@@ -261,3 +281,10 @@ for epoch in range(100):
         print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f"
               % (epoch, train_loss, compute_sat_level(train_loader), compute_sat_level(test_loader),
                  compute_accuracy(train_loader), compute_accuracy(test_loader)))
+###############################################################################################
+        precision, recall, f1 = compute_metrics(test_loader, mlp)
+        print(f"Precision: {precision:.4f}, Recall: {recall:.4f}, F1-Score: {f1:.4f}")
+###############################################################################################
+
+
+
