@@ -1,8 +1,8 @@
 import torch
 import pandas as pd
 import ltn
-from sklearn.preprocessing import StandardScaler
 import numpy as np
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score
 import matplotlib.pyplot as plt
 
@@ -118,9 +118,6 @@ Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
 SatAgg = ltn.fuzzy_ops.SatAgg()
 
 # define utility classes and functions
-from sklearn.metrics import accuracy_score
-import numpy as np
-
 
 # this is a standard PyTorch DataLoader to load the dataset for the training and testing of the model
 class DataLoader(object):
@@ -286,5 +283,9 @@ for epoch in range(100):
         print(f"Precision: {precision:.4f}, Recall: {recall:.4f}, F1-Score: {f1:.4f}")
 ###############################################################################################
 
+# 训练循环结束后保存模型
+model_save_path = 'LTN_reduce.pth'
+torch.save(mlp.state_dict(), model_save_path)
+print(f"Model saved to {model_save_path}")
 
 
