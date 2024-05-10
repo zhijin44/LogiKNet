@@ -1,7 +1,7 @@
 import torch
 import pandas as pd
-from sklearn.metrics import precision_recall_curve
-from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import precision_recall_curve, auc
+from sklearn.preprocessing import StandardScaler, label_binarize
 import matplotlib.pyplot as plt
 from test import MLP, DataLoader
 
@@ -31,7 +31,7 @@ mlp = MLP().to(device)
 mlp.load_state_dict(torch.load('LTN_reduce.pth'))
 mlp.eval()
 
-
+# 加载test数据和test loader
 processed_test_file = '../CIC_IoMT/6classes/6classes_1700_test.csv'
 test_data = pd.read_csv(processed_test_file)
 test_labels = test_data.pop("label")
@@ -52,15 +52,29 @@ test_loader = DataLoader(test_data, test_labels, batch_size, shuffle=False)
 # 收集预测和标签，计算评估指标
 all_labels, all_probabilities = collect_predictions_and_labels(test_loader, mlp)
 
-# 计算每个类的Precision和Recall
-precision, recall, _ = precision_recall_curve(all_labels.numpy(), all_probabilities.numpy())
+# Binarize labels for each class
+n_classes = 6  # Update this with your number of classes
+labels_binarized = label_binarize(all_labels.numpy(), classes=[*range(n_classes)])
 
-# 绘制PR曲线
-plt.figure()
+# Compute Precision-Recall for each class
+precision = dict()
+recall = dict()
+thresholds = dict()
 for i in range(n_classes):
-    plt.plot(recall[i], precision[i], label=f'Class {i}')
+    precision[i], recall[i], thresholds[i] = precision_recall_curve(labels_binarized[:, i],
+                                                                    all_probabilities[:, i])
+
+# Define class names if you have them
+class_names = ["ARP_Spoofing", "Benign", "MQTT", "Recon", "TCP_IP-DDOS", "TCP_IP-DOS"]
+
+# Plot PR curve for each class
+plt.figure(figsize=(10, 8))
+for i in range(n_classes):
+    plt.plot(recall[i], precision[i], lw=2, label='PR curve of class {0} (area = {1:0.2f})'
+             ''.format(class_names[i], auc(recall[i], precision[i])))
+
 plt.xlabel('Recall')
 plt.ylabel('Precision')
-plt.title('Precision-Recall curve')
-plt.legend()
+plt.title('Precision-Recall curve per class')
+plt.legend(loc="best")
 plt.show()

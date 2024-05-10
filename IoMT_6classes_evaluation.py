@@ -46,6 +46,9 @@ print("Predictions made.")
 
 # Evaluate the model
 print('Accuracy Score:', accuracy_score(y_test, y_pred))
+print('Recall Score (Macro):', recall_score(y_test, y_pred, average='macro'))
+print('Precision Score (Macro):', precision_score(y_test, y_pred, average='macro'))
+print('F1 Score (Macro):', f1_score(y_test, y_pred, average='macro'))
 
 # Compute and display the confusion matrix
 # Create the output directory if it doesn't exist

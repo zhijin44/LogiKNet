@@ -2,8 +2,8 @@ import torch
 import pandas as pd
 import ltn
 import numpy as np
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import precision_recall_fscore_support, accuracy_score
+from sklearn.preprocessing import StandardScaler, label_binarize
+from sklearn.metrics import precision_recall_fscore_support, accuracy_score, auc, precision_recall_curve
 import matplotlib.pyplot as plt
 
 # 假设这里是你的新数据集路径
@@ -117,6 +117,7 @@ P = ltn.Predicate(LogitsToPredicate(mlp))
 Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
 SatAgg = ltn.fuzzy_ops.SatAgg()
 
+
 # define utility classes and functions
 
 # this is a standard PyTorch DataLoader to load the dataset for the training and testing of the model
@@ -225,7 +226,11 @@ def compute_metrics(loader, model):
 
     # 计算 precision, recall 和 f1-score
     precision, recall, f1_score, _ = precision_recall_fscore_support(
-        all_labels, all_predictions, average='macro')
+        all_labels,
+        all_predictions,
+        average='macro',
+        zero_division=0  # 防止由于没有预测样本导致的未定义行为
+    )
 
     return precision, recall, f1_score
 
@@ -278,14 +283,63 @@ for epoch in range(100):
         print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f"
               % (epoch, train_loss, compute_sat_level(train_loader), compute_sat_level(test_loader),
                  compute_accuracy(train_loader), compute_accuracy(test_loader)))
-###############################################################################################
+        ###############################################################################################
         precision, recall, f1 = compute_metrics(test_loader, mlp)
-        print(f"Precision: {precision:.4f}, Recall: {recall:.4f}, F1-Score: {f1:.4f}")
+        print(f"Recall: {recall:.4f}, Precision: {precision:.4f}, F1-Score: {f1:.4f}")
+
+class_names = ["ARP_Spoofing", "Benign", "MQTT", "Recon", "TCP_IP-DDOS", "TCP_IP-DOS"]
+precision, recall, f1 = compute_metrics(test_loader, mlp)
+print("Scores by Class:")
+for i, class_name in enumerate(class_names):
+    print(f"Class {class_name}: Recall: {recall[i]:.6f}, Precision: {precision[i]:.6f}, F1: {f1[i]:.6f}")
+
+
 ###############################################################################################
 
 # 训练循环结束后保存模型
-model_save_path = 'LTN_reduce.pth'
-torch.save(mlp.state_dict(), model_save_path)
-print(f"Model saved to {model_save_path}")
+# model_save_path = 'LTN_reduce.pth'
+# torch.save(mlp.state_dict(), model_save_path)
+# print(f"Model saved to {model_save_path}")
+
+def plot_pr_curves(labels, probabilities, class_names, save_path):
+    # Binarize labels for each class
+    labels_binarized = label_binarize(labels, classes=list(range(len(class_names))))
+
+    plt.figure(figsize=(12, 8))
+    for i, class_name in enumerate(class_names):
+        precision, recall, _ = precision_recall_curve(labels_binarized[:, i], probabilities[:, i])
+        pr_auc = auc(recall, precision)
+        plt.plot(recall, precision, lw=2, label=f'Class {class_name} (AUC = {pr_auc:.2f})')
+
+    plt.xlabel('Recall')
+    plt.ylabel('Precision')
+    plt.title('Precision-Recall curve per class')
+    plt.legend(loc="best")
+    plt.grid(True)
+    # Save the plot to a file
+    plt.savefig(save_path, format='png', dpi=300, bbox_inches='tight')
+    plt.show()
+    plt.close()  # Close the figure to free up memory
 
 
+def collect_predictions_and_labels(loader, model):
+    model.eval()  # Set the model to evaluation mode
+    all_labels = []
+    all_probabilities = []
+    with torch.no_grad():
+        for data, labels in loader:
+            data = data.to(device)
+            probabilities = torch.softmax(model(data), dim=1)  # Assuming model outputs raw logits
+            all_labels.append(labels.cpu())
+            all_probabilities.append(probabilities.cpu())
+
+    # Concatenate all batches
+    all_labels = torch.cat(all_labels)
+    all_probabilities = torch.cat(all_probabilities)
+    return all_labels, all_probabilities
+
+
+# 在训练循环结束后绘制PR曲线
+all_labels, all_probabilities = collect_predictions_and_labels(test_loader, mlp)
+save_path = "reduce_LTN_PR_curve.png"  # 设定保存路径和文件名
+plot_pr_curves(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)
