@@ -7,10 +7,10 @@ from sklearn.metrics import precision_recall_fscore_support, accuracy_score, auc
 import matplotlib.pyplot as plt
 
 # 假设这里是你的新数据集路径
-# processed_train_file = 'datasets/reduce_6classes_train.csv'
-# processed_test_file = 'datasets/reduce_6classes_test.csv'
-processed_train_file = '../CIC_IoMT/6classes/6classes_15k_train.csv'
-processed_test_file = '../CIC_IoMT/6classes/6classes_1700_test.csv'
+processed_train_file = '../CIC_IoMT/6classes/processed_train_data_6classes.csv'
+processed_test_file = '../CIC_IoMT/6classes/processed_test_data_6classes.csv'
+# processed_train_file = '../CIC_IoMT/6classes/6classes_15k_train.csv'
+# processed_test_file = '../CIC_IoMT/6classes/6classes_1700_test.csv'
 
 # 加载数据集
 train_data = pd.read_csv(processed_train_file)
@@ -145,7 +145,15 @@ class DataLoader(object):
             end_idx = min(start_idx + self.batch_size, n)
             data = self.data[idxlist[start_idx:end_idx]]
             labels = self.labels[idxlist[start_idx:end_idx]]
-
+            ############################################################
+            # Check if any class is missing in the batch
+            # present_classes = np.unique(labels.cpu().numpy())
+            # all_classes = np.arange(len(label_mapping))  # Adjust based on number of classes
+            # missing_classes = set(all_classes) - set(present_classes)
+            #
+            # if missing_classes:
+            #     print(f"Batch {start_idx // self.batch_size} is missing classes {missing_classes}")
+            ############################################################
             yield data, labels
 
 
@@ -228,7 +236,7 @@ def compute_metrics(loader, model):
     precision, recall, f1_score, _ = precision_recall_fscore_support(
         all_labels,
         all_predictions,
-        average='macro',
+        # average='macro',
         zero_division=0  # 防止由于没有预测样本导致的未定义行为
     )
 
@@ -243,7 +251,7 @@ test_loader = DataLoader(test_data, test_labels, batch_size, shuffle=False)
 # Learning
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
 
-for epoch in range(100):
+for epoch in range(50):
     train_loss = 0.0
     for batch_idx, (data, labels) in enumerate(train_loader):
         optimizer.zero_grad()
@@ -268,8 +276,8 @@ for epoch in range(100):
         for variable, label in variables_labels:
             if variable.value.size(0) != 0:
                 valid_forall_expressions.append(Forall(variable, P(variable, label, training=True)))
-            else:
-                print(f"{variable.free_vars[0]} is empty, no this class in batch {batch_idx}")
+            # else:
+            #     print(f"{variable.free_vars[0]} is empty, no this class in batch {batch_idx}")
         #########################################################
         sat_agg = SatAgg(*valid_forall_expressions)
         loss = 1. - sat_agg
@@ -285,7 +293,8 @@ for epoch in range(100):
                  compute_accuracy(train_loader), compute_accuracy(test_loader)))
         ###############################################################################################
         precision, recall, f1 = compute_metrics(test_loader, mlp)
-        print(f"Recall: {recall:.4f}, Precision: {precision:.4f}, F1-Score: {f1:.4f}")
+        print(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
+
 
 class_names = ["ARP_Spoofing", "Benign", "MQTT", "Recon", "TCP_IP-DDOS", "TCP_IP-DOS"]
 precision, recall, f1 = compute_metrics(test_loader, mlp)
@@ -341,5 +350,6 @@ def collect_predictions_and_labels(loader, model):
 
 # 在训练循环结束后绘制PR曲线
 all_labels, all_probabilities = collect_predictions_and_labels(test_loader, mlp)
-save_path = "reduce_LTN_PR_curve.png"  # 设定保存路径和文件名
+# save_path = "LTN_6classes_reduce_PR_curve.png"  # 设定保存路径和文件名
+save_path = "LTN_6classes_PR_curve.png"
 plot_pr_curves(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)

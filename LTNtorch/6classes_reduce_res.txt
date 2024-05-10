@@ -1,0 +1,207 @@
+ epoch 0 | loss 0.8077 | Train Sat 0.222 | Test Sat 0.224 | Train Acc 0.588 | Test Acc 0.601
+Macro Recall: 0.6032, Macro Precision: 0.5653, Macro F1-Score: 0.5554
+ epoch 1 | loss 0.7266 | Train Sat 0.334 | Test Sat 0.339 | Train Acc 0.666 | Test Acc 0.651
+Macro Recall: 0.6538, Macro Precision: 0.5802, Macro F1-Score: 0.6019
+ epoch 2 | loss 0.6096 | Train Sat 0.438 | Test Sat 0.440 | Train Acc 0.690 | Test Acc 0.671
+Macro Recall: 0.6733, Macro Precision: 0.6805, Macro F1-Score: 0.6504
+ epoch 3 | loss 0.5347 | Train Sat 0.486 | Test Sat 0.488 | Train Acc 0.701 | Test Acc 0.680
+Macro Recall: 0.6820, Macro Precision: 0.6846, Macro F1-Score: 0.6585
+ epoch 4 | loss 0.5006 | Train Sat 0.511 | Test Sat 0.511 | Train Acc 0.709 | Test Acc 0.696
+Macro Recall: 0.6976, Macro Precision: 0.6927, Macro F1-Score: 0.6730
+ epoch 5 | loss 0.4816 | Train Sat 0.526 | Test Sat 0.531 | Train Acc 0.734 | Test Acc 0.706
+Macro Recall: 0.7081, Macro Precision: 0.6922, Macro F1-Score: 0.6864
+ epoch 6 | loss 0.4672 | Train Sat 0.539 | Test Sat 0.541 | Train Acc 0.739 | Test Acc 0.715
+Macro Recall: 0.7166, Macro Precision: 0.7008, Macro F1-Score: 0.6964
+ epoch 7 | loss 0.4558 | Train Sat 0.548 | Test Sat 0.552 | Train Acc 0.744 | Test Acc 0.723
+Macro Recall: 0.7251, Macro Precision: 0.7138, Macro F1-Score: 0.7091
+ epoch 8 | loss 0.4471 | Train Sat 0.557 | Test Sat 0.563 | Train Acc 0.752 | Test Acc 0.735
+Macro Recall: 0.7370, Macro Precision: 0.7315, Macro F1-Score: 0.7269
+ epoch 9 | loss 0.4381 | Train Sat 0.566 | Test Sat 0.571 | Train Acc 0.758 | Test Acc 0.744
+Macro Recall: 0.7455, Macro Precision: 0.7427, Macro F1-Score: 0.7378
+ epoch 10 | loss 0.4305 | Train Sat 0.572 | Test Sat 0.581 | Train Acc 0.764 | Test Acc 0.753
+Macro Recall: 0.7546, Macro Precision: 0.7555, Macro F1-Score: 0.7499
+ epoch 11 | loss 0.4241 | Train Sat 0.579 | Test Sat 0.587 | Train Acc 0.771 | Test Acc 0.756
+Macro Recall: 0.7578, Macro Precision: 0.7597, Macro F1-Score: 0.7543
+ epoch 12 | loss 0.4181 | Train Sat 0.585 | Test Sat 0.595 | Train Acc 0.773 | Test Acc 0.760
+Macro Recall: 0.7610, Macro Precision: 0.7632, Macro F1-Score: 0.7576
+ epoch 13 | loss 0.4126 | Train Sat 0.589 | Test Sat 0.600 | Train Acc 0.773 | Test Acc 0.761
+Macro Recall: 0.7627, Macro Precision: 0.7651, Macro F1-Score: 0.7592
+ epoch 14 | loss 0.4075 | Train Sat 0.594 | Test Sat 0.605 | Train Acc 0.774 | Test Acc 0.763
+Macro Recall: 0.7645, Macro Precision: 0.7670, Macro F1-Score: 0.7611
+ epoch 15 | loss 0.4037 | Train Sat 0.598 | Test Sat 0.608 | Train Acc 0.776 | Test Acc 0.766
+Macro Recall: 0.7675, Macro Precision: 0.7705, Macro F1-Score: 0.7644
+ epoch 16 | loss 0.4002 | Train Sat 0.602 | Test Sat 0.614 | Train Acc 0.778 | Test Acc 0.768
+Macro Recall: 0.7691, Macro Precision: 0.7717, Macro F1-Score: 0.7656
+ epoch 17 | loss 0.3968 | Train Sat 0.605 | Test Sat 0.615 | Train Acc 0.782 | Test Acc 0.770
+Macro Recall: 0.7716, Macro Precision: 0.7749, Macro F1-Score: 0.7685
+ epoch 18 | loss 0.3938 | Train Sat 0.607 | Test Sat 0.619 | Train Acc 0.784 | Test Acc 0.772
+Macro Recall: 0.7736, Macro Precision: 0.7771, Macro F1-Score: 0.7706
+ epoch 19 | loss 0.3908 | Train Sat 0.610 | Test Sat 0.623 | Train Acc 0.786 | Test Acc 0.775
+Macro Recall: 0.7761, Macro Precision: 0.7802, Macro F1-Score: 0.7730
+ epoch 20 | loss 0.3888 | Train Sat 0.612 | Test Sat 0.626 | Train Acc 0.788 | Test Acc 0.777
+Macro Recall: 0.7780, Macro Precision: 0.7829, Macro F1-Score: 0.7752
+ epoch 21 | loss 0.3869 | Train Sat 0.614 | Test Sat 0.627 | Train Acc 0.788 | Test Acc 0.778
+Macro Recall: 0.7797, Macro Precision: 0.7857, Macro F1-Score: 0.7769
+ epoch 22 | loss 0.3850 | Train Sat 0.616 | Test Sat 0.628 | Train Acc 0.790 | Test Acc 0.781
+Macro Recall: 0.7822, Macro Precision: 0.7900, Macro F1-Score: 0.7799
+ epoch 23 | loss 0.3831 | Train Sat 0.618 | Test Sat 0.631 | Train Acc 0.792 | Test Acc 0.782
+Macro Recall: 0.7831, Macro Precision: 0.7910, Macro F1-Score: 0.7808
+ epoch 24 | loss 0.3814 | Train Sat 0.619 | Test Sat 0.632 | Train Acc 0.792 | Test Acc 0.782
+Macro Recall: 0.7837, Macro Precision: 0.7925, Macro F1-Score: 0.7814
+ epoch 25 | loss 0.3807 | Train Sat 0.620 | Test Sat 0.635 | Train Acc 0.793 | Test Acc 0.783
+Macro Recall: 0.7844, Macro Precision: 0.7933, Macro F1-Score: 0.7821
+ epoch 26 | loss 0.3793 | Train Sat 0.621 | Test Sat 0.635 | Train Acc 0.793 | Test Acc 0.784
+Macro Recall: 0.7853, Macro Precision: 0.7941, Macro F1-Score: 0.7828
+ epoch 27 | loss 0.3781 | Train Sat 0.623 | Test Sat 0.637 | Train Acc 0.795 | Test Acc 0.783
+Macro Recall: 0.7845, Macro Precision: 0.7922, Macro F1-Score: 0.7821
+ epoch 28 | loss 0.3779 | Train Sat 0.623 | Test Sat 0.638 | Train Acc 0.795 | Test Acc 0.785
+Macro Recall: 0.7860, Macro Precision: 0.7951, Macro F1-Score: 0.7836
+ epoch 29 | loss 0.3767 | Train Sat 0.624 | Test Sat 0.638 | Train Acc 0.795 | Test Acc 0.785
+Macro Recall: 0.7866, Macro Precision: 0.7964, Macro F1-Score: 0.7839
+ epoch 30 | loss 0.3757 | Train Sat 0.624 | Test Sat 0.640 | Train Acc 0.796 | Test Acc 0.785
+Macro Recall: 0.7866, Macro Precision: 0.7967, Macro F1-Score: 0.7838
+ epoch 31 | loss 0.3748 | Train Sat 0.626 | Test Sat 0.643 | Train Acc 0.797 | Test Acc 0.786
+Macro Recall: 0.7871, Macro Precision: 0.7970, Macro F1-Score: 0.7843
+ epoch 32 | loss 0.3742 | Train Sat 0.626 | Test Sat 0.641 | Train Acc 0.798 | Test Acc 0.787
+Macro Recall: 0.7884, Macro Precision: 0.7993, Macro F1-Score: 0.7855
+ epoch 33 | loss 0.3729 | Train Sat 0.627 | Test Sat 0.644 | Train Acc 0.798 | Test Acc 0.787
+Macro Recall: 0.7879, Macro Precision: 0.7979, Macro F1-Score: 0.7851
+ epoch 34 | loss 0.3726 | Train Sat 0.628 | Test Sat 0.643 | Train Acc 0.799 | Test Acc 0.787
+Macro Recall: 0.7888, Macro Precision: 0.7996, Macro F1-Score: 0.7859
+ epoch 35 | loss 0.3722 | Train Sat 0.628 | Test Sat 0.643 | Train Acc 0.799 | Test Acc 0.788
+Macro Recall: 0.7892, Macro Precision: 0.7998, Macro F1-Score: 0.7863
+ epoch 36 | loss 0.3718 | Train Sat 0.629 | Test Sat 0.644 | Train Acc 0.799 | Test Acc 0.788
+Macro Recall: 0.7897, Macro Precision: 0.8004, Macro F1-Score: 0.7866
+ epoch 37 | loss 0.3713 | Train Sat 0.629 | Test Sat 0.645 | Train Acc 0.800 | Test Acc 0.787
+Macro Recall: 0.7887, Macro Precision: 0.7986, Macro F1-Score: 0.7859
+ epoch 38 | loss 0.3709 | Train Sat 0.630 | Test Sat 0.644 | Train Acc 0.801 | Test Acc 0.787
+Macro Recall: 0.7879, Macro Precision: 0.7972, Macro F1-Score: 0.7851
+ epoch 39 | loss 0.3704 | Train Sat 0.630 | Test Sat 0.646 | Train Acc 0.800 | Test Acc 0.788
+Macro Recall: 0.7898, Macro Precision: 0.8000, Macro F1-Score: 0.7866
+ epoch 40 | loss 0.3693 | Train Sat 0.631 | Test Sat 0.646 | Train Acc 0.800 | Test Acc 0.787
+Macro Recall: 0.7889, Macro Precision: 0.7990, Macro F1-Score: 0.7855
+ epoch 41 | loss 0.3698 | Train Sat 0.631 | Test Sat 0.647 | Train Acc 0.801 | Test Acc 0.789
+Macro Recall: 0.7901, Macro Precision: 0.8011, Macro F1-Score: 0.7866
+ epoch 42 | loss 0.3686 | Train Sat 0.631 | Test Sat 0.648 | Train Acc 0.801 | Test Acc 0.788
+Macro Recall: 0.7895, Macro Precision: 0.8001, Macro F1-Score: 0.7861
+ epoch 43 | loss 0.3685 | Train Sat 0.632 | Test Sat 0.646 | Train Acc 0.801 | Test Acc 0.788
+Macro Recall: 0.7891, Macro Precision: 0.7991, Macro F1-Score: 0.7858
+ epoch 44 | loss 0.3679 | Train Sat 0.632 | Test Sat 0.646 | Train Acc 0.802 | Test Acc 0.788
+Macro Recall: 0.7893, Macro Precision: 0.7989, Macro F1-Score: 0.7861
+ epoch 45 | loss 0.3678 | Train Sat 0.632 | Test Sat 0.650 | Train Acc 0.803 | Test Acc 0.788
+Macro Recall: 0.7898, Macro Precision: 0.7997, Macro F1-Score: 0.7867
+ epoch 46 | loss 0.3669 | Train Sat 0.633 | Test Sat 0.651 | Train Acc 0.803 | Test Acc 0.789
+Macro Recall: 0.7908, Macro Precision: 0.8021, Macro F1-Score: 0.7873
+ epoch 47 | loss 0.3675 | Train Sat 0.633 | Test Sat 0.651 | Train Acc 0.802 | Test Acc 0.790
+Macro Recall: 0.7913, Macro Precision: 0.8036, Macro F1-Score: 0.7877
+ epoch 48 | loss 0.3667 | Train Sat 0.634 | Test Sat 0.651 | Train Acc 0.803 | Test Acc 0.790
+Macro Recall: 0.7911, Macro Precision: 0.8021, Macro F1-Score: 0.7877
+ epoch 49 | loss 0.3665 | Train Sat 0.634 | Test Sat 0.650 | Train Acc 0.803 | Test Acc 0.790
+Macro Recall: 0.7915, Macro Precision: 0.8030, Macro F1-Score: 0.7880
+ epoch 50 | loss 0.3662 | Train Sat 0.634 | Test Sat 0.652 | Train Acc 0.804 | Test Acc 0.790
+Macro Recall: 0.7917, Macro Precision: 0.8032, Macro F1-Score: 0.7881
+ epoch 51 | loss 0.3658 | Train Sat 0.634 | Test Sat 0.651 | Train Acc 0.803 | Test Acc 0.790
+Macro Recall: 0.7910, Macro Precision: 0.8017, Macro F1-Score: 0.7875
+ epoch 52 | loss 0.3654 | Train Sat 0.635 | Test Sat 0.652 | Train Acc 0.804 | Test Acc 0.791
+Macro Recall: 0.7921, Macro Precision: 0.8039, Macro F1-Score: 0.7886
+ epoch 53 | loss 0.3655 | Train Sat 0.635 | Test Sat 0.653 | Train Acc 0.804 | Test Acc 0.790
+Macro Recall: 0.7919, Macro Precision: 0.8034, Macro F1-Score: 0.7882
+ epoch 54 | loss 0.3649 | Train Sat 0.635 | Test Sat 0.654 | Train Acc 0.804 | Test Acc 0.791
+Macro Recall: 0.7925, Macro Precision: 0.8049, Macro F1-Score: 0.7887
+ epoch 55 | loss 0.3650 | Train Sat 0.636 | Test Sat 0.653 | Train Acc 0.804 | Test Acc 0.792
+Macro Recall: 0.7931, Macro Precision: 0.8056, Macro F1-Score: 0.7893
+ epoch 56 | loss 0.3643 | Train Sat 0.636 | Test Sat 0.654 | Train Acc 0.804 | Test Acc 0.791
+Macro Recall: 0.7927, Macro Precision: 0.8044, Macro F1-Score: 0.7890
+ epoch 57 | loss 0.3643 | Train Sat 0.636 | Test Sat 0.654 | Train Acc 0.805 | Test Acc 0.791
+Macro Recall: 0.7925, Macro Precision: 0.8040, Macro F1-Score: 0.7887
+ epoch 58 | loss 0.3641 | Train Sat 0.636 | Test Sat 0.657 | Train Acc 0.804 | Test Acc 0.791
+Macro Recall: 0.7925, Macro Precision: 0.8043, Macro F1-Score: 0.7886
+ epoch 59 | loss 0.3634 | Train Sat 0.637 | Test Sat 0.654 | Train Acc 0.804 | Test Acc 0.791
+Macro Recall: 0.7927, Macro Precision: 0.8052, Macro F1-Score: 0.7889
+ epoch 60 | loss 0.3634 | Train Sat 0.636 | Test Sat 0.656 | Train Acc 0.805 | Test Acc 0.803
+Macro Recall: 0.8041, Macro Precision: 0.8199, Macro F1-Score: 0.7984
+ epoch 61 | loss 0.3635 | Train Sat 0.637 | Test Sat 0.656 | Train Acc 0.806 | Test Acc 0.792
+Macro Recall: 0.7932, Macro Precision: 0.8053, Macro F1-Score: 0.7892
+ epoch 62 | loss 0.3630 | Train Sat 0.637 | Test Sat 0.655 | Train Acc 0.805 | Test Acc 0.791
+Macro Recall: 0.7929, Macro Precision: 0.8043, Macro F1-Score: 0.7890
+ epoch 63 | loss 0.3625 | Train Sat 0.638 | Test Sat 0.657 | Train Acc 0.805 | Test Acc 0.792
+Macro Recall: 0.7933, Macro Precision: 0.8060, Macro F1-Score: 0.7893
+ epoch 64 | loss 0.3627 | Train Sat 0.637 | Test Sat 0.654 | Train Acc 0.806 | Test Acc 0.794
+Macro Recall: 0.7958, Macro Precision: 0.8075, Macro F1-Score: 0.7912
+ epoch 65 | loss 0.3627 | Train Sat 0.638 | Test Sat 0.657 | Train Acc 0.805 | Test Acc 0.794
+Macro Recall: 0.7954, Macro Precision: 0.8072, Macro F1-Score: 0.7911
+ epoch 66 | loss 0.3617 | Train Sat 0.638 | Test Sat 0.657 | Train Acc 0.806 | Test Acc 0.794
+Macro Recall: 0.7952, Macro Precision: 0.8073, Macro F1-Score: 0.7908
+ epoch 67 | loss 0.3621 | Train Sat 0.638 | Test Sat 0.658 | Train Acc 0.806 | Test Acc 0.805
+Macro Recall: 0.8066, Macro Precision: 0.8235, Macro F1-Score: 0.8005
+ epoch 68 | loss 0.3624 | Train Sat 0.638 | Test Sat 0.659 | Train Acc 0.808 | Test Acc 0.798
+Macro Recall: 0.7995, Macro Precision: 0.8134, Macro F1-Score: 0.7945
+ epoch 69 | loss 0.3622 | Train Sat 0.638 | Test Sat 0.660 | Train Acc 0.806 | Test Acc 0.794
+Macro Recall: 0.7960, Macro Precision: 0.8079, Macro F1-Score: 0.7915
+ epoch 70 | loss 0.3619 | Train Sat 0.639 | Test Sat 0.657 | Train Acc 0.806 | Test Acc 0.794
+Macro Recall: 0.7951, Macro Precision: 0.8070, Macro F1-Score: 0.7907
+ epoch 71 | loss 0.3615 | Train Sat 0.639 | Test Sat 0.656 | Train Acc 0.806 | Test Acc 0.805
+Macro Recall: 0.8066, Macro Precision: 0.8237, Macro F1-Score: 0.8002
+ epoch 72 | loss 0.3611 | Train Sat 0.639 | Test Sat 0.660 | Train Acc 0.807 | Test Acc 0.795
+Macro Recall: 0.7961, Macro Precision: 0.8086, Macro F1-Score: 0.7916
+ epoch 73 | loss 0.3613 | Train Sat 0.640 | Test Sat 0.659 | Train Acc 0.806 | Test Acc 0.804
+Macro Recall: 0.8060, Macro Precision: 0.8232, Macro F1-Score: 0.7998
+ epoch 74 | loss 0.3609 | Train Sat 0.639 | Test Sat 0.659 | Train Acc 0.808 | Test Acc 0.794
+Macro Recall: 0.7952, Macro Precision: 0.8068, Macro F1-Score: 0.7909
+ epoch 75 | loss 0.3606 | Train Sat 0.639 | Test Sat 0.660 | Train Acc 0.808 | Test Acc 0.805
+Macro Recall: 0.8062, Macro Precision: 0.8233, Macro F1-Score: 0.7996
+ epoch 76 | loss 0.3606 | Train Sat 0.640 | Test Sat 0.658 | Train Acc 0.809 | Test Acc 0.805
+Macro Recall: 0.8069, Macro Precision: 0.8233, Macro F1-Score: 0.8006
+ epoch 77 | loss 0.3608 | Train Sat 0.640 | Test Sat 0.660 | Train Acc 0.808 | Test Acc 0.805
+Macro Recall: 0.8070, Macro Precision: 0.8242, Macro F1-Score: 0.8004
+ epoch 78 | loss 0.3606 | Train Sat 0.640 | Test Sat 0.659 | Train Acc 0.808 | Test Acc 0.806
+Macro Recall: 0.8073, Macro Precision: 0.8239, Macro F1-Score: 0.8008
+ epoch 79 | loss 0.3599 | Train Sat 0.640 | Test Sat 0.660 | Train Acc 0.808 | Test Acc 0.805
+Macro Recall: 0.8069, Macro Precision: 0.8238, Macro F1-Score: 0.8003
+ epoch 80 | loss 0.3603 | Train Sat 0.640 | Test Sat 0.659 | Train Acc 0.808 | Test Acc 0.806
+Macro Recall: 0.8073, Macro Precision: 0.8243, Macro F1-Score: 0.8008
+ epoch 81 | loss 0.3600 | Train Sat 0.640 | Test Sat 0.661 | Train Acc 0.809 | Test Acc 0.806
+Macro Recall: 0.8072, Macro Precision: 0.8238, Macro F1-Score: 0.8006
+ epoch 82 | loss 0.3595 | Train Sat 0.640 | Test Sat 0.661 | Train Acc 0.809 | Test Acc 0.805
+Macro Recall: 0.8069, Macro Precision: 0.8244, Macro F1-Score: 0.7999
+ epoch 83 | loss 0.3593 | Train Sat 0.640 | Test Sat 0.658 | Train Acc 0.809 | Test Acc 0.806
+Macro Recall: 0.8075, Macro Precision: 0.8234, Macro F1-Score: 0.8009
+ epoch 84 | loss 0.3595 | Train Sat 0.641 | Test Sat 0.661 | Train Acc 0.809 | Test Acc 0.806
+Macro Recall: 0.8076, Macro Precision: 0.8234, Macro F1-Score: 0.8011
+ epoch 85 | loss 0.3586 | Train Sat 0.641 | Test Sat 0.663 | Train Acc 0.809 | Test Acc 0.806
+Macro Recall: 0.8079, Macro Precision: 0.8247, Macro F1-Score: 0.8013
+ epoch 86 | loss 0.3594 | Train Sat 0.641 | Test Sat 0.662 | Train Acc 0.809 | Test Acc 0.805
+Macro Recall: 0.8065, Macro Precision: 0.8226, Macro F1-Score: 0.7998
+ epoch 87 | loss 0.3590 | Train Sat 0.641 | Test Sat 0.658 | Train Acc 0.809 | Test Acc 0.805
+Macro Recall: 0.8068, Macro Precision: 0.8228, Macro F1-Score: 0.8001
+ epoch 88 | loss 0.3583 | Train Sat 0.642 | Test Sat 0.659 | Train Acc 0.809 | Test Acc 0.806
+Macro Recall: 0.8073, Macro Precision: 0.8247, Macro F1-Score: 0.8005
+ epoch 89 | loss 0.3589 | Train Sat 0.642 | Test Sat 0.660 | Train Acc 0.810 | Test Acc 0.806
+Macro Recall: 0.8073, Macro Precision: 0.8233, Macro F1-Score: 0.8006
+ epoch 90 | loss 0.3585 | Train Sat 0.641 | Test Sat 0.660 | Train Acc 0.810 | Test Acc 0.805
+Macro Recall: 0.8064, Macro Precision: 0.8231, Macro F1-Score: 0.7997
+ epoch 91 | loss 0.3585 | Train Sat 0.641 | Test Sat 0.659 | Train Acc 0.810 | Test Acc 0.805
+Macro Recall: 0.8067, Macro Precision: 0.8238, Macro F1-Score: 0.8001
+ epoch 92 | loss 0.3584 | Train Sat 0.642 | Test Sat 0.663 | Train Acc 0.810 | Test Acc 0.805
+Macro Recall: 0.8068, Macro Precision: 0.8237, Macro F1-Score: 0.8001
+ epoch 93 | loss 0.3589 | Train Sat 0.642 | Test Sat 0.661 | Train Acc 0.811 | Test Acc 0.805
+Macro Recall: 0.8064, Macro Precision: 0.8236, Macro F1-Score: 0.7997
+ epoch 94 | loss 0.3581 | Train Sat 0.642 | Test Sat 0.660 | Train Acc 0.810 | Test Acc 0.805
+Macro Recall: 0.8067, Macro Precision: 0.8240, Macro F1-Score: 0.7998
+ epoch 95 | loss 0.3580 | Train Sat 0.642 | Test Sat 0.663 | Train Acc 0.811 | Test Acc 0.805
+Macro Recall: 0.8065, Macro Precision: 0.8235, Macro F1-Score: 0.7997
+ epoch 96 | loss 0.3581 | Train Sat 0.642 | Test Sat 0.663 | Train Acc 0.811 | Test Acc 0.805
+Macro Recall: 0.8067, Macro Precision: 0.8236, Macro F1-Score: 0.7999
+ epoch 97 | loss 0.3576 | Train Sat 0.642 | Test Sat 0.663 | Train Acc 0.811 | Test Acc 0.805
+Macro Recall: 0.8070, Macro Precision: 0.8234, Macro F1-Score: 0.8004
+ epoch 98 | loss 0.3575 | Train Sat 0.642 | Test Sat 0.663 | Train Acc 0.811 | Test Acc 0.805
+Macro Recall: 0.8068, Macro Precision: 0.8231, Macro F1-Score: 0.8001
+ epoch 99 | loss 0.3576 | Train Sat 0.642 | Test Sat 0.662 | Train Acc 0.811 | Test Acc 0.805
+Macro Recall: 0.8062, Macro Precision: 0.8225, Macro F1-Score: 0.7995
+Scores by Class:
+Class ARP_Spoofing: Recall: 0.952941, Precision: 0.760206, F1: 0.845732
+Class Benign: Recall: 0.782941, Precision: 0.937984, F1: 0.853479
+Class MQTT: Recall: 0.980588, Precision: 0.997606, F1: 0.989024
+Class Recon: Recall: 0.932353, Precision: 0.997483, F1: 0.963819
+Class TCP_IP-DDOS: Recall: 0.822941, Precision: 0.566168, F1: 0.670822
+Class TCP_IP-DOS: Recall: 0.365294, Precision: 0.675734, F1: 0.474227
