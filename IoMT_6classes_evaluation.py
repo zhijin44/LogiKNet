@@ -74,7 +74,7 @@ def plot_confusion_matrix(cm, class_labels, output_file):
 # Compute the confusion matrix
 cm = confusion_matrix(y_test, y_pred, labels=np.unique(y_test))
 # Plot the confusion matrix
-plot_confusion_matrix(cm, np.unique(y_test), output_file='reduce_confusion_matrix_6classes.png')
+plot_confusion_matrix(cm, np.unique(y_test), output_file='6classes_reduce_confusion_matrix.png')
 
 # Compute scores for each class
 recall_scores = recall_score(y_test, y_pred, average=None, labels=np.unique(y_test), zero_division=0)
@@ -91,9 +91,9 @@ for i, label in enumerate(unique_labels):
 
 print("Model evaluation complete.")
 
-from sklearn.metrics import precision_recall_curve, average_precision_score, auc
+#################################################################################
+from sklearn.metrics import precision_recall_curve, average_precision_score
 from sklearn.preprocessing import label_binarize
-import matplotlib.pyplot as plt
 from itertools import cycle
 
 # Assuming y_test, X_test_scaled, model, and unique_labels are already defined
@@ -115,10 +115,8 @@ for i in range(n_classes):
     average_precision[i] = average_precision_score(y_test_bin[:, i], y_score[:, i])
 
 # Compute micro-average Precision-Recall curve and area
-precision["micro"], recall["micro"], _ = precision_recall_curve(y_test_bin.ravel(),
-                                                                y_score.ravel())
-average_precision["micro"] = average_precision_score(y_test_bin, y_score,
-                                                     average="micro")
+precision["micro"], recall["micro"], _ = precision_recall_curve(y_test_bin.ravel(), y_score.ravel())
+average_precision["micro"] = average_precision_score(y_test_bin, y_score, average="micro")
 
 # Plotting Precision-Recall curves for each class
 plt.figure(figsize=(12, 8))
