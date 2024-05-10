@@ -34,7 +34,7 @@ unique_labels = np.unique(y_test)
 class_labels_dict = {label: label for label in unique_labels}
 
 # Apply the scaler to the test data
-X_test_scaled = scaler.transform(X_test.values)
+X_test_scaled = scaler.transform(X_test)
 # X_test_scaled = scaler.transform(X_test)
 print("Test data scaled.")
 
@@ -134,4 +134,8 @@ plt.xlabel('Recall')
 plt.ylabel('Precision')
 plt.title('Precision-Recall Curve for 19-Class Classification')
 plt.legend(loc="lower left", fontsize='small')
+
+# Save the PR curve plot to the specified file
+pr_curve_output_path = os.path.join(output_dir, '19classes_PR_curve.png')
+plt.savefig(pr_curve_output_path, format='png', dpi=300, bbox_inches='tight')
 plt.show()

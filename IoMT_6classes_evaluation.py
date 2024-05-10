@@ -74,6 +74,7 @@ def plot_confusion_matrix(cm, class_labels, output_file):
 # Compute the confusion matrix
 cm = confusion_matrix(y_test, y_pred, labels=np.unique(y_test))
 # Plot the confusion matrix
+# plot_confusion_matrix(cm, np.unique(y_test), output_file='6classes_confusion_matrix.png')
 plot_confusion_matrix(cm, np.unique(y_test), output_file='6classes_reduce_confusion_matrix.png')
 
 # Compute scores for each class
@@ -134,5 +135,10 @@ plt.xlabel('Recall')
 plt.ylabel('Precision')
 plt.title('Multi-class Precision-Recall')
 plt.legend(loc="lower left")
+
+# Save the PR curve plot to the specified file
+# pr_curve_output_path = os.path.join(output_dir, '6classes_PR_curve.png')
+pr_curve_output_path = os.path.join(output_dir, '6classes_reduce_PR_curve.png')
+plt.savefig(pr_curve_output_path, format='png', dpi=300, bbox_inches='tight')
 plt.show()
 
