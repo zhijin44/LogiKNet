@@ -29,7 +29,9 @@ train_labels = train_labels.map(label_mapping)
 test_labels = test_labels.map(label_mapping)
 
 # 使用 StandardScaler 对数据进行缩放
-scaler = StandardScaler()
+# scaler = StandardScaler()
+# 使用 在baseline中使用的Scaler 对数据进行缩放
+scaler = '../CIC_IoMT/6classes/scaler_6classes_reduced.joblib'
 train_data_scaled = scaler.fit_transform(train_data)
 test_data_scaled = scaler.transform(test_data)
 
@@ -111,10 +113,10 @@ class LogitsToPredicate(torch.nn.Module):
 
 
 # 创建模型实例并移动到设备
-# mlp = MLP().to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
+mlp = MLP().to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
 #####################################################################
-mlp = MLPClassifier(hidden_layer_sizes=(32, 32), max_iter=200, activation='relu', solver='adam', random_state=1,
-                          verbose=True)
+# mlp = MLPClassifier(hidden_layer_sizes=(32, 32), max_iter=200, activation='relu', solver='adam', random_state=1,
+#                           verbose=True)
 #####################################################################
 P = ltn.Predicate(LogitsToPredicate(mlp))
 
