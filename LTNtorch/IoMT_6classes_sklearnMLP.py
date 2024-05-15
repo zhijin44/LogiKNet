@@ -4,6 +4,7 @@ import ltn
 import numpy as np
 from sklearn.preprocessing import StandardScaler, label_binarize
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score, auc, precision_recall_curve
+from sklearn.neural_network import MLPClassifier
 import matplotlib.pyplot as plt
 
 # 假设这里是你的新数据集路径
@@ -110,7 +111,11 @@ class LogitsToPredicate(torch.nn.Module):
 
 
 # 创建模型实例并移动到设备
-mlp = MLP().to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
+# mlp = MLP().to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
+#####################################################################
+mlp = MLPClassifier(hidden_layer_sizes=(32, 32), max_iter=200, activation='relu', solver='adam', random_state=1,
+                          verbose=True).to(device)
+#####################################################################
 P = ltn.Predicate(LogitsToPredicate(mlp))
 
 # we define the connectives, quantifiers, and the SatAgg
@@ -350,6 +355,6 @@ def collect_predictions_and_labels(loader, model):
 
 # 在训练循环结束后绘制PR曲线
 all_labels, all_probabilities = collect_predictions_and_labels(test_loader, mlp)
-# save_path = "LTN_6classes_reduce_PR_curve.png"  # 设定保存路径和文件名
-save_path = "outputs/LTN_6classes_PR_curve.png"
+save_path = "outputs/LTN_6classes_reduce_PR_curve.png"  # 设定保存路径和文件名
+# save_path = "outputs/LTN_6classes_PR_curve.png"
 plot_pr_curves(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)

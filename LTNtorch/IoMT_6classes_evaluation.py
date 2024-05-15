@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.metrics import precision_recall_curve, auc
 from sklearn.preprocessing import StandardScaler, label_binarize
 import matplotlib.pyplot as plt
-from test import MLP, DataLoader
+from IoMT_6classes import MLP, DataLoader
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
