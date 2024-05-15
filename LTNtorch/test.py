@@ -7,10 +7,10 @@ from sklearn.metrics import precision_recall_fscore_support, accuracy_score, auc
 import matplotlib.pyplot as plt
 
 # 假设这里是你的新数据集路径
-processed_train_file = '../CIC_IoMT/6classes/processed_train_data_6classes.csv'
-processed_test_file = '../CIC_IoMT/6classes/processed_test_data_6classes.csv'
-# processed_train_file = '../CIC_IoMT/6classes/6classes_15k_train.csv'
-# processed_test_file = '../CIC_IoMT/6classes/6classes_1700_test.csv'
+# processed_train_file = '../CIC_IoMT/6classes/processed_train_data_6classes.csv'
+# processed_test_file = '../CIC_IoMT/6classes/processed_test_data_6classes.csv'
+processed_train_file = '../CIC_IoMT/6classes/6classes_15k_train.csv'
+processed_test_file = '../CIC_IoMT/6classes/6classes_1700_test.csv'
 
 # 加载数据集
 train_data = pd.read_csv(processed_train_file)
@@ -351,5 +351,5 @@ def collect_predictions_and_labels(loader, model):
 # 在训练循环结束后绘制PR曲线
 all_labels, all_probabilities = collect_predictions_and_labels(test_loader, mlp)
 # save_path = "LTN_6classes_reduce_PR_curve.png"  # 设定保存路径和文件名
-save_path = "LTN_6classes_PR_curve.png"
+save_path = "outputs/LTN_6classes_PR_curve.png"
 plot_pr_curves(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)
