@@ -114,7 +114,7 @@ class LogitsToPredicate(torch.nn.Module):
 # mlp = MLP().to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
 #####################################################################
 mlp = MLPClassifier(hidden_layer_sizes=(32, 32), max_iter=200, activation='relu', solver='adam', random_state=1,
-                          verbose=True).to(device)
+                          verbose=True)
 #####################################################################
 P = ltn.Predicate(LogitsToPredicate(mlp))
 
