@@ -6,9 +6,10 @@ from sklearn.preprocessing import StandardScaler, label_binarize
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score, auc, precision_recall_curve
 import matplotlib.pyplot as plt
 
-# 假设这里是你的新数据集路径
+# 6类 全部数据集路径
 # processed_train_file = '../CIC_IoMT/6classes/processed_train_data_6classes.csv'
 # processed_test_file = '../CIC_IoMT/6classes/processed_test_data_6classes.csv'
+# 6类 缩减版数据集路径
 processed_train_file = '../CIC_IoMT/6classes/6classes_15k_train.csv'
 processed_test_file = '../CIC_IoMT/6classes/6classes_1700_test.csv'
 

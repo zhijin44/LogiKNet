@@ -3,6 +3,9 @@ import pandas as pd
 # 读取训练集和测试集文件
 processed_train_file = '../CIC_IoMT/19classes/processed_train_data.csv'
 processed_test_file = '../CIC_IoMT/19classes/processed_test_data.csv'
+# processed_train_file = '../CIC_IOT/0.1percent_8classes.csv'
+# processed_train_file = '../CIC_IoMT/19classes/processed_train_data.csv'
+# processed_test_file = '../CIC_IoMT/19classes/processed_test_data.csv'
 # processed_train_file = '../CIC_IoMT/6classes/processed_train_data_6classes.csv'
 # processed_test_file = '../CIC_IoMT/6classes/processed_test_data_6classes.csv'
 # processed_train_file = '../CIC_IoMT/6classes/reduce_6classes_train.csv'
@@ -100,3 +103,4 @@ def create_reduced_dataset(data, n_samples=64):
 # reduced_test_data.to_csv("../CIC_IoMT/6classes/6classes_1700_test.csv", index=False)
 
 #####################################################################################
+############# Part of the data from IoMT (benign & MQTT)#####################

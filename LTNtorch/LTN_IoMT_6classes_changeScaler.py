@@ -30,7 +30,7 @@ test_labels = test_labels.map(label_mapping)
 
 # 使用 StandardScaler 对数据进行缩放
 # scaler = StandardScaler()
-# 使用 在baseline中使用的Scaler 对数据进行缩放
+# 使用 在baseline中使用的Scaler 对数据进行缩放 (此法证明不太行)
 scaler = '../CIC_IoMT/6classes/scaler_6classes_reduced.joblib'
 train_data_scaled = scaler.fit_transform(train_data)
 test_data_scaled = scaler.transform(test_data)
@@ -258,7 +258,7 @@ test_loader = DataLoader(test_data, test_labels, batch_size, shuffle=False)
 # Learning
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
 
-for epoch in range(50):
+for epoch in range(100):
     train_loss = 0.0
     for batch_idx, (data, labels) in enumerate(train_loader):
         optimizer.zero_grad()
@@ -357,6 +357,7 @@ def collect_predictions_and_labels(loader, model):
 
 # 在训练循环结束后绘制PR曲线
 all_labels, all_probabilities = collect_predictions_and_labels(test_loader, mlp)
-save_path = "outputs/LTN_6classes_reduce_PR_curve.png"  # 设定保存路径和文件名
+# save_path = "outputs/LTN_6classes_reduce_PR_curve.png"  # 设定保存路径和文件名
 # save_path = "outputs/LTN_6classes_PR_curve.png"
+save_path = "LTN_6classes_reduce_PR_curve.png"
 plot_pr_curves(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)
