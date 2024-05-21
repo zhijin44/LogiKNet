@@ -1,8 +1,8 @@
 import pandas as pd
 
 # 读取训练集和测试集文件
-processed_train_file = '../CIC_IoMT/19classes/processed_train_data.csv'
-processed_test_file = '../CIC_IoMT/19classes/processed_test_data.csv'
+processed_train_file = '../CIC_IoMT/19classes/filtered_train_data.csv'
+processed_test_file = '../CIC_IoMT/19classes/filtered_test_data.csv'
 # processed_train_file = '../CIC_IOT/0.1percent_8classes.csv'
 # processed_train_file = '../CIC_IoMT/19classes/processed_train_data.csv'
 # processed_test_file = '../CIC_IoMT/19classes/processed_test_data.csv'
@@ -30,13 +30,24 @@ def print_label_counts(df):
     Returns:
     None
     """
-    if 'label' in df.columns:
-        label_counts = df['label'].value_counts()
+    # if 'label' in df.columns:
+    #     label_counts = df['label'].value_counts()
+    #     print("Label Counts:")
+    #     for label, count in label_counts.items():
+    #         print(f"Label {label}: {count} entries")
+    #
+    # else:
+    #     print("The DataFrame does not have a 'label' column.")
+
+    if 'label_L2' in df.columns:
+        label_counts = df['label_L2'].value_counts()
         print("Label Counts:")
         for label, count in label_counts.items():
             print(f"Label {label}: {count} entries")
+
     else:
         print("The DataFrame does not have a 'label' column.")
+
 
 
 print_label_counts(train_data)
@@ -104,3 +115,45 @@ def create_reduced_dataset(data, n_samples=64):
 
 #####################################################################################
 ############# Part of the data from IoMT (benign & MQTT)#####################
+
+# 要提取的六类标签
+selected_labels = [
+    "Benign",
+    "MQTT-DDoS-Connect_Flood",
+    "MQTT-DoS-Publish_Flood",
+    "MQTT-DDoS-Publish_Flood",
+    "MQTT-DoS-Connect_Flood",
+    "MQTT-Malformed_Data"
+]
+
+# 提取对应标签的数据
+# filtered_train_data = train_data[train_data['label'].isin(selected_labels)]
+# filtered_test_data = test_data[test_data['label'].isin(selected_labels)]
+
+# 新建feature列label_L1和label_L2
+def create_labels(row):
+    label = row['label']
+    if label == "Benign":
+        return "Benign", "Benign"
+    elif "MQTT" in label:
+        parts = label.split('-', 1)
+        return parts[0], parts[1]
+    else:
+        return label, label
+
+# filtered_train_data[['label_L1', 'label_L2']] = filtered_train_data.apply(create_labels, axis=1, result_type="expand")
+# filtered_test_data[['label_L1', 'label_L2']] = filtered_test_data.apply(create_labels, axis=1, result_type="expand")
+#
+# # 删除原始的Label列
+# filtered_train_data.drop(columns=['label'], inplace=True)
+# filtered_test_data.drop(columns=['label'], inplace=True)
+#
+# # 导出新的数据集
+# filtered_train_data.to_csv('../CIC_IoMT/19classes/filtered_train_data.csv', index=False)
+# filtered_test_data.to_csv('../CIC_IoMT/19classes/filtered_test_data.csv', index=False)
+#
+# # 查看数据集的结构
+# print(filtered_train_data.head())
+# print(filtered_test_data.head())
+#
+# print("数据处理完成并导出新的数据集。")
