@@ -176,7 +176,7 @@ def compute_accuracy(loader, threshold=0.5):
 train_loader = DataLoader(train_data, (train_sex_labels, train_color_labels), 64, shuffle=True)
 test_loader = DataLoader(test_data, (test_sex_labels, test_color_labels), 64, shuffle=False)
 
-#####################querying#####################################
+#####################querying setting#####################################
 Implies = ltn.Connective(ltn.fuzzy_ops.ImpliesReichenbach())
 
 

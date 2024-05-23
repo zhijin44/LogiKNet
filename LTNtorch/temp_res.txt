@@ -1,0 +1,54 @@
+Data processing and scaling done.
+LTN setting done.
+Create train and test loader done.
+Start training...
+ epoch 0 | loss 0.0560 | Train Sat 0.961 | Test Sat 0.955 | Train Acc 0.382 | Test Acc 0.388 |
+ epoch 2 | loss 0.0330 | Train Sat 0.968 | Test Sat 0.963 | Train Acc 0.366 | Test Acc 0.373 |
+ epoch 4 | loss 0.0314 | Train Sat 0.969 | Test Sat 0.964 | Train Acc 0.367 | Test Acc 0.373 |
+ epoch 6 | loss 0.0307 | Train Sat 0.970 | Test Sat 0.966 | Train Acc 0.367 | Test Acc 0.373 |
+ epoch 8 | loss 0.0305 | Train Sat 0.970 | Test Sat 0.964 | Train Acc 0.368 | Test Acc 0.374 |
+ epoch 10 | loss 0.0303 | Train Sat 0.970 | Test Sat 0.963 | Train Acc 0.368 | Test Acc 0.374 |
+ epoch 12 | loss 0.0298 | Train Sat 0.970 | Test Sat 0.963 | Train Acc 0.368 | Test Acc 0.374 |
+ epoch 14 | loss 0.0299 | Train Sat 0.971 | Test Sat 0.966 | Train Acc 0.368 | Test Acc 0.374 |
+ epoch 16 | loss 0.0296 | Train Sat 0.970 | Test Sat 0.965 | Train Acc 0.369 | Test Acc 0.374 |
+ epoch 18 | loss 0.0295 | Train Sat 0.970 | Test Sat 0.966 | Train Acc 0.370 | Test Acc 0.375 |
+ epoch 20 | loss 0.0293 | Train Sat 0.970 | Test Sat 0.966 | Train Acc 0.369 | Test Acc 0.374 |
+ epoch 22 | loss 0.0293 | Train Sat 0.970 | Test Sat 0.967 | Train Acc 0.369 | Test Acc 0.375 |
+ epoch 24 | loss 0.0293 | Train Sat 0.970 | Test Sat 0.966 | Train Acc 0.370 | Test Acc 0.375 |
+ epoch 26 | loss 0.0292 | Train Sat 0.971 | Test Sat 0.966 | Train Acc 0.370 | Test Acc 0.375 |
+ epoch 28 | loss 0.0291 | Train Sat 0.971 | Test Sat 0.966 | Train Acc 0.370 | Test Acc 0.374 |
+ epoch 30 | loss 0.0292 | Train Sat 0.971 | Test Sat 0.964 | Train Acc 0.370 | Test Acc 0.375 |
+ epoch 32 | loss 0.0289 | Train Sat 0.971 | Test Sat 0.964 | Train Acc 0.369 | Test Acc 0.374 |
+ epoch 34 | loss 0.0288 | Train Sat 0.971 | Test Sat 0.965 | Train Acc 0.370 | Test Acc 0.375 |
+ epoch 36 | loss 0.0288 | Train Sat 0.972 | Test Sat 0.964 | Train Acc 0.369 | Test Acc 0.375 |
+ epoch 38 | loss 0.0287 | Train Sat 0.970 | Test Sat 0.964 | Train Acc 0.368 | Test Acc 0.374 |
+ epoch 40 | loss 0.0286 | Train Sat 0.972 | Test Sat 0.965 | Train Acc 0.371 | Test Acc 0.375 |
+ epoch 42 | loss 0.0287 | Train Sat 0.971 | Test Sat 0.963 | Train Acc 0.369 | Test Acc 0.374 |
+ epoch 44 | loss 0.0286 | Train Sat 0.972 | Test Sat 0.966 | Train Acc 0.370 | Test Acc 0.375 |
+ epoch 46 | loss 0.0284 | Train Sat 0.971 | Test Sat 0.967 | Train Acc 0.370 | Test Acc 0.375 |
+ epoch 48 | loss 0.0285 | Train Sat 0.972 | Test Sat 0.965 | Train Acc 0.370 | Test Acc 0.375 |
+ epoch 50 | loss 0.0285 | Train Sat 0.972 | Test Sat 0.964 | Train Acc 0.369 | Test Acc 0.375 |
+ epoch 52 | loss 0.0283 | Train Sat 0.972 | Test Sat 0.965 | Train Acc 0.369 | Test Acc 0.374 |
+ epoch 54 | loss 0.0283 | Train Sat 0.972 | Test Sat 0.967 | Train Acc 0.369 | Test Acc 0.375 |
+ epoch 56 | loss 0.0286 | Train Sat 0.972 | Test Sat 0.967 | Train Acc 0.370 | Test Acc 0.375 |
+ epoch 58 | loss 0.0283 | Train Sat 0.972 | Test Sat 0.967 | Train Acc 0.370 | Test Acc 0.375 |
+ epoch 60 | loss 0.0282 | Train Sat 0.972 | Test Sat 0.965 | Train Acc 0.370 | Test Acc 0.375 |
+ epoch 62 | loss 0.0280 | Train Sat 0.973 | Test Sat 0.966 | Train Acc 0.370 | Test Acc 0.375 |
+ epoch 64 | loss 0.0281 | Train Sat 0.972 | Test Sat 0.965 | Train Acc 0.369 | Test Acc 0.374 |
+ epoch 66 | loss 0.0282 | Train Sat 0.972 | Test Sat 0.966 | Train Acc 0.369 | Test Acc 0.375 |
+ epoch 68 | loss 0.0283 | Train Sat 0.972 | Test Sat 0.965 | Train Acc 0.369 | Test Acc 0.374 |
+ epoch 70 | loss 0.0282 | Train Sat 0.972 | Test Sat 0.966 | Train Acc 0.369 | Test Acc 0.375 |
+ epoch 72 | loss 0.0280 | Train Sat 0.972 | Test Sat 0.965 | Train Acc 0.369 | Test Acc 0.374 |
+ epoch 74 | loss 0.0280 | Train Sat 0.972 | Test Sat 0.964 | Train Acc 0.369 | Test Acc 0.374 |
+ epoch 76 | loss 0.0279 | Train Sat 0.972 | Test Sat 0.963 | Train Acc 0.369 | Test Acc 0.374 |
+ epoch 78 | loss 0.0277 | Train Sat 0.973 | Test Sat 0.966 | Train Acc 0.369 | Test Acc 0.375 |
+ epoch 80 | loss 0.0278 | Train Sat 0.971 | Test Sat 0.966 | Train Acc 0.370 | Test Acc 0.375 |
+ epoch 82 | loss 0.0281 | Train Sat 0.972 | Test Sat 0.967 | Train Acc 0.369 | Test Acc 0.375 |
+ epoch 84 | loss 0.0277 | Train Sat 0.972 | Test Sat 0.964 | Train Acc 0.368 | Test Acc 0.374 |
+ epoch 86 | loss 0.0276 | Train Sat 0.973 | Test Sat 0.966 | Train Acc 0.369 | Test Acc 0.374 |
+ epoch 88 | loss 0.0279 | Train Sat 0.973 | Test Sat 0.966 | Train Acc 0.369 | Test Acc 0.375 |
+ epoch 90 | loss 0.0279 | Train Sat 0.973 | Test Sat 0.967 | Train Acc 0.370 | Test Acc 0.375 |
+ epoch 92 | loss 0.0278 | Train Sat 0.972 | Test Sat 0.965 | Train Acc 0.369 | Test Acc 0.374 |
+ epoch 94 | loss 0.0276 | Train Sat 0.972 | Test Sat 0.964 | Train Acc 0.369 | Test Acc 0.374 |
+ epoch 96 | loss 0.0279 | Train Sat 0.972 | Test Sat 0.966 | Train Acc 0.369 | Test Acc 0.374 |
+ epoch 98 | loss 0.0275 | Train Sat 0.972 | Test Sat 0.965 | Train Acc 0.368 | Test Acc 0.374 |

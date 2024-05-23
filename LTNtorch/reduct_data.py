@@ -39,8 +39,8 @@ def print_label_counts(df):
     # else:
     #     print("The DataFrame does not have a 'label' column.")
 
-    if 'label_L2' in df.columns:
-        label_counts = df['label_L2'].value_counts()
+    if 'label_L1' in df.columns:
+        label_counts = df['label_L1'].value_counts()
         print("Label Counts:")
         for label, count in label_counts.items():
             print(f"Label {label}: {count} entries")
