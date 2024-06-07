@@ -57,6 +57,46 @@ def print_label_counts(df):
 # print_label_counts(test_data)
 
 
+def print_extended_label_counts(df):
+    """
+    Print the counts of each label in the given DataFrame for label_L1 and label_L2.
+
+    Parameters:
+    df (pandas.DataFrame): The DataFrame containing the data and labels.
+
+    Returns:
+    None
+    """
+    if 'label_L1' in df.columns and 'label_L2' in df.columns:
+        label_L1_counts = df['label_L1'].value_counts()
+        label_L2_counts = df['label_L2'].value_counts()
+
+        print("Label_L1 Counts:")
+        for label, count in label_L1_counts.items():
+            print(f"Label_L1 {label}: {count} entries")
+
+        print("\nLabel_L2 Counts:")
+        for label, count in label_L2_counts.items():
+            print(f"Label_L2 {label}: {count} entries")
+
+    else:
+        missing_columns = []
+        if 'label_L1' not in df.columns:
+            missing_columns.append('label_L1')
+        if 'label_L2' not in df.columns:
+            missing_columns.append('label_L2')
+        print(f"The DataFrame does not have the following column(s): {', '.join(missing_columns)}")
+
+
+# extended_train_data = pd.read_csv(processed_train_file)
+# extended_test_data = pd.read_csv(processed_test_file)
+# # 打印扩展标签的统计信息
+# print("Train Data:")
+# print_extended_label_counts(extended_train_data)
+# print("\nTest Data:")
+# print_extended_label_counts(extended_test_data)
+
+
 #########################################################################
 def reduce_instances(df, labels_to_reduce, reduction_fraction=0.01):
     """
@@ -164,19 +204,6 @@ def create_labels(row):
 
 #####################################################################################
 ############# reduce the huge data from IoMT (Dos & DDos)#####################
-# 要提取的六类标签
-selected_labels = [
-    "TCP_IP-DDoS-UDP",
-    "TCP_IP-DDoS-ICMP",
-    "TCP_IP-DDoS-TCP",
-    "TCP_IP-DDoS-SYN",
-    "TCP_IP-DoS-UDP",
-    "TCP_IP-DoS-SYN",
-    "TCP_IP-DoS-ICMP",
-    "TCP_IP-DoS-TCP"
-]
-
-
 def reduce_data(train_file, test_file, selected_labels, max_samples=20000):
     # 读取训练和测试数据
     train_data = pd.read_csv(train_file)
@@ -206,19 +233,61 @@ def reduce_data(train_file, test_file, selected_labels, max_samples=20000):
     reduced_train_data = pd.concat([reduced_train_data, other_train_data], ignore_index=True)
     reduced_test_data = pd.concat([reduced_test_data, other_test_data], ignore_index=True)
 
+    return reduced_train_data, reduced_test_data
+
+
+def extend_labels(train_data, test_data, label_L1_mapping):
+    # 添加新的标签列
+    train_data['label_L2'] = train_data['label']
+    test_data['label_L2'] = test_data['label']
+
+    # 映射新的label_L1
+    def map_label_L1(label):
+        for l1 in label_L1_mapping:
+            if l1.replace("-", "").lower() in label.lower().replace("-", ""):
+                return l1
+        return 'Other'
+
+    train_data['label_L1'] = train_data['label'].apply(map_label_L1)
+    test_data['label_L1'] = test_data['label'].apply(map_label_L1)
+
     # 生成新的文件名
-    reduced_train_file = train_file.replace('processed_train_data', 'reduced_train_data')
-    reduced_test_file = test_file.replace('processed_test_data', 'reduced_test_data')
+    extended_train_file = '../CIC_IoMT/19classes/reduced_train_data.csv'
+    extended_test_file = '../CIC_IoMT/19classes/reduced_test_data.csv'
 
-    # 保存缩减后的数据集到新的CSV文件
-    reduced_train_data.to_csv(reduced_train_file, index=False)
-    reduced_test_data.to_csv(reduced_test_file, index=False)
+    # 保存扩展后的数据集到新的CSV文件
+    train_data.to_csv(extended_train_file, index=False)
+    test_data.to_csv(extended_test_file, index=False)
 
-    print(f"Reduced train data saved to: {reduced_train_file}")
-    print(f"Reduced test data saved to: {reduced_test_file}")
+    print(f"Extended train data saved to: {extended_train_file}")
+    print(f"Extended test data saved to: {extended_test_file}")
 
 
-reduce_data(processed_train_file, processed_test_file, selected_labels)
+# 使用示例
+selected_labels = [
+    "TCP_IP-DDoS-UDP",
+    "TCP_IP-DDoS-ICMP",
+    "TCP_IP-DDoS-TCP",
+    "TCP_IP-DDoS-SYN",
+    "TCP_IP-DoS-UDP",
+    "TCP_IP-DoS-SYN",
+    "TCP_IP-DoS-ICMP",
+    "TCP_IP-DoS-TCP"
+]
+label_L1_mapping = [
+    "ARP_Spoofing", "Benign", "MQTT", "Recon", "TCP_IP-DDOS", "TCP_IP-DOS"
+]
 
-print_label_counts(pd.read_csv('../CIC_IoMT/19classes/reduced_train_data.csv'))
-print_label_counts(pd.read_csv('../CIC_IoMT/19classes/reduced_test_data.csv'))
+# 先进行数据缩减
+reduced_train_data, reduced_test_data = reduce_data(processed_train_file, processed_test_file, selected_labels)
+
+# 然后扩展标签并保存数据
+extend_labels(reduced_train_data, reduced_test_data, label_L1_mapping)
+
+extended_train_data = pd.read_csv('../CIC_IoMT/19classes/reduced_train_data.csv')
+extended_test_data = pd.read_csv('../CIC_IoMT/19classes/reduced_test_data.csv')
+# 打印扩展标签的统计信息
+print("Train Data:")
+print_extended_label_counts(extended_train_data)
+print("\nTest Data:")
+print_extended_label_counts(extended_test_data)

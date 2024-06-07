@@ -5,18 +5,22 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler, label_binarize
 
 # 加载数据集
-processed_train_file = '../CIC_IoMT/19classes/filtered_train_data.csv'
-processed_test_file = '../CIC_IoMT/19classes/filtered_test_data.csv'
+processed_train_file = '../CIC_IoMT/19classes/reduced_train_data.csv'
+processed_test_file = '../CIC_IoMT/19classes/reduced_test_data.csv'
 
 train_data = pd.read_csv(processed_train_file)
 test_data = pd.read_csv(processed_test_file)
 
-# 将标签映射到整数，适用于6个类别的场景
+# 将标签映射到整数，适用于19个类别的场景
 train_label_L1, train_label_L2 = train_data.pop("label_L1"), train_data.pop("label_L2"),
 test_label_L1, test_label_L2 = test_data.pop("label_L1"), test_data.pop("label_L2")
 
-label_mapping = {"Benign": 0, "MQTT": 1, "DDoS-Connect_Flood": 2, "DDoS-Publish_Flood": 3,
-                 "DoS-Connect_Flood": 4, "DoS-Publish_Flood": 5, "Malformed_Data": 6}
+label_mapping = {"Benign": 0, "MQTT": 1, "Recon": 2, "ARP_Spoofing": 3, "TCP_IP-DDOS": 4, "TCP_IP-DOS": 5,
+                 "MQTT-DDoS-Connect_Flood": 11, "MQTT-DDoS-Publish_Flood": 12, "MQTT-DoS-Connect_Flood": 13,
+                 "MQTT-DoS-Publish_Flood": 14, "MQTT-Malformed_Data": 15,
+                 "Recon-Port_Scan": 21, "Recon-OS_Scan": 22, "Recon-VulScan": 23, "Recon-Ping_Sweep": 24,
+                 "TCP_IP-DDoS-TCP": 41, "TCP_IP-DDoS-ICMP": 42,  "TCP_IP-DDoS-SYN": 43, "TCP_IP-DDoS-UDP": 44,
+                 "TCP_IP-DoS-TCP": 51, "TCP_IP-DoS-ICMP": 52, "TCP_IP-DoS-SYN": 53, "TCP_IP-DoS-UDP": 54}
 train_label_L1, train_label_L2 = train_label_L1.map(label_mapping), train_label_L2.map(label_mapping)
 test_label_L1, test_label_L2 = test_label_L1.map(label_mapping), test_label_L2.map(label_mapping)
 
