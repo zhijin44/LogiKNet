@@ -55,7 +55,7 @@ Start training...
 
 
 
- Data processing and scaling done.
+Data processing and scaling done.
 LTN setting done.
 Create train and test loader done.
 Start training...
@@ -109,4 +109,6 @@ Start training...
  epoch 47 | loss 0.0369 | Train Sat 0.964 | Test Sat 0.778 | Train Acc 0.937 | Test Acc 0.923 |
  epoch 48 | loss 0.0365 | Train Sat 0.963 | Test Sat 0.780 | Train Acc 0.936 | Test Acc 0.922 |
  epoch 49 | loss 0.0361 | Train Sat 0.963 | Test Sat 0.777 | Train Acc 0.936 | Test Acc 0.922 |
+(hierarchical filtered data result)
 
+--------------------------------------------------------------------------------------------------------

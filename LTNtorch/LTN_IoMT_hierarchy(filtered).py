@@ -190,44 +190,55 @@ def compute_sat_level(loader):
             valid_forall_expressions.append(Forall(x_Benign, P(x_Benign, l_Benign)))
         if x_MQTT.value.size(0) != 0:
             valid_forall_expressions.append(Forall(x_MQTT, P(x_MQTT, l_MQTT)))
-        if x_DDoS_Connect_Flood.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_DDoS_Connect_Flood, P(x_DDoS_Connect_Flood, l_DDoS_Connect_Flood)))
-        if x_DDoS_Publish_Flood.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_DDoS_Publish_Flood, P(x_DDoS_Publish_Flood, l_DDoS_Publish_Flood)))
-        if x_DoS_Connect_Flood.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_DoS_Connect_Flood, P(x_DoS_Connect_Flood, l_DoS_Connect_Flood)))
-        if x_DoS_Publish_Flood.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_DoS_Publish_Flood, P(x_DoS_Publish_Flood, l_DoS_Publish_Flood)))
-        if x_Malformed_Data.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Malformed_Data, P(x_Malformed_Data, l_Malformed_Data)))
         # 添加Benign和MQTT的非逻辑关系
         valid_forall_expressions.append(Forall(x, Not(And(P(x, l_Benign), P(x, l_MQTT)))))
-        # 添加label_L2中各标签互斥的语句
-        mutual_exclusive_constraints = [
-            Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_DDoS_Publish_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_DoS_Connect_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_DoS_Publish_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_Malformed_Data)))),
-            Forall(x, Not(And(P(x, l_DDoS_Publish_Flood), P(x, l_DoS_Connect_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Publish_Flood), P(x, l_DoS_Publish_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Publish_Flood), P(x, l_Malformed_Data)))),
-            Forall(x, Not(And(P(x, l_DoS_Connect_Flood), P(x, l_DoS_Publish_Flood)))),
-            Forall(x, Not(And(P(x, l_DoS_Connect_Flood), P(x, l_Malformed_Data)))),
-            Forall(x, Not(And(P(x, l_DoS_Publish_Flood), P(x, l_Malformed_Data))))
-        ]
-        valid_forall_expressions.extend(mutual_exclusive_constraints)
 
-        # mean_sat += SatAgg(
-        #     Forall(x_Benign, P(x_Benign, l_Benign)),
-        #     Forall(x_MQTT, P(x_MQTT, l_MQTT)),
-        #     Forall(x_DDoS_Connect_Flood, P(x_DDoS_Connect_Flood, l_DDoS_Connect_Flood)),
-        #     Forall(x_DDoS_Publish_Flood, P(x_DDoS_Publish_Flood, l_DDoS_Publish_Flood)),
-        #     Forall(x_DoS_Connect_Flood, P(x_DoS_Connect_Flood, l_DoS_Connect_Flood)),
-        #     Forall(x_DoS_Publish_Flood, P(x_DoS_Publish_Flood, l_DoS_Publish_Flood)),
-        #     Forall(x_Malformed_Data, P(x_Malformed_Data, l_Malformed_Data)),
-        #     Forall(x, Not(And(P(x, l_Benign), P(x, l_MQTT))))
-        #     #################此处仍需加一个多重互斥的语句，label_L2中各标签是互斥的###################
-        # )
+        if x_DDoS_Connect_Flood.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_DDoS_Connect_Flood,
+                                                   And(
+                                                       P(x_DDoS_Connect_Flood, l_DDoS_Connect_Flood),
+                                                       P(x_DDoS_Connect_Flood, l_MQTT)
+                                                   )))
+        if x_DDoS_Publish_Flood.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_DDoS_Publish_Flood,
+                                                   And(
+                                                       P(x_DDoS_Publish_Flood, l_DDoS_Publish_Flood),
+                                                       P(x_DDoS_Publish_Flood, l_MQTT)
+                                                   )))
+        if x_DoS_Connect_Flood.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_DoS_Connect_Flood,
+                                                   And(
+                                                       P(x_DoS_Connect_Flood, l_DoS_Connect_Flood),
+                                                       P(x_DoS_Connect_Flood, l_MQTT)
+                                                   )))
+        if x_DoS_Publish_Flood.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_DoS_Publish_Flood,
+                                                   And(
+                                                       P(x_DoS_Publish_Flood, l_DoS_Publish_Flood),
+                                                       P(x_DoS_Publish_Flood, l_MQTT)
+                                                   )))
+        if x_Malformed_Data.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_Malformed_Data,
+                                                   And(
+                                                       P(x_Malformed_Data, l_Malformed_Data),
+                                                       P(x_Malformed_Data, l_MQTT)
+                                                   )))
+
+        # 添加label_L2中各标签互斥的语句
+        # mutual_exclusive_constraints = [
+        #     Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_DDoS_Publish_Flood)))),
+        #     Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_DoS_Connect_Flood)))),
+        #     Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_DoS_Publish_Flood)))),
+        #     Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_Malformed_Data)))),
+        #     Forall(x, Not(And(P(x, l_DDoS_Publish_Flood), P(x, l_DoS_Connect_Flood)))),
+        #     Forall(x, Not(And(P(x, l_DDoS_Publish_Flood), P(x, l_DoS_Publish_Flood)))),
+        #     Forall(x, Not(And(P(x, l_DDoS_Publish_Flood), P(x, l_Malformed_Data)))),
+        #     Forall(x, Not(And(P(x, l_DoS_Connect_Flood), P(x, l_DoS_Publish_Flood)))),
+        #     Forall(x, Not(And(P(x, l_DoS_Connect_Flood), P(x, l_Malformed_Data)))),
+        #     Forall(x, Not(And(P(x, l_DoS_Publish_Flood), P(x, l_Malformed_Data))))
+        # ]
+        # valid_forall_expressions.extend(mutual_exclusive_constraints)
+
         mean_sat += SatAgg(*valid_forall_expressions)
     mean_sat /= len(loader)
     return mean_sat
@@ -273,7 +284,7 @@ print("Create train and test loader done.")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
 print("Start training...")
 
-for epoch in range(50):
+for epoch in range(30):
     train_loss = 0.0
     for batch_idx, (data, label_L1, label_L2) in enumerate(train_loader):
         optimizer.zero_grad()
@@ -292,32 +303,39 @@ for epoch in range(50):
             valid_forall_expressions.append(Forall(x_Benign, P(x_Benign, l_Benign)))
         if x_MQTT.value.size(0) != 0:
             valid_forall_expressions.append(Forall(x_MQTT, P(x_MQTT, l_MQTT)))
-        if x_DDoS_Connect_Flood.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_DDoS_Connect_Flood, P(x_DDoS_Connect_Flood, l_DDoS_Connect_Flood)))
-        if x_DDoS_Publish_Flood.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_DDoS_Publish_Flood, P(x_DDoS_Publish_Flood, l_DDoS_Publish_Flood)))
-        if x_DoS_Connect_Flood.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_DoS_Connect_Flood, P(x_DoS_Connect_Flood, l_DoS_Connect_Flood)))
-        if x_DoS_Publish_Flood.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_DoS_Publish_Flood, P(x_DoS_Publish_Flood, l_DoS_Publish_Flood)))
-        if x_Malformed_Data.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Malformed_Data, P(x_Malformed_Data, l_Malformed_Data)))
         # 添加Benign和MQTT的非逻辑关系
         valid_forall_expressions.append(Forall(x, Not(And(P(x, l_Benign), P(x, l_MQTT)))))
-        # 添加label_L2中各标签互斥的语句
-        mutual_exclusive_constraints = [
-            Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_DDoS_Publish_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_DoS_Connect_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_DoS_Publish_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_Malformed_Data)))),
-            Forall(x, Not(And(P(x, l_DDoS_Publish_Flood), P(x, l_DoS_Connect_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Publish_Flood), P(x, l_DoS_Publish_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Publish_Flood), P(x, l_Malformed_Data)))),
-            Forall(x, Not(And(P(x, l_DoS_Connect_Flood), P(x, l_DoS_Publish_Flood)))),
-            Forall(x, Not(And(P(x, l_DoS_Connect_Flood), P(x, l_Malformed_Data)))),
-            Forall(x, Not(And(P(x, l_DoS_Publish_Flood), P(x, l_Malformed_Data))))
-        ]
-        valid_forall_expressions.extend(mutual_exclusive_constraints)
+
+        if x_DDoS_Connect_Flood.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_DDoS_Connect_Flood,
+                                                   And(
+                                                       P(x_DDoS_Connect_Flood, l_DDoS_Connect_Flood),
+                                                       P(x_DDoS_Connect_Flood, l_MQTT)
+                                                   )))
+        if x_DDoS_Publish_Flood.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_DDoS_Publish_Flood,
+                                                   And(
+                                                       P(x_DDoS_Publish_Flood, l_DDoS_Publish_Flood),
+                                                       P(x_DDoS_Publish_Flood, l_MQTT)
+                                                   )))
+        if x_DoS_Connect_Flood.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_DoS_Connect_Flood,
+                                                   And(
+                                                       P(x_DoS_Connect_Flood, l_DoS_Connect_Flood),
+                                                       P(x_DoS_Connect_Flood, l_MQTT)
+                                                   )))
+        if x_DoS_Publish_Flood.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_DoS_Publish_Flood,
+                                                   And(
+                                                       P(x_DoS_Publish_Flood, l_DoS_Publish_Flood),
+                                                       P(x_DoS_Publish_Flood, l_MQTT)
+                                                   )))
+        if x_Malformed_Data.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_Malformed_Data,
+                                                   And(
+                                                       P(x_Malformed_Data, l_Malformed_Data),
+                                                       P(x_Malformed_Data, l_MQTT)
+                                                   )))
 
         sat_agg = SatAgg(*valid_forall_expressions)
         #############################################################################

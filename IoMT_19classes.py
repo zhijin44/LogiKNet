@@ -17,8 +17,10 @@ TRAIN_DIR = 'CIC_IoMT/train/'
 TEST_DIR = 'CIC_IoMT/test/'
 
 # 定义处理后的数据文件路径
-processed_train_file = 'CIC_IoMT/19classes/processed_train_data.csv'
-processed_test_file = 'CIC_IoMT/19classes/processed_test_data.csv'
+processed_train_file = 'CIC_IoMT/19classes/reduced_train_data.csv'
+processed_test_file = 'CIC_IoMT/19classes/reduced_test_data.csv'
+# processed_train_file = 'CIC_IoMT/19classes/processed_train_data.csv'
+# processed_test_file = 'CIC_IoMT/19classes/processed_test_data.csv'
 
 # 特征列名称
 X_columns = [
@@ -68,8 +70,10 @@ else:
     test_data = load_and_preprocess_data(TEST_DIR)
 
     # 保存处理好的训练数据和测试数据
-    processed_train_file = 'CIC_IoMT/19classes/processed_train_data.csv'
-    processed_test_file = 'CIC_IoMT/19classes/processed_test_data.csv'
+    processed_train_file = 'CIC_IoMT/19classes/reduced_train_data.csv'
+    processed_test_file = 'CIC_IoMT/19classes/reduced_test_data.csv'
+    # processed_train_file = 'CIC_IoMT/19classes/processed_train_data.csv'
+    # processed_test_file = 'CIC_IoMT/19classes/processed_test_data.csv'
     training_data.to_csv(processed_train_file, index=False)
     test_data.to_csv(processed_test_file, index=False)
     print("Processed data saved.")
@@ -80,26 +84,30 @@ scaler.fit(training_data[X_columns])
 training_data[X_columns] = scaler.transform(training_data[X_columns])
 test_data[X_columns] = scaler.transform(test_data[X_columns])
 # After scaling your training data in the training script
-scaler_save_path = 'CIC_IoMT/19classes/scaler.joblib'
+scaler_save_path = 'CIC_IoMT/19classes/scaler_reduced.joblib'
+# scaler_save_path = 'CIC_IoMT/19classes/scaler.joblib'
 dump(scaler, scaler_save_path)
 print("Data scaled.")
 
 # Check if the model already exists
-model_save_path = 'CIC_IoMT/19classes/mlp_classifier_model.joblib'
+model_save_path = 'CIC_IoMT/19classes/reduced_mlp_classifier_model.joblib'
+# model_save_path = 'CIC_IoMT/19classes/mlp_classifier_model.joblib'
 if os.path.exists(model_save_path):
     print("Loading existing model...")
     model = load(model_save_path)
 else:
     print("Training model...")
     # Model training code
-    model = MLPClassifier(hidden_layer_sizes=(32, 32), max_iter=50, activation='relu', solver='adam', random_state=1, verbose=True)
-    model.fit(training_data[X_columns], training_data['label'])
+    model = MLPClassifier(hidden_layer_sizes=(16, 16, 8), max_iter=50, activation='relu', solver='adam', random_state=1, verbose=True)
+    model.fit(training_data[X_columns], training_data['label_L2'])
+    # model.fit(training_data[X_columns], training_data['label'])
     # Save the trained model
     dump(model, model_save_path)
     print("Model saved to", model_save_path)
 
 print("Making predictions...")
-y_test = test_data['label']
+y_test = test_data['label_L2']
+# y_test = test_data['label']
 y_pred = model.predict(test_data[X_columns])
 print("Predictions made.")
 

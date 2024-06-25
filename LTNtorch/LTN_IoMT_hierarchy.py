@@ -12,15 +12,15 @@ train_data = pd.read_csv(processed_train_file)
 test_data = pd.read_csv(processed_test_file)
 
 # 将标签映射到整数，适用于19个类别的场景
-train_label_L1, train_label_L2 = train_data.pop("label_L1"), train_data.pop("label_L2"),
+train_label_L1, train_label_L2 = train_data.pop("label_L1"), train_data.pop("label_L2")
 test_label_L1, test_label_L2 = test_data.pop("label_L1"), test_data.pop("label_L2")
 
 label_mapping = {"Benign": 0, "MQTT": 1, "Recon": 2, "ARP_Spoofing": 3, "TCP_IP-DDOS": 4, "TCP_IP-DOS": 5,
-                 "MQTT-DDoS-Connect_Flood": 11, "MQTT-DDoS-Publish_Flood": 12, "MQTT-DoS-Connect_Flood": 13,
-                 "MQTT-DoS-Publish_Flood": 14, "MQTT-Malformed_Data": 15,
-                 "Recon-Port_Scan": 21, "Recon-OS_Scan": 22, "Recon-VulScan": 23, "Recon-Ping_Sweep": 24,
-                 "TCP_IP-DDoS-TCP": 41, "TCP_IP-DDoS-ICMP": 42,  "TCP_IP-DDoS-SYN": 43, "TCP_IP-DDoS-UDP": 44,
-                 "TCP_IP-DoS-TCP": 51, "TCP_IP-DoS-ICMP": 52, "TCP_IP-DoS-SYN": 53, "TCP_IP-DoS-UDP": 54}
+                 "MQTT-DDoS-Connect_Flood": 6, "MQTT-DDoS-Publish_Flood": 7, "MQTT-DoS-Connect_Flood": 8,
+                 "MQTT-DoS-Publish_Flood": 9, "MQTT-Malformed_Data": 10,
+                 "Recon-Port_Scan": 11, "Recon-OS_Scan": 12, "Recon-VulScan": 13, "Recon-Ping_Sweep": 14,
+                 "TCP_IP-DDoS-TCP": 15, "TCP_IP-DDoS-ICMP": 16,  "TCP_IP-DDoS-SYN": 17, "TCP_IP-DDoS-UDP": 18,
+                 "TCP_IP-DoS-TCP": 19, "TCP_IP-DoS-ICMP": 20, "TCP_IP-DoS-SYN": 21, "TCP_IP-DoS-UDP": 22}
 train_label_L1, train_label_L2 = train_label_L1.map(label_mapping), train_label_L2.map(label_mapping)
 test_label_L1, test_label_L2 = test_label_L1.map(label_mapping), test_label_L2.map(label_mapping)
 
@@ -53,13 +53,29 @@ test_label_L2 = torch.tensor(test_label_L2.to_numpy()).long().to(device)
 #####################Setting#################################
 # we define the constants
 # 并移动到设备
-l_Benign = ltn.Constant(torch.tensor([1, 0, 0, 0, 0, 0, 0]))
-l_MQTT = ltn.Constant(torch.tensor([0, 1, 0, 0, 0, 0, 0]))
-l_DDoS_Connect_Flood = ltn.Constant(torch.tensor([0, 0, 1, 0, 0, 0, 0]))
-l_DDoS_Publish_Flood = ltn.Constant(torch.tensor([0, 0, 0, 1, 0, 0, 0]))
-l_DoS_Connect_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 1, 0, 0]))
-l_DoS_Publish_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 1, 0]))
-l_Malformed_Data = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 1]))
+l_Benign = ltn.Constant(torch.tensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_MQTT = ltn.Constant(torch.tensor([0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_Recon = ltn.Constant(torch.tensor([0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_ARP_Spoofing = ltn.Constant(torch.tensor([0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_TCP_IP_DDOS = ltn.Constant(torch.tensor([0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_TCP_IP_DOS = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_MQTT_DDoS_Connect_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_MQTT_DDoS_Publish_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_MQTT_DoS_Connect_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_MQTT_DoS_Publish_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_MQTT_Malformed_Data = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_Recon_Port_Scan = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_Recon_OS_Scan = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_Recon_VulScan = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_Recon_Ping_Sweep = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]))
+l_TCP_IP_DDoS_TCP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]))
+l_TCP_IP_DDoS_ICMP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]))
+l_TCP_IP_DDoS_SYN = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]))
+l_TCP_IP_DDoS_UDP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]))
+l_TCP_IP_DoS_TCP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0]))
+l_TCP_IP_DoS_ICMP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]))
+l_TCP_IP_DoS_SYN = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]))
+l_TCP_IP_DoS_UDP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]))
 
 
 # we define predicate P
@@ -71,7 +87,7 @@ class MLP(torch.nn.Module):
     to understand it.
     """
 
-    def __init__(self, layer_sizes=(45, 16, 16, 8, 7)):
+    def __init__(self, layer_sizes=(45, 16, 16, 8, 23)):
         super(MLP, self).__init__()
         self.elu = torch.nn.ELU()
         self.dropout = torch.nn.Dropout(0.2)
@@ -164,28 +180,38 @@ class DataLoader(object):
 # define metrics for evaluation of the model
 
 # it computes the overall satisfaction level on the knowledge base using the given data loader (train or test)
-
-# label_mapping = {"Benign": 0, "MQTT": 1, "DDoS-Connect_Flood": 2, "DDoS-Publish_Flood": 3,
-#                  "DoS-Connect_Flood": 4, "DoS-Publish_Flood": 5, "Malformed_Data": 6}
-# l_Benign = ltn.Constant(torch.tensor([1, 0, 0, 0, 0, 0, 0]))
-# l_MQTT = ltn.Constant(torch.tensor([0, 1, 0, 0, 0, 0, 0]))
-# l_DDoS_Connect_Flood = ltn.Constant(torch.tensor([0, 0, 1, 0, 0, 0, 0]))
-# l_DDoS_Publish_Flood = ltn.Constant(torch.tensor([0, 0, 0, 1, 0, 0, 0]))
-# l_DoS_Connect_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 1, 0, 0]))
-# l_DoS_Publish_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 1, 0]))
-# l_Malformed_Data = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 1]))
-
 def compute_sat_level(loader):
     mean_sat = 0
     for data, label_L1, label_L2 in loader:
         x = ltn.Variable("x", data)
+        # 根据label_mapping创建变量
         x_Benign = ltn.Variable("x_Benign", data[label_L1 == 0])
         x_MQTT = ltn.Variable("x_MQTT", data[label_L1 == 1])
-        x_DDoS_Connect_Flood = ltn.Variable("x_DDoS_Connect_Flood", data[label_L2 == 2])
-        x_DDoS_Publish_Flood = ltn.Variable("x_DDoS-Publish_Flood", data[label_L2 == 3])
-        x_DoS_Connect_Flood = ltn.Variable("x_DoS_Connect_Flood", data[label_L2 == 4])
-        x_DoS_Publish_Flood = ltn.Variable("x_DoS_Publish_Flood", data[label_L2 == 5])
-        x_Malformed_Data = ltn.Variable("x_Malformed_Data", data[label_L2 == 6])
+        x_Recon = ltn.Variable("x_Recon", data[label_L1 == 2])
+        x_ARP_Spoofing = ltn.Variable("x_ARP_Spoofing", data[label_L1 == 3])
+        x_TCP_IP_DDOS = ltn.Variable("x_TCP_IP_DDOS", data[label_L1 == 4])
+        x_TCP_IP_DOS = ltn.Variable("x_TCP_IP_DOS", data[label_L1 == 5])
+
+        x_MQTT_DDoS_Connect_Flood = ltn.Variable("x_MQTT_DDoS_Connect_Flood", data[label_L2 == 6])
+        x_MQTT_DDoS_Publish_Flood = ltn.Variable("x_MQTT_DDoS_Publish_Flood", data[label_L2 == 7])
+        x_MQTT_DoS_Connect_Flood = ltn.Variable("x_MQTT_DoS_Connect_Flood", data[label_L2 == 8])
+        x_MQTT_DoS_Publish_Flood = ltn.Variable("x_MQTT_DoS_Publish_Flood", data[label_L2 == 9])
+        x_MQTT_Malformed_Data = ltn.Variable("x_MQTT_Malformed_Data", data[label_L2 == 10])
+
+        x_Recon_Port_Scan = ltn.Variable("x_Recon_Port_Scan", data[label_L2 == 11])
+        x_Recon_OS_Scan = ltn.Variable("x_Recon_OS_Scan", data[label_L2 == 12])
+        x_Recon_VulScan = ltn.Variable("x_Recon_VulScan", data[label_L2 == 13])
+        x_Recon_Ping_Sweep = ltn.Variable("x_Recon_Ping_Sweep", data[label_L2 == 14])
+
+        x_TCP_IP_DDoS_TCP = ltn.Variable("x_TCP_IP_DDoS_TCP", data[label_L2 == 15])
+        x_TCP_IP_DDoS_ICMP = ltn.Variable("x_TCP_IP_DDoS_ICMP", data[label_L2 == 16])
+        x_TCP_IP_DDoS_SYN = ltn.Variable("x_TCP_IP_DDoS_SYN", data[label_L2 == 17])
+        x_TCP_IP_DDoS_UDP = ltn.Variable("x_TCP_IP_DDoS_UDP", data[label_L2 == 18])
+
+        x_TCP_IP_DoS_TCP = ltn.Variable("x_TCP_IP_DoS_TCP", data[label_L2 == 19])
+        x_TCP_IP_DoS_ICMP = ltn.Variable("x_TCP_IP_DoS_ICMP", data[label_L2 == 20])
+        x_TCP_IP_DoS_SYN = ltn.Variable("x_TCP_IP_DoS_SYN", data[label_L2 == 21])
+        x_TCP_IP_DoS_UDP = ltn.Variable("x_TCP_IP_DoS_UDP", data[label_L2 == 22])
 
         # 创建有效的forall表达式列表
         valid_forall_expressions = []
@@ -193,44 +219,78 @@ def compute_sat_level(loader):
             valid_forall_expressions.append(Forall(x_Benign, P(x_Benign, l_Benign)))
         if x_MQTT.value.size(0) != 0:
             valid_forall_expressions.append(Forall(x_MQTT, P(x_MQTT, l_MQTT)))
-        if x_DDoS_Connect_Flood.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_DDoS_Connect_Flood, P(x_DDoS_Connect_Flood, l_DDoS_Connect_Flood)))
-        if x_DDoS_Publish_Flood.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_DDoS_Publish_Flood, P(x_DDoS_Publish_Flood, l_DDoS_Publish_Flood)))
-        if x_DoS_Connect_Flood.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_DoS_Connect_Flood, P(x_DoS_Connect_Flood, l_DoS_Connect_Flood)))
-        if x_DoS_Publish_Flood.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_DoS_Publish_Flood, P(x_DoS_Publish_Flood, l_DoS_Publish_Flood)))
-        if x_Malformed_Data.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Malformed_Data, P(x_Malformed_Data, l_Malformed_Data)))
-        # 添加Benign和MQTT的非逻辑关系
-        valid_forall_expressions.append(Forall(x, Not(And(P(x, l_Benign), P(x, l_MQTT)))))
-        # 添加label_L2中各标签互斥的语句
+        if x_Recon.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_Recon, P(x_Recon, l_Recon)))
+        if x_ARP_Spoofing.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_ARP_Spoofing, P(x_ARP_Spoofing, l_ARP_Spoofing)))
+        if x_TCP_IP_DDOS.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDOS, P(x_TCP_IP_DDOS, l_TCP_IP_DDOS)))
+        if x_TCP_IP_DOS.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DOS, P(x_TCP_IP_DOS, l_TCP_IP_DOS)))
+
+        if x_MQTT_DDoS_Connect_Flood.value.size(0) != 0:
+            valid_forall_expressions.append(
+                Forall(x_MQTT_DDoS_Connect_Flood, P(x_MQTT_DDoS_Connect_Flood, l_MQTT_DDoS_Connect_Flood)))
+        if x_MQTT_DDoS_Publish_Flood.value.size(0) != 0:
+            valid_forall_expressions.append(
+                Forall(x_MQTT_DDoS_Publish_Flood, P(x_MQTT_DDoS_Publish_Flood, l_MQTT_DDoS_Publish_Flood)))
+        if x_MQTT_DoS_Connect_Flood.value.size(0) != 0:
+            valid_forall_expressions.append(
+                Forall(x_MQTT_DoS_Connect_Flood, P(x_MQTT_DoS_Connect_Flood, l_MQTT_DoS_Connect_Flood)))
+        if x_MQTT_DoS_Publish_Flood.value.size(0) != 0:
+            valid_forall_expressions.append(
+                Forall(x_MQTT_DoS_Publish_Flood, P(x_MQTT_DoS_Publish_Flood, l_MQTT_DoS_Publish_Flood)))
+        if x_MQTT_Malformed_Data.value.size(0) != 0:
+            valid_forall_expressions.append(
+                Forall(x_MQTT_Malformed_Data, P(x_MQTT_Malformed_Data, l_MQTT_Malformed_Data)))
+
+        if x_Recon_Port_Scan.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_Recon_Port_Scan, P(x_Recon_Port_Scan, l_Recon_Port_Scan)))
+        if x_Recon_OS_Scan.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_Recon_OS_Scan, P(x_Recon_OS_Scan, l_Recon_OS_Scan)))
+        if x_Recon_VulScan.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_Recon_VulScan, P(x_Recon_VulScan, l_Recon_VulScan)))
+        if x_Recon_Ping_Sweep.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_Recon_Ping_Sweep, P(x_Recon_Ping_Sweep, l_Recon_Ping_Sweep)))
+
+        if x_TCP_IP_DDoS_TCP.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_TCP, P(x_TCP_IP_DDoS_TCP, l_TCP_IP_DDoS_TCP)))
+        if x_TCP_IP_DDoS_ICMP.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_ICMP, P(x_TCP_IP_DDoS_ICMP, l_TCP_IP_DDoS_ICMP)))
+        if x_TCP_IP_DDoS_SYN.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_SYN, P(x_TCP_IP_DDoS_SYN, l_TCP_IP_DDoS_SYN)))
+        if x_TCP_IP_DDoS_UDP.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_UDP, P(x_TCP_IP_DDoS_UDP, l_TCP_IP_DDoS_UDP)))
+
+        if x_TCP_IP_DoS_TCP.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_TCP, P(x_TCP_IP_DoS_TCP, l_TCP_IP_DoS_TCP)))
+        if x_TCP_IP_DoS_ICMP.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_ICMP, P(x_TCP_IP_DoS_ICMP, l_TCP_IP_DoS_ICMP)))
+        if x_TCP_IP_DoS_SYN.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_SYN, P(x_TCP_IP_DoS_SYN, l_TCP_IP_DoS_SYN)))
+        if x_TCP_IP_DoS_UDP.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_UDP, P(x_TCP_IP_DoS_UDP, l_TCP_IP_DoS_UDP)))
+
+        # 添加label_L1中各标签互斥的语句
         mutual_exclusive_constraints = [
-            Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_DDoS_Publish_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_DoS_Connect_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_DoS_Publish_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_Malformed_Data)))),
-            Forall(x, Not(And(P(x, l_DDoS_Publish_Flood), P(x, l_DoS_Connect_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Publish_Flood), P(x, l_DoS_Publish_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Publish_Flood), P(x, l_Malformed_Data)))),
-            Forall(x, Not(And(P(x, l_DoS_Connect_Flood), P(x, l_DoS_Publish_Flood)))),
-            Forall(x, Not(And(P(x, l_DoS_Connect_Flood), P(x, l_Malformed_Data)))),
-            Forall(x, Not(And(P(x, l_DoS_Publish_Flood), P(x, l_Malformed_Data))))
+            Forall(x, Not(And(P(x, l_Benign), P(x, l_MQTT), P(x, l_Recon), P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DDOS), P(x, l_TCP_IP_DOS)))),
+            # Forall(x, Not(And(P(x, l_Benign), P(x, l_Recon)))),
+            # Forall(x, Not(And(P(x, l_Benign), P(x, l_ARP_Spoofing)))),
+            # Forall(x, Not(And(P(x, l_Benign), P(x, l_TCP_IP_DDOS)))),
+            # Forall(x, Not(And(P(x, l_Benign), P(x, l_TCP_IP_DOS)))),
+            # Forall(x, Not(And(P(x, l_MQTT), P(x, l_Recon)))),
+            # Forall(x, Not(And(P(x, l_MQTT), P(x, l_ARP_Spoofing)))),
+            # Forall(x, Not(And(P(x, l_MQTT), P(x, l_TCP_IP_DDOS)))),
+            # Forall(x, Not(And(P(x, l_MQTT), P(x, l_TCP_IP_DOS)))),
+            # Forall(x, Not(And(P(x, l_Recon), P(x, l_ARP_Spoofing)))),
+            # Forall(x, Not(And(P(x, l_Recon), P(x, l_TCP_IP_DDOS)))),
+            # Forall(x, Not(And(P(x, l_Recon), P(x, l_TCP_IP_DOS)))),
+            # Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DDOS)))),
+            # Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DOS)))),
+            # Forall(x, Not(And(P(x, l_TCP_IP_DDOS), P(x, l_TCP_IP_DOS)))),
         ]
         valid_forall_expressions.extend(mutual_exclusive_constraints)
 
-        # mean_sat += SatAgg(
-        #     Forall(x_Benign, P(x_Benign, l_Benign)),
-        #     Forall(x_MQTT, P(x_MQTT, l_MQTT)),
-        #     Forall(x_DDoS_Connect_Flood, P(x_DDoS_Connect_Flood, l_DDoS_Connect_Flood)),
-        #     Forall(x_DDoS_Publish_Flood, P(x_DDoS_Publish_Flood, l_DDoS_Publish_Flood)),
-        #     Forall(x_DoS_Connect_Flood, P(x_DoS_Connect_Flood, l_DoS_Connect_Flood)),
-        #     Forall(x_DoS_Publish_Flood, P(x_DoS_Publish_Flood, l_DoS_Publish_Flood)),
-        #     Forall(x_Malformed_Data, P(x_Malformed_Data, l_Malformed_Data)),
-        #     Forall(x, Not(And(P(x, l_Benign), P(x, l_MQTT))))
-        #     #################此处仍需加一个多重互斥的语句，label_L2中各标签是互斥的###################
-        # )
         mean_sat += SatAgg(*valid_forall_expressions)
     mean_sat /= len(loader)
     return mean_sat
@@ -245,15 +305,37 @@ def compute_accuracy(loader, threshold=0.5):
         predictions = mlp(data).detach().numpy()
         label_Benign = (label_L1 == 0)
         label_MQTT = (label_L1 == 1)
-        label_DDoS_Connect_Flood = (label_L2 == 2)
-        label_DDoS_Publish_Flood = (label_L2 == 3)
-        label_DoS_Connect_Flood = (label_L2 == 4)
-        label_DoS_Publish_Flood = (label_L2 == 5)
-        label_Malformed_Data = (label_L2 == 6)
+        label_Recon = (label_L1 == 2)
+        label_ARP_Spoofing = (label_L1 == 3)
+        label_TCP_IP_DDOS = (label_L1 == 4)
+        label_TCP_IP_DOS = (label_L1 == 5)
+        label_MQTT_DDoS_Connect_Flood = (label_L2 == 6)
+        label_MQTT_DDoS_Publish_Flood = (label_L2 == 7)
+        label_MQTT_DoS_Connect_Flood = (label_L2 == 8)
+        label_MQTT_DoS_Publish_Flood = (label_L2 == 9)
+        label_MQTT_Malformed_Data = (label_L2 == 10)
+        label_Recon_Port_Scan = (label_L2 == 11)
+        label_Recon_OS_Scan = (label_L2 == 12)
+        label_Recon_VulScan = (label_L2 == 13)
+        label_Recon_Ping_Sweep = (label_L2 == 14)
+        label_TCP_IP_DDoS_TCP = (label_L2 == 15)
+        label_TCP_IP_DDoS_ICMP = (label_L2 == 16)
+        label_TCP_IP_DDoS_SYN = (label_L2 == 17)
+        label_TCP_IP_DDoS_UDP = (label_L2 == 18)
+        label_TCP_IP_DoS_TCP = (label_L2 == 19)
+        label_TCP_IP_DoS_ICMP = (label_L2 == 20)
+        label_TCP_IP_DoS_SYN = (label_L2 == 21)
+        label_TCP_IP_DoS_UDP = (label_L2 == 22)
+
         onehot = (np.stack(
-            [label_Benign, label_MQTT, label_DDoS_Connect_Flood,
-             label_DDoS_Publish_Flood, label_DoS_Connect_Flood,
-             label_DoS_Publish_Flood, label_Malformed_Data], axis=-1).astype(np.int32))
+            [label_Benign, label_MQTT, label_Recon, label_ARP_Spoofing, label_TCP_IP_DDOS, label_TCP_IP_DOS,
+             label_MQTT_DDoS_Connect_Flood, label_MQTT_DDoS_Publish_Flood, label_MQTT_DoS_Connect_Flood,
+             label_MQTT_DoS_Publish_Flood, label_MQTT_Malformed_Data,
+             label_Recon_Port_Scan, label_Recon_OS_Scan, label_Recon_VulScan, label_Recon_Ping_Sweep,
+             label_TCP_IP_DDoS_TCP, label_TCP_IP_DDoS_ICMP, label_TCP_IP_DDoS_SYN, label_TCP_IP_DDoS_UDP,
+             label_TCP_IP_DoS_TCP, label_TCP_IP_DoS_ICMP, label_TCP_IP_DoS_SYN, label_TCP_IP_DoS_UDP], axis=-1).astype(
+            np.int32))
+
         predictions = predictions > threshold
         predictions = predictions.astype(np.int32)
         nonzero = np.count_nonzero(onehot - predictions, axis=-1).astype(np.float32)
@@ -276,49 +358,115 @@ print("Create train and test loader done.")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
 print("Start training...")
 
-for epoch in range(50):
+for epoch in range(1):
     train_loss = 0.0
     for batch_idx, (data, label_L1, label_L2) in enumerate(train_loader):
         optimizer.zero_grad()
         # we ground the variables with current batch data
         x = ltn.Variable("x", data)
+
         x_Benign = ltn.Variable("x_Benign", data[label_L1 == 0])
         x_MQTT = ltn.Variable("x_MQTT", data[label_L1 == 1])
-        x_DDoS_Connect_Flood = ltn.Variable("x_DDoS_Connect_Flood", data[label_L2 == 2])
-        x_DDoS_Publish_Flood = ltn.Variable("x_DDoS-Publish_Flood", data[label_L2 == 3])
-        x_DoS_Connect_Flood = ltn.Variable("x_DoS_Connect_Flood", data[label_L2 == 4])
-        x_DoS_Publish_Flood = ltn.Variable("x_DoS_Publish_Flood", data[label_L2 == 5])
-        x_Malformed_Data = ltn.Variable("x_Malformed_Data", data[label_L2 == 6])
+        x_Recon = ltn.Variable("x_Recon", data[label_L1 == 2])
+        x_ARP_Spoofing = ltn.Variable("x_ARP_Spoofing", data[label_L1 == 3])
+        x_TCP_IP_DDOS = ltn.Variable("x_TCP_IP_DDOS", data[label_L1 == 4])
+        x_TCP_IP_DOS = ltn.Variable("x_TCP_IP_DOS", data[label_L1 == 5])
+
+        x_MQTT_DDoS_Connect_Flood = ltn.Variable("x_MQTT_DDoS_Connect_Flood", data[label_L2 == 6])
+        x_MQTT_DDoS_Publish_Flood = ltn.Variable("x_MQTT_DDoS_Publish_Flood", data[label_L2 == 7])
+        x_MQTT_DoS_Connect_Flood = ltn.Variable("x_MQTT_DoS_Connect_Flood", data[label_L2 == 8])
+        x_MQTT_DoS_Publish_Flood = ltn.Variable("x_MQTT_DoS_Publish_Flood", data[label_L2 == 9])
+        x_MQTT_Malformed_Data = ltn.Variable("x_MQTT_Malformed_Data", data[label_L2 == 10])
+
+        x_Recon_Port_Scan = ltn.Variable("x_Recon_Port_Scan", data[label_L2 == 11])
+        x_Recon_OS_Scan = ltn.Variable("x_Recon_OS_Scan", data[label_L2 == 12])
+        x_Recon_VulScan = ltn.Variable("x_Recon_VulScan", data[label_L2 == 13])
+        x_Recon_Ping_Sweep = ltn.Variable("x_Recon_Ping_Sweep", data[label_L2 == 14])
+
+        x_TCP_IP_DDoS_TCP = ltn.Variable("x_TCP_IP_DDoS_TCP", data[label_L2 == 15])
+        x_TCP_IP_DDoS_ICMP = ltn.Variable("x_TCP_IP_DDoS_ICMP", data[label_L2 == 16])
+        x_TCP_IP_DDoS_SYN = ltn.Variable("x_TCP_IP_DDoS_SYN", data[label_L2 == 17])
+        x_TCP_IP_DDoS_UDP = ltn.Variable("x_TCP_IP_DDoS_UDP", data[label_L2 == 18])
+
+        x_TCP_IP_DoS_TCP = ltn.Variable("x_TCP_IP_DoS_TCP", data[label_L2 == 19])
+        x_TCP_IP_DoS_ICMP = ltn.Variable("x_TCP_IP_DoS_ICMP", data[label_L2 == 20])
+        x_TCP_IP_DoS_SYN = ltn.Variable("x_TCP_IP_DoS_SYN", data[label_L2 == 21])
+        x_TCP_IP_DoS_UDP = ltn.Variable("x_TCP_IP_DoS_UDP", data[label_L2 == 22])
         ##############################################################################
         valid_forall_expressions = []
         if x_Benign.value.size(0) != 0:
             valid_forall_expressions.append(Forall(x_Benign, P(x_Benign, l_Benign)))
         if x_MQTT.value.size(0) != 0:
             valid_forall_expressions.append(Forall(x_MQTT, P(x_MQTT, l_MQTT)))
-        if x_DDoS_Connect_Flood.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_DDoS_Connect_Flood, P(x_DDoS_Connect_Flood, l_DDoS_Connect_Flood)))
-        if x_DDoS_Publish_Flood.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_DDoS_Publish_Flood, P(x_DDoS_Publish_Flood, l_DDoS_Publish_Flood)))
-        if x_DoS_Connect_Flood.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_DoS_Connect_Flood, P(x_DoS_Connect_Flood, l_DoS_Connect_Flood)))
-        if x_DoS_Publish_Flood.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_DoS_Publish_Flood, P(x_DoS_Publish_Flood, l_DoS_Publish_Flood)))
-        if x_Malformed_Data.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Malformed_Data, P(x_Malformed_Data, l_Malformed_Data)))
-        # 添加Benign和MQTT的非逻辑关系
-        valid_forall_expressions.append(Forall(x, Not(And(P(x, l_Benign), P(x, l_MQTT)))))
-        # 添加label_L2中各标签互斥的语句
+        if x_Recon.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_Recon, P(x_Recon, l_Recon)))
+        if x_ARP_Spoofing.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_ARP_Spoofing, P(x_ARP_Spoofing, l_ARP_Spoofing)))
+        if x_TCP_IP_DDOS.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDOS, P(x_TCP_IP_DDOS, l_TCP_IP_DDOS)))
+        if x_TCP_IP_DOS.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DOS, P(x_TCP_IP_DOS, l_TCP_IP_DOS)))
+
+        if x_MQTT_DDoS_Connect_Flood.value.size(0) != 0:
+            valid_forall_expressions.append(
+                Forall(x_MQTT_DDoS_Connect_Flood, P(x_MQTT_DDoS_Connect_Flood, l_MQTT_DDoS_Connect_Flood)))
+        if x_MQTT_DDoS_Publish_Flood.value.size(0) != 0:
+            valid_forall_expressions.append(
+                Forall(x_MQTT_DDoS_Publish_Flood, P(x_MQTT_DDoS_Publish_Flood, l_MQTT_DDoS_Publish_Flood)))
+        if x_MQTT_DoS_Connect_Flood.value.size(0) != 0:
+            valid_forall_expressions.append(
+                Forall(x_MQTT_DoS_Connect_Flood, P(x_MQTT_DoS_Connect_Flood, l_MQTT_DoS_Connect_Flood)))
+        if x_MQTT_DoS_Publish_Flood.value.size(0) != 0:
+            valid_forall_expressions.append(
+                Forall(x_MQTT_DoS_Publish_Flood, P(x_MQTT_DoS_Publish_Flood, l_MQTT_DoS_Publish_Flood)))
+        if x_MQTT_Malformed_Data.value.size(0) != 0:
+            valid_forall_expressions.append(
+                Forall(x_MQTT_Malformed_Data, P(x_MQTT_Malformed_Data, l_MQTT_Malformed_Data)))
+
+        if x_Recon_Port_Scan.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_Recon_Port_Scan, P(x_Recon_Port_Scan, l_Recon_Port_Scan)))
+        if x_Recon_OS_Scan.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_Recon_OS_Scan, P(x_Recon_OS_Scan, l_Recon_OS_Scan)))
+        if x_Recon_VulScan.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_Recon_VulScan, P(x_Recon_VulScan, l_Recon_VulScan)))
+        if x_Recon_Ping_Sweep.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_Recon_Ping_Sweep, P(x_Recon_Ping_Sweep, l_Recon_Ping_Sweep)))
+
+        if x_TCP_IP_DDoS_TCP.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_TCP, P(x_TCP_IP_DDoS_TCP, l_TCP_IP_DDoS_TCP)))
+        if x_TCP_IP_DDoS_ICMP.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_ICMP, P(x_TCP_IP_DDoS_ICMP, l_TCP_IP_DDoS_ICMP)))
+        if x_TCP_IP_DDoS_SYN.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_SYN, P(x_TCP_IP_DDoS_SYN, l_TCP_IP_DDoS_SYN)))
+        if x_TCP_IP_DDoS_UDP.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_UDP, P(x_TCP_IP_DDoS_UDP, l_TCP_IP_DDoS_UDP)))
+
+        if x_TCP_IP_DoS_TCP.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_TCP, P(x_TCP_IP_DoS_TCP, l_TCP_IP_DoS_TCP)))
+        if x_TCP_IP_DoS_ICMP.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_ICMP, P(x_TCP_IP_DoS_ICMP, l_TCP_IP_DoS_ICMP)))
+        if x_TCP_IP_DoS_SYN.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_SYN, P(x_TCP_IP_DoS_SYN, l_TCP_IP_DoS_SYN)))
+        if x_TCP_IP_DoS_UDP.value.size(0) != 0:
+            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_UDP, P(x_TCP_IP_DoS_UDP, l_TCP_IP_DoS_UDP)))
+
+        # 添加label_L1中各标签互斥的语句
         mutual_exclusive_constraints = [
-            Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_DDoS_Publish_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_DoS_Connect_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_DoS_Publish_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_Malformed_Data)))),
-            Forall(x, Not(And(P(x, l_DDoS_Publish_Flood), P(x, l_DoS_Connect_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Publish_Flood), P(x, l_DoS_Publish_Flood)))),
-            Forall(x, Not(And(P(x, l_DDoS_Publish_Flood), P(x, l_Malformed_Data)))),
-            Forall(x, Not(And(P(x, l_DoS_Connect_Flood), P(x, l_DoS_Publish_Flood)))),
-            Forall(x, Not(And(P(x, l_DoS_Connect_Flood), P(x, l_Malformed_Data)))),
-            Forall(x, Not(And(P(x, l_DoS_Publish_Flood), P(x, l_Malformed_Data))))
+            Forall(x, Not(And(P(x, l_Benign), P(x, l_MQTT)))),
+            Forall(x, Not(And(P(x, l_Benign), P(x, l_Recon)))),
+            Forall(x, Not(And(P(x, l_Benign), P(x, l_ARP_Spoofing)))),
+            Forall(x, Not(And(P(x, l_Benign), P(x, l_TCP_IP_DDOS)))),
+            Forall(x, Not(And(P(x, l_Benign), P(x, l_TCP_IP_DOS)))),
+            Forall(x, Not(And(P(x, l_MQTT), P(x, l_Recon)))),
+            Forall(x, Not(And(P(x, l_MQTT), P(x, l_ARP_Spoofing)))),
+            Forall(x, Not(And(P(x, l_MQTT), P(x, l_TCP_IP_DDOS)))),
+            Forall(x, Not(And(P(x, l_MQTT), P(x, l_TCP_IP_DOS)))),
+            Forall(x, Not(And(P(x, l_Recon), P(x, l_ARP_Spoofing)))),
+            Forall(x, Not(And(P(x, l_Recon), P(x, l_TCP_IP_DDOS)))),
+            Forall(x, Not(And(P(x, l_Recon), P(x, l_TCP_IP_DOS)))),
+            Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DDOS)))),
+            Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DOS)))),
+            Forall(x, Not(And(P(x, l_TCP_IP_DDOS), P(x, l_TCP_IP_DOS)))),
         ]
         valid_forall_expressions.extend(mutual_exclusive_constraints)
 

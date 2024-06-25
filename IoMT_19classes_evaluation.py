@@ -17,17 +17,25 @@ X_columns = [
 ]
 
 # Load the saved model and scaler
-model_path = 'CIC_IoMT/19classes/mlp_classifier_model.joblib'
-scaler_path = 'CIC_IoMT/19classes/scaler.joblib'
+########################################################################
+model_path = 'CIC_IoMT/19classes/reduced_mlp_classifier_model.joblib'
+scaler_path = 'CIC_IoMT/19classes/scaler_reduced.joblib'
+# model_path = 'CIC_IoMT/19classes/mlp_classifier_model.joblib'
+# scaler_path = 'CIC_IoMT/19classes/scaler.joblib'
+########################################################################
 model = load(model_path)
 scaler = load(scaler_path)
 print("Model and scaler loaded.")
 
 # Load the processed test data
-test_data_path = 'CIC_IoMT/19classes/processed_test_data.csv'
+########################################################################
+test_data_path = 'CIC_IoMT/19classes/reduced_test_data.csv'
+# test_data_path = 'CIC_IoMT/19classes/processed_test_data.csv'
+########################################################################
 test_data = pd.read_csv(test_data_path)
 X_test = test_data[X_columns]
-y_test = test_data['label']
+y_test = test_data['label_L2']
+# y_test = test_data['label']
 
 # dynamically creating a class_labels_dict from y_test
 unique_labels = np.unique(y_test)
@@ -35,7 +43,6 @@ class_labels_dict = {label: label for label in unique_labels}
 
 # Apply the scaler to the test data
 X_test_scaled = scaler.transform(X_test)
-# X_test_scaled = scaler.transform(X_test)
 print("Test data scaled.")
 
 # Make predictions using the scaled test data

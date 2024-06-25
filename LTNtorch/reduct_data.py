@@ -237,10 +237,6 @@ def reduce_data(train_file, test_file, selected_labels, max_samples=20000):
 
 
 def extend_labels(train_data, test_data, label_L1_mapping):
-    # 添加新的标签列
-    train_data['label_L2'] = train_data['label']
-    test_data['label_L2'] = test_data['label']
-
     # 映射新的label_L1
     def map_label_L1(label):
         for l1 in label_L1_mapping:
@@ -250,6 +246,10 @@ def extend_labels(train_data, test_data, label_L1_mapping):
 
     train_data['label_L1'] = train_data['label'].apply(map_label_L1)
     test_data['label_L1'] = test_data['label'].apply(map_label_L1)
+
+    # 修改 'label' 列名为 'label_L2'
+    train_data.rename(columns={'label': 'label_L2'}, inplace=True)
+    test_data.rename(columns={'label': 'label_L2'}, inplace=True)
 
     # 生成新的文件名
     extended_train_file = '../CIC_IoMT/19classes/reduced_train_data.csv'
