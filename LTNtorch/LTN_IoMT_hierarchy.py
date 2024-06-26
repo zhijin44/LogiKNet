@@ -261,66 +261,63 @@ def compute_sat_level(loader):
 
         if x_MQTT_DDoS_Connect_Flood.value.size(0) != 0:
             valid_forall_expressions.append(
-                Forall(x_MQTT_DDoS_Connect_Flood, P(x_MQTT_DDoS_Connect_Flood, l_MQTT_DDoS_Connect_Flood)))
+                Forall(x_MQTT_DDoS_Connect_Flood, And(P(x_MQTT_DDoS_Connect_Flood, l_MQTT_DDoS_Connect_Flood),
+                                                      P(x_MQTT_DDoS_Connect_Flood, l_MQTT))))
         if x_MQTT_DDoS_Publish_Flood.value.size(0) != 0:
             valid_forall_expressions.append(
-                Forall(x_MQTT_DDoS_Publish_Flood, P(x_MQTT_DDoS_Publish_Flood, l_MQTT_DDoS_Publish_Flood)))
+                Forall(x_MQTT_DDoS_Publish_Flood, And(P(x_MQTT_DDoS_Publish_Flood, l_MQTT_DDoS_Publish_Flood),
+                                                      P(x_MQTT_DDoS_Publish_Flood, l_MQTT))))
         if x_MQTT_DoS_Connect_Flood.value.size(0) != 0:
             valid_forall_expressions.append(
-                Forall(x_MQTT_DoS_Connect_Flood, P(x_MQTT_DoS_Connect_Flood, l_MQTT_DoS_Connect_Flood)))
+                Forall(x_MQTT_DoS_Connect_Flood, And(P(x_MQTT_DoS_Connect_Flood, l_MQTT_DoS_Connect_Flood),
+                                                     P(x_MQTT_DoS_Connect_Flood, l_MQTT))))
         if x_MQTT_DoS_Publish_Flood.value.size(0) != 0:
             valid_forall_expressions.append(
-                Forall(x_MQTT_DoS_Publish_Flood, P(x_MQTT_DoS_Publish_Flood, l_MQTT_DoS_Publish_Flood)))
+                Forall(x_MQTT_DoS_Publish_Flood, And(P(x_MQTT_DoS_Publish_Flood, l_MQTT_DoS_Publish_Flood),
+                                                     P(x_MQTT_DoS_Publish_Flood, l_MQTT))))
         if x_MQTT_Malformed_Data.value.size(0) != 0:
             valid_forall_expressions.append(
-                Forall(x_MQTT_Malformed_Data, P(x_MQTT_Malformed_Data, l_MQTT_Malformed_Data)))
+                Forall(x_MQTT_Malformed_Data, And(P(x_MQTT_Malformed_Data, l_MQTT_Malformed_Data),
+                                                  P(x_MQTT_Malformed_Data, l_MQTT))))
 
         if x_Recon_Port_Scan.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Recon_Port_Scan, P(x_Recon_Port_Scan, l_Recon_Port_Scan)))
+            valid_forall_expressions.append(Forall(x_Recon_Port_Scan, And(P(x_Recon_Port_Scan, l_Recon_Port_Scan),
+                                                                          P(x_Recon_Port_Scan, l_Recon))))
         if x_Recon_OS_Scan.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Recon_OS_Scan, P(x_Recon_OS_Scan, l_Recon_OS_Scan)))
+            valid_forall_expressions.append(Forall(x_Recon_OS_Scan, And(P(x_Recon_OS_Scan, l_Recon_OS_Scan),
+                                                                        P(x_Recon_OS_Scan, l_Recon))))
         if x_Recon_VulScan.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Recon_VulScan, P(x_Recon_VulScan, l_Recon_VulScan)))
+            valid_forall_expressions.append(Forall(x_Recon_VulScan, And(P(x_Recon_VulScan, l_Recon_VulScan),
+                                                                        P(x_Recon_VulScan, l_Recon))))
         if x_Recon_Ping_Sweep.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Recon_Ping_Sweep, P(x_Recon_Ping_Sweep, l_Recon_Ping_Sweep)))
+            valid_forall_expressions.append(Forall(x_Recon_Ping_Sweep, And(P(x_Recon_Ping_Sweep, l_Recon_Ping_Sweep),
+                                                                           P(x_Recon_Ping_Sweep, l_Recon))))
 
         if x_TCP_IP_DDoS_TCP.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_TCP, P(x_TCP_IP_DDoS_TCP, l_TCP_IP_DDoS_TCP)))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_TCP, And(P(x_TCP_IP_DDoS_TCP, l_TCP_IP_DDoS_TCP),
+                                                                          P(x_TCP_IP_DDoS_TCP, l_TCP_IP_DDOS))))
         if x_TCP_IP_DDoS_ICMP.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_ICMP, P(x_TCP_IP_DDoS_ICMP, l_TCP_IP_DDoS_ICMP)))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_ICMP, And(P(x_TCP_IP_DDoS_ICMP, l_TCP_IP_DDoS_ICMP),
+                                                                           P(x_TCP_IP_DDoS_ICMP, l_TCP_IP_DDOS))))
         if x_TCP_IP_DDoS_SYN.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_SYN, P(x_TCP_IP_DDoS_SYN, l_TCP_IP_DDoS_SYN)))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_SYN, And(P(x_TCP_IP_DDoS_SYN, l_TCP_IP_DDoS_SYN),
+                                                                          P(x_TCP_IP_DDoS_SYN, l_TCP_IP_DDOS))))
         if x_TCP_IP_DDoS_UDP.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_UDP, P(x_TCP_IP_DDoS_UDP, l_TCP_IP_DDoS_UDP)))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_UDP, And(P(x_TCP_IP_DDoS_UDP, l_TCP_IP_DDoS_UDP),
+                                                                          P(x_TCP_IP_DDoS_UDP, l_TCP_IP_DDOS))))
 
         if x_TCP_IP_DoS_TCP.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_TCP, P(x_TCP_IP_DoS_TCP, l_TCP_IP_DoS_TCP)))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_TCP, And(P(x_TCP_IP_DoS_TCP, l_TCP_IP_DoS_TCP),
+                                                                         P(x_TCP_IP_DoS_TCP, l_TCP_IP_DOS))))
         if x_TCP_IP_DoS_ICMP.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_ICMP, P(x_TCP_IP_DoS_ICMP, l_TCP_IP_DoS_ICMP)))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_ICMP, And(P(x_TCP_IP_DoS_ICMP, l_TCP_IP_DoS_ICMP),
+                                                                          P(x_TCP_IP_DoS_ICMP, l_TCP_IP_DOS))))
         if x_TCP_IP_DoS_SYN.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_SYN, P(x_TCP_IP_DoS_SYN, l_TCP_IP_DoS_SYN)))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_SYN, And(P(x_TCP_IP_DoS_SYN, l_TCP_IP_DoS_SYN),
+                                                                         P(x_TCP_IP_DoS_SYN, l_TCP_IP_DOS))))
         if x_TCP_IP_DoS_UDP.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_UDP, P(x_TCP_IP_DoS_UDP, l_TCP_IP_DoS_UDP)))
-
-        # 添加label_L1中各标签互斥的语句
-        mutual_exclusive_constraints = [
-            Forall(x, Not(Or(P(x, l_Benign), P(x, l_MQTT), P(x, l_Recon), P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DDOS), P(x, l_TCP_IP_DOS)))),
-            # Forall(x, Not(And(P(x, l_Benign), P(x, l_Recon)))),
-            # Forall(x, Not(And(P(x, l_Benign), P(x, l_ARP_Spoofing)))),
-            # Forall(x, Not(And(P(x, l_Benign), P(x, l_TCP_IP_DDOS)))),
-            # Forall(x, Not(And(P(x, l_Benign), P(x, l_TCP_IP_DOS)))),
-            # Forall(x, Not(And(P(x, l_MQTT), P(x, l_Recon)))),
-            # Forall(x, Not(And(P(x, l_MQTT), P(x, l_ARP_Spoofing)))),
-            # Forall(x, Not(And(P(x, l_MQTT), P(x, l_TCP_IP_DDOS)))),
-            # Forall(x, Not(And(P(x, l_MQTT), P(x, l_TCP_IP_DOS)))),
-            # Forall(x, Not(And(P(x, l_Recon), P(x, l_ARP_Spoofing)))),
-            # Forall(x, Not(And(P(x, l_Recon), P(x, l_TCP_IP_DDOS)))),
-            # Forall(x, Not(And(P(x, l_Recon), P(x, l_TCP_IP_DOS)))),
-            # Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DDOS)))),
-            # Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DOS)))),
-            # Forall(x, Not(And(P(x, l_TCP_IP_DDOS), P(x, l_TCP_IP_DOS)))),
-        ]
-        valid_forall_expressions.extend(mutual_exclusive_constraints)
+            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_UDP, And(P(x_TCP_IP_DoS_UDP, l_TCP_IP_DoS_UDP),
+                                                                         P(x_TCP_IP_DoS_UDP, l_TCP_IP_DOS))))
 
         mean_sat += SatAgg(*valid_forall_expressions)
     mean_sat /= len(loader)
@@ -426,80 +423,107 @@ for epoch in range(1):
         ##############################################################################
         valid_forall_expressions = []
         if x_Benign.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Benign, P(x_Benign, l_Benign)))
+            valid_forall_expressions.append(Forall(x_Benign, And(P(x_Benign, l_Benign),
+                                                                 Not(P(x_Benign, l_MQTT)),
+                                                                 Not(P(x_Benign, l_Recon)),
+                                                                 Not(P(x_Benign, l_ARP_Spoofing)),
+                                                                 Not(P(x_Benign, l_TCP_IP_DDOS)),
+                                                                 Not(P(x_Benign, l_TCP_IP_DOS)))))
         if x_MQTT.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_MQTT, P(x_MQTT, l_MQTT)))
+            valid_forall_expressions.append(Forall(x_MQTT, And(P(x_MQTT, l_MQTT),
+                                                               Not(P(x_MQTT, l_Benign)),
+                                                               Not(P(x_MQTT, l_Recon)),
+                                                               Not(P(x_MQTT, l_ARP_Spoofing)),
+                                                               Not(P(x_MQTT, l_TCP_IP_DDOS)),
+                                                               Not(P(x_MQTT, l_TCP_IP_DOS)))))
         if x_Recon.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Recon, P(x_Recon, l_Recon)))
+            valid_forall_expressions.append(Forall(x_Recon, And(P(x_Recon, l_Recon),
+                                                                Not(P(x_Recon, l_Benign)),
+                                                                Not(P(x_Recon, l_MQTT)),
+                                                                Not(P(x_Recon, l_ARP_Spoofing)),
+                                                                Not(P(x_Recon, l_TCP_IP_DDOS)),
+                                                                Not(P(x_Recon, l_TCP_IP_DOS)))))
         if x_ARP_Spoofing.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_ARP_Spoofing, P(x_ARP_Spoofing, l_ARP_Spoofing)))
+            valid_forall_expressions.append(Forall(x_ARP_Spoofing, And(P(x_ARP_Spoofing, l_ARP_Spoofing),
+                                                                       Not(P(x_ARP_Spoofing, l_Benign)),
+                                                                       Not(P(x_ARP_Spoofing, l_MQTT)),
+                                                                       Not(P(x_ARP_Spoofing, l_Recon)),
+                                                                       Not(P(x_ARP_Spoofing, l_TCP_IP_DDOS)),
+                                                                       Not(P(x_ARP_Spoofing, l_TCP_IP_DOS)))))
         if x_TCP_IP_DDOS.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DDOS, P(x_TCP_IP_DDOS, l_TCP_IP_DDOS)))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDOS, And(P(x_TCP_IP_DDOS, l_TCP_IP_DDOS),
+                                                                      Not(P(x_TCP_IP_DDOS, l_Benign)),
+                                                                      Not(P(x_TCP_IP_DDOS, l_MQTT)),
+                                                                      Not(P(x_TCP_IP_DDOS, l_Recon)),
+                                                                      Not(P(x_TCP_IP_DDOS, l_ARP_Spoofing)),
+                                                                      Not(P(x_TCP_IP_DDOS, l_TCP_IP_DOS)))))
         if x_TCP_IP_DOS.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DOS, P(x_TCP_IP_DOS, l_TCP_IP_DOS)))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DOS, And(P(x_TCP_IP_DOS, l_TCP_IP_DOS),
+                                                                     Not(P(x_TCP_IP_DOS, l_Benign)),
+                                                                     Not(P(x_TCP_IP_DOS, l_MQTT)),
+                                                                     Not(P(x_TCP_IP_DOS, l_Recon)),
+                                                                     Not(P(x_TCP_IP_DOS, l_ARP_Spoofing)),
+                                                                     Not(P(x_TCP_IP_DDOS, l_TCP_IP_DDOS)))))
 
         if x_MQTT_DDoS_Connect_Flood.value.size(0) != 0:
             valid_forall_expressions.append(
-                Forall(x_MQTT_DDoS_Connect_Flood, P(x_MQTT_DDoS_Connect_Flood, l_MQTT_DDoS_Connect_Flood)))
+                Forall(x_MQTT_DDoS_Connect_Flood, And(P(x_MQTT_DDoS_Connect_Flood, l_MQTT_DDoS_Connect_Flood),
+                                                      P(x_MQTT_DDoS_Connect_Flood, l_MQTT))))
         if x_MQTT_DDoS_Publish_Flood.value.size(0) != 0:
             valid_forall_expressions.append(
-                Forall(x_MQTT_DDoS_Publish_Flood, P(x_MQTT_DDoS_Publish_Flood, l_MQTT_DDoS_Publish_Flood)))
+                Forall(x_MQTT_DDoS_Publish_Flood, And(P(x_MQTT_DDoS_Publish_Flood, l_MQTT_DDoS_Publish_Flood),
+                                                      P(x_MQTT_DDoS_Publish_Flood, l_MQTT))))
         if x_MQTT_DoS_Connect_Flood.value.size(0) != 0:
             valid_forall_expressions.append(
-                Forall(x_MQTT_DoS_Connect_Flood, P(x_MQTT_DoS_Connect_Flood, l_MQTT_DoS_Connect_Flood)))
+                Forall(x_MQTT_DoS_Connect_Flood, And(P(x_MQTT_DoS_Connect_Flood, l_MQTT_DoS_Connect_Flood),
+                                                     P(x_MQTT_DoS_Connect_Flood, l_MQTT))))
         if x_MQTT_DoS_Publish_Flood.value.size(0) != 0:
             valid_forall_expressions.append(
-                Forall(x_MQTT_DoS_Publish_Flood, P(x_MQTT_DoS_Publish_Flood, l_MQTT_DoS_Publish_Flood)))
+                Forall(x_MQTT_DoS_Publish_Flood, And(P(x_MQTT_DoS_Publish_Flood, l_MQTT_DoS_Publish_Flood),
+                                                     P(x_MQTT_DoS_Publish_Flood, l_MQTT))))
         if x_MQTT_Malformed_Data.value.size(0) != 0:
             valid_forall_expressions.append(
-                Forall(x_MQTT_Malformed_Data, P(x_MQTT_Malformed_Data, l_MQTT_Malformed_Data)))
+                Forall(x_MQTT_Malformed_Data, And(P(x_MQTT_Malformed_Data, l_MQTT_Malformed_Data),
+                                                  P(x_MQTT_Malformed_Data, l_MQTT))))
 
         if x_Recon_Port_Scan.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Recon_Port_Scan, P(x_Recon_Port_Scan, l_Recon_Port_Scan)))
+            valid_forall_expressions.append(Forall(x_Recon_Port_Scan, And(P(x_Recon_Port_Scan, l_Recon_Port_Scan),
+                                                                          P(x_Recon_Port_Scan, l_Recon))))
         if x_Recon_OS_Scan.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Recon_OS_Scan, P(x_Recon_OS_Scan, l_Recon_OS_Scan)))
+            valid_forall_expressions.append(Forall(x_Recon_OS_Scan, And(P(x_Recon_OS_Scan, l_Recon_OS_Scan),
+                                                                        P(x_Recon_OS_Scan, l_Recon))))
         if x_Recon_VulScan.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Recon_VulScan, P(x_Recon_VulScan, l_Recon_VulScan)))
+            valid_forall_expressions.append(Forall(x_Recon_VulScan, And(P(x_Recon_VulScan, l_Recon_VulScan),
+                                                                        P(x_Recon_VulScan, l_Recon))))
         if x_Recon_Ping_Sweep.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Recon_Ping_Sweep, P(x_Recon_Ping_Sweep, l_Recon_Ping_Sweep)))
+            valid_forall_expressions.append(Forall(x_Recon_Ping_Sweep, And(P(x_Recon_Ping_Sweep, l_Recon_Ping_Sweep),
+                                                                           P(x_Recon_Ping_Sweep, l_Recon))))
 
         if x_TCP_IP_DDoS_TCP.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_TCP, P(x_TCP_IP_DDoS_TCP, l_TCP_IP_DDoS_TCP)))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_TCP, And(P(x_TCP_IP_DDoS_TCP, l_TCP_IP_DDoS_TCP),
+                                                                          P(x_TCP_IP_DDoS_TCP, l_TCP_IP_DDOS))))
         if x_TCP_IP_DDoS_ICMP.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_ICMP, P(x_TCP_IP_DDoS_ICMP, l_TCP_IP_DDoS_ICMP)))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_ICMP, And(P(x_TCP_IP_DDoS_ICMP, l_TCP_IP_DDoS_ICMP),
+                                                                           P(x_TCP_IP_DDoS_ICMP, l_TCP_IP_DDOS))))
         if x_TCP_IP_DDoS_SYN.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_SYN, P(x_TCP_IP_DDoS_SYN, l_TCP_IP_DDoS_SYN)))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_SYN, And(P(x_TCP_IP_DDoS_SYN, l_TCP_IP_DDoS_SYN),
+                                                                          P(x_TCP_IP_DDoS_SYN, l_TCP_IP_DDOS))))
         if x_TCP_IP_DDoS_UDP.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_UDP, P(x_TCP_IP_DDoS_UDP, l_TCP_IP_DDoS_UDP)))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDoS_UDP, And(P(x_TCP_IP_DDoS_UDP, l_TCP_IP_DDoS_UDP),
+                                                                          P(x_TCP_IP_DDoS_UDP, l_TCP_IP_DDOS))))
 
         if x_TCP_IP_DoS_TCP.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_TCP, P(x_TCP_IP_DoS_TCP, l_TCP_IP_DoS_TCP)))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_TCP, And(P(x_TCP_IP_DoS_TCP, l_TCP_IP_DoS_TCP),
+                                                                         P(x_TCP_IP_DoS_TCP, l_TCP_IP_DOS))))
         if x_TCP_IP_DoS_ICMP.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_ICMP, P(x_TCP_IP_DoS_ICMP, l_TCP_IP_DoS_ICMP)))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_ICMP, And(P(x_TCP_IP_DoS_ICMP, l_TCP_IP_DoS_ICMP),
+                                                                          P(x_TCP_IP_DoS_ICMP, l_TCP_IP_DOS))))
         if x_TCP_IP_DoS_SYN.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_SYN, P(x_TCP_IP_DoS_SYN, l_TCP_IP_DoS_SYN)))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_SYN, And(P(x_TCP_IP_DoS_SYN, l_TCP_IP_DoS_SYN),
+                                                                         P(x_TCP_IP_DoS_SYN, l_TCP_IP_DOS))))
         if x_TCP_IP_DoS_UDP.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_UDP, P(x_TCP_IP_DoS_UDP, l_TCP_IP_DoS_UDP)))
-
-        # 添加label_L1中各标签互斥的语句
-        mutual_exclusive_constraints = [
-            Forall(x, Not(And(P(x, l_Benign), P(x, l_MQTT)))),
-            Forall(x, Not(And(P(x, l_Benign), P(x, l_Recon)))),
-            Forall(x, Not(And(P(x, l_Benign), P(x, l_ARP_Spoofing)))),
-            Forall(x, Not(And(P(x, l_Benign), P(x, l_TCP_IP_DDOS)))),
-            Forall(x, Not(And(P(x, l_Benign), P(x, l_TCP_IP_DOS)))),
-            Forall(x, Not(And(P(x, l_MQTT), P(x, l_Recon)))),
-            Forall(x, Not(And(P(x, l_MQTT), P(x, l_ARP_Spoofing)))),
-            Forall(x, Not(And(P(x, l_MQTT), P(x, l_TCP_IP_DDOS)))),
-            Forall(x, Not(And(P(x, l_MQTT), P(x, l_TCP_IP_DOS)))),
-            Forall(x, Not(And(P(x, l_Recon), P(x, l_ARP_Spoofing)))),
-            Forall(x, Not(And(P(x, l_Recon), P(x, l_TCP_IP_DDOS)))),
-            Forall(x, Not(And(P(x, l_Recon), P(x, l_TCP_IP_DOS)))),
-            Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DDOS)))),
-            Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DOS)))),
-            Forall(x, Not(And(P(x, l_TCP_IP_DDOS), P(x, l_TCP_IP_DOS)))),
-        ]
-        valid_forall_expressions.extend(mutual_exclusive_constraints)
+            valid_forall_expressions.append(Forall(x_TCP_IP_DoS_UDP, And(P(x_TCP_IP_DoS_UDP, l_TCP_IP_DoS_UDP),
+                                                                         P(x_TCP_IP_DoS_UDP, l_TCP_IP_DOS))))
 
         sat_agg = SatAgg(*valid_forall_expressions)
         #############################################################################
