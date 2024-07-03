@@ -217,47 +217,17 @@ def compute_sat_level(loader):
         # 创建有效的forall表达式列表
         valid_forall_expressions = []
         if x_Benign.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Benign, And(P(x_Benign, l_Benign),
-                                                                 Not(P(x_Benign, l_MQTT)),
-                                                                 Not(P(x_Benign, l_Recon)),
-                                                                 Not(P(x_Benign, l_ARP_Spoofing)),
-                                                                 Not(P(x_Benign, l_TCP_IP_DDOS)),
-                                                                 Not(P(x_Benign, l_TCP_IP_DOS)))))
+            valid_forall_expressions.append(Forall(x_Benign, P(x_Benign, l_Benign)))
         if x_MQTT.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_MQTT, And(P(x_MQTT, l_MQTT),
-                                                               Not(P(x_MQTT, l_Benign)),
-                                                               Not(P(x_MQTT, l_Recon)),
-                                                               Not(P(x_MQTT, l_ARP_Spoofing)),
-                                                               Not(P(x_MQTT, l_TCP_IP_DDOS)),
-                                                               Not(P(x_MQTT, l_TCP_IP_DOS)))))
+            valid_forall_expressions.append(Forall(x_MQTT, P(x_MQTT, l_MQTT)))
         if x_Recon.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Recon, And(P(x_Recon, l_Recon),
-                                                                Not(P(x_Recon, l_Benign)),
-                                                                Not(P(x_Recon, l_MQTT)),
-                                                                Not(P(x_Recon, l_ARP_Spoofing)),
-                                                                Not(P(x_Recon, l_TCP_IP_DDOS)),
-                                                                Not(P(x_Recon, l_TCP_IP_DOS)))))
+            valid_forall_expressions.append(Forall(x_Recon, P(x_Recon, l_Recon)))
         if x_ARP_Spoofing.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_ARP_Spoofing, And(P(x_ARP_Spoofing, l_ARP_Spoofing),
-                                                                       Not(P(x_ARP_Spoofing, l_Benign)),
-                                                                       Not(P(x_ARP_Spoofing, l_MQTT)),
-                                                                       Not(P(x_ARP_Spoofing, l_Recon)),
-                                                                       Not(P(x_ARP_Spoofing, l_TCP_IP_DDOS)),
-                                                                       Not(P(x_ARP_Spoofing, l_TCP_IP_DOS)))))
+            valid_forall_expressions.append(Forall(x_ARP_Spoofing, P(x_ARP_Spoofing, l_ARP_Spoofing)))
         if x_TCP_IP_DDOS.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DDOS, And(P(x_TCP_IP_DDOS, l_TCP_IP_DDOS),
-                                                                      Not(P(x_TCP_IP_DDOS, l_Benign)),
-                                                                      Not(P(x_TCP_IP_DDOS, l_MQTT)),
-                                                                      Not(P(x_TCP_IP_DDOS, l_Recon)),
-                                                                      Not(P(x_TCP_IP_DDOS, l_ARP_Spoofing)),
-                                                                      Not(P(x_TCP_IP_DDOS, l_TCP_IP_DOS)))))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDOS, P(x_TCP_IP_DDOS, l_TCP_IP_DDOS)))
         if x_TCP_IP_DOS.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DOS, And(P(x_TCP_IP_DOS, l_TCP_IP_DOS),
-                                                                     Not(P(x_TCP_IP_DOS, l_Benign)),
-                                                                     Not(P(x_TCP_IP_DOS, l_MQTT)),
-                                                                     Not(P(x_TCP_IP_DOS, l_Recon)),
-                                                                     Not(P(x_TCP_IP_DOS, l_ARP_Spoofing)),
-                                                                     Not(P(x_TCP_IP_DDOS, l_TCP_IP_DDOS)))))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DOS, P(x_TCP_IP_DOS, l_TCP_IP_DOS)))
 
         if x_MQTT_DDoS_Connect_Flood.value.size(0) != 0:
             valid_forall_expressions.append(
@@ -318,6 +288,25 @@ def compute_sat_level(loader):
         if x_TCP_IP_DoS_UDP.value.size(0) != 0:
             valid_forall_expressions.append(Forall(x_TCP_IP_DoS_UDP, And(P(x_TCP_IP_DoS_UDP, l_TCP_IP_DoS_UDP),
                                                                          P(x_TCP_IP_DoS_UDP, l_TCP_IP_DOS))))
+
+        mutual_exclusive_constraints = [
+            Forall(x, Not(And(P(x, l_Benign), P(x, l_MQTT)))),
+            Forall(x, Not(And(P(x, l_Benign), P(x, l_Recon)))),
+            Forall(x, Not(And(P(x, l_Benign), P(x, l_ARP_Spoofing)))),
+            Forall(x, Not(And(P(x, l_Benign), P(x, l_TCP_IP_DDOS)))),
+            Forall(x, Not(And(P(x, l_Benign), P(x, l_TCP_IP_DOS)))),
+            Forall(x, Not(And(P(x, l_MQTT), P(x, l_Recon)))),
+            Forall(x, Not(And(P(x, l_MQTT), P(x, l_ARP_Spoofing)))),
+            Forall(x, Not(And(P(x, l_MQTT), P(x, l_TCP_IP_DDOS)))),
+            Forall(x, Not(And(P(x, l_MQTT), P(x, l_TCP_IP_DOS)))),
+            Forall(x, Not(And(P(x, l_Recon), P(x, l_ARP_Spoofing)))),
+            Forall(x, Not(And(P(x, l_Recon), P(x, l_TCP_IP_DDOS)))),
+            Forall(x, Not(And(P(x, l_Recon), P(x, l_TCP_IP_DOS)))),
+            Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DDOS)))),
+            Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DOS)))),
+            Forall(x, Not(And(P(x, l_TCP_IP_DDOS), P(x, l_TCP_IP_DOS))))
+        ]
+        valid_forall_expressions.extend(mutual_exclusive_constraints)
 
         mean_sat += SatAgg(*valid_forall_expressions)
     mean_sat /= len(loader)
@@ -386,7 +375,7 @@ print("Create train and test loader done.")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
 print("Start training...")
 
-for epoch in range(1):
+for epoch in range(30):
     train_loss = 0.0
     for batch_idx, (data, label_L1, label_L2) in enumerate(train_loader):
         optimizer.zero_grad()
@@ -423,47 +412,17 @@ for epoch in range(1):
         ##############################################################################
         valid_forall_expressions = []
         if x_Benign.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Benign, And(P(x_Benign, l_Benign),
-                                                                 Not(P(x_Benign, l_MQTT)),
-                                                                 Not(P(x_Benign, l_Recon)),
-                                                                 Not(P(x_Benign, l_ARP_Spoofing)),
-                                                                 Not(P(x_Benign, l_TCP_IP_DDOS)),
-                                                                 Not(P(x_Benign, l_TCP_IP_DOS)))))
+            valid_forall_expressions.append(Forall(x_Benign, P(x_Benign, l_Benign)))
         if x_MQTT.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_MQTT, And(P(x_MQTT, l_MQTT),
-                                                               Not(P(x_MQTT, l_Benign)),
-                                                               Not(P(x_MQTT, l_Recon)),
-                                                               Not(P(x_MQTT, l_ARP_Spoofing)),
-                                                               Not(P(x_MQTT, l_TCP_IP_DDOS)),
-                                                               Not(P(x_MQTT, l_TCP_IP_DOS)))))
+            valid_forall_expressions.append(Forall(x_MQTT, P(x_MQTT, l_MQTT)))
         if x_Recon.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_Recon, And(P(x_Recon, l_Recon),
-                                                                Not(P(x_Recon, l_Benign)),
-                                                                Not(P(x_Recon, l_MQTT)),
-                                                                Not(P(x_Recon, l_ARP_Spoofing)),
-                                                                Not(P(x_Recon, l_TCP_IP_DDOS)),
-                                                                Not(P(x_Recon, l_TCP_IP_DOS)))))
+            valid_forall_expressions.append(Forall(x_Recon, P(x_Recon, l_Recon)))
         if x_ARP_Spoofing.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_ARP_Spoofing, And(P(x_ARP_Spoofing, l_ARP_Spoofing),
-                                                                       Not(P(x_ARP_Spoofing, l_Benign)),
-                                                                       Not(P(x_ARP_Spoofing, l_MQTT)),
-                                                                       Not(P(x_ARP_Spoofing, l_Recon)),
-                                                                       Not(P(x_ARP_Spoofing, l_TCP_IP_DDOS)),
-                                                                       Not(P(x_ARP_Spoofing, l_TCP_IP_DOS)))))
+            valid_forall_expressions.append(Forall(x_ARP_Spoofing, P(x_ARP_Spoofing, l_ARP_Spoofing)))
         if x_TCP_IP_DDOS.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DDOS, And(P(x_TCP_IP_DDOS, l_TCP_IP_DDOS),
-                                                                      Not(P(x_TCP_IP_DDOS, l_Benign)),
-                                                                      Not(P(x_TCP_IP_DDOS, l_MQTT)),
-                                                                      Not(P(x_TCP_IP_DDOS, l_Recon)),
-                                                                      Not(P(x_TCP_IP_DDOS, l_ARP_Spoofing)),
-                                                                      Not(P(x_TCP_IP_DDOS, l_TCP_IP_DOS)))))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DDOS, P(x_TCP_IP_DDOS, l_TCP_IP_DDOS)))
         if x_TCP_IP_DOS.value.size(0) != 0:
-            valid_forall_expressions.append(Forall(x_TCP_IP_DOS, And(P(x_TCP_IP_DOS, l_TCP_IP_DOS),
-                                                                     Not(P(x_TCP_IP_DOS, l_Benign)),
-                                                                     Not(P(x_TCP_IP_DOS, l_MQTT)),
-                                                                     Not(P(x_TCP_IP_DOS, l_Recon)),
-                                                                     Not(P(x_TCP_IP_DOS, l_ARP_Spoofing)),
-                                                                     Not(P(x_TCP_IP_DDOS, l_TCP_IP_DDOS)))))
+            valid_forall_expressions.append(Forall(x_TCP_IP_DOS, P(x_TCP_IP_DOS, l_TCP_IP_DOS)))
 
         if x_MQTT_DDoS_Connect_Flood.value.size(0) != 0:
             valid_forall_expressions.append(
@@ -524,6 +483,25 @@ for epoch in range(1):
         if x_TCP_IP_DoS_UDP.value.size(0) != 0:
             valid_forall_expressions.append(Forall(x_TCP_IP_DoS_UDP, And(P(x_TCP_IP_DoS_UDP, l_TCP_IP_DoS_UDP),
                                                                          P(x_TCP_IP_DoS_UDP, l_TCP_IP_DOS))))
+
+        mutual_exclusive_constraints = [
+                Forall(x, Not(And(P(x, l_Benign), P(x, l_MQTT)))),
+                Forall(x, Not(And(P(x, l_Benign), P(x, l_Recon)))),
+                Forall(x, Not(And(P(x, l_Benign), P(x, l_ARP_Spoofing)))),
+                Forall(x, Not(And(P(x, l_Benign), P(x, l_TCP_IP_DDOS)))),
+                Forall(x, Not(And(P(x, l_Benign), P(x, l_TCP_IP_DOS)))),
+                Forall(x, Not(And(P(x, l_MQTT), P(x, l_Recon)))),
+                Forall(x, Not(And(P(x, l_MQTT), P(x, l_ARP_Spoofing)))),
+                Forall(x, Not(And(P(x, l_MQTT), P(x, l_TCP_IP_DDOS)))),
+                Forall(x, Not(And(P(x, l_MQTT), P(x, l_TCP_IP_DOS)))),
+                Forall(x, Not(And(P(x, l_Recon), P(x, l_ARP_Spoofing)))),
+                Forall(x, Not(And(P(x, l_Recon), P(x, l_TCP_IP_DDOS)))),
+                Forall(x, Not(And(P(x, l_Recon), P(x, l_TCP_IP_DOS)))),
+                Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DDOS)))),
+                Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DOS)))),
+                Forall(x, Not(And(P(x, l_TCP_IP_DDOS), P(x, l_TCP_IP_DOS))))
+            ]
+        valid_forall_expressions.extend(mutual_exclusive_constraints)
 
         sat_agg = SatAgg(*valid_forall_expressions)
         #############################################################################

@@ -112,3 +112,38 @@ Start training...
 (hierarchical filtered data result)
 
 --------------------------------------------------------------------------------------------------------
+
+Start training...
+ epoch 0 | loss 0.1352 | Train Sat 0.887 | Test Sat 0.856 | Train Acc 0.449 | Test Acc 0.463 |
+ epoch 1 | loss 0.1105 | Train Sat 0.892 | Test Sat 0.848 | Train Acc 0.452 | Test Acc 0.470 |
+ epoch 2 | loss 0.1085 | Train Sat 0.892 | Test Sat 0.850 | Train Acc 0.448 | Test Acc 0.473 |
+ epoch 3 | loss 0.1075 | Train Sat 0.893 | Test Sat 0.850 | Train Acc 0.442 | Test Acc 0.463 |
+ epoch 4 | loss 0.1069 | Train Sat 0.893 | Test Sat 0.853 | Train Acc 0.430 | Test Acc 0.458 |
+ epoch 5 | loss 0.1064 | Train Sat 0.894 | Test Sat 0.851 | Train Acc 0.420 | Test Acc 0.460 |
+ epoch 6 | loss 0.1059 | Train Sat 0.895 | Test Sat 0.852 | Train Acc 0.416 | Test Acc 0.451 |
+ epoch 7 | loss 0.1055 | Train Sat 0.895 | Test Sat 0.850 | Train Acc 0.418 | Test Acc 0.453 |
+ epoch 8 | loss 0.1047 | Train Sat 0.895 | Test Sat 0.849 | Train Acc 0.422 | Test Acc 0.455 |
+ epoch 9 | loss 0.1043 | Train Sat 0.897 | Test Sat 0.852 | Train Acc 0.423 | Test Acc 0.457 |
+ epoch 10 | loss 0.1038 | Train Sat 0.896 | Test Sat 0.849 | Train Acc 0.421 | Test Acc 0.455 |
+ epoch 11 | loss 0.1034 | Train Sat 0.897 | Test Sat 0.853 | Train Acc 0.427 | Test Acc 0.459 |
+ epoch 12 | loss 0.1030 | Train Sat 0.897 | Test Sat 0.852 | Train Acc 0.426 | Test Acc 0.458 |
+ epoch 13 | loss 0.1025 | Train Sat 0.898 | Test Sat 0.850 | Train Acc 0.426 | Test Acc 0.459 |
+ epoch 14 | loss 0.1023 | Train Sat 0.898 | Test Sat 0.851 | Train Acc 0.425 | Test Acc 0.461 |
+ epoch 15 | loss 0.1018 | Train Sat 0.899 | Test Sat 0.848 | Train Acc 0.427 | Test Acc 0.461 |
+ epoch 16 | loss 0.1016 | Train Sat 0.899 | Test Sat 0.849 | Train Acc 0.426 | Test Acc 0.460 |
+ epoch 17 | loss 0.1012 | Train Sat 0.899 | Test Sat 0.854 | Train Acc 0.418 | Test Acc 0.454 |
+ epoch 18 | loss 0.1010 | Train Sat 0.900 | Test Sat 0.851 | Train Acc 0.421 | Test Acc 0.462 |
+ epoch 19 | loss 0.1006 | Train Sat 0.900 | Test Sat 0.851 | Train Acc 0.418 | Test Acc 0.456 |
+ epoch 20 | loss 0.1004 | Train Sat 0.899 | Test Sat 0.850 | Train Acc 0.421 | Test Acc 0.460 |
+ epoch 21 | loss 0.1001 | Train Sat 0.900 | Test Sat 0.852 | Train Acc 0.421 | Test Acc 0.460 |
+ epoch 22 | loss 0.1001 | Train Sat 0.900 | Test Sat 0.851 | Train Acc 0.425 | Test Acc 0.463 |
+ epoch 23 | loss 0.0999 | Train Sat 0.900 | Test Sat 0.847 | Train Acc 0.425 | Test Acc 0.464 |
+ epoch 24 | loss 0.0995 | Train Sat 0.900 | Test Sat 0.847 | Train Acc 0.427 | Test Acc 0.467 |
+ epoch 25 | loss 0.0994 | Train Sat 0.901 | Test Sat 0.847 | Train Acc 0.426 | Test Acc 0.468 |
+ epoch 26 | loss 0.0993 | Train Sat 0.900 | Test Sat 0.850 | Train Acc 0.428 | Test Acc 0.473 |
+ epoch 27 | loss 0.0991 | Train Sat 0.901 | Test Sat 0.848 | Train Acc 0.430 | Test Acc 0.470 |
+ epoch 28 | loss 0.0991 | Train Sat 0.901 | Test Sat 0.849 | Train Acc 0.430 | Test Acc 0.479 |
+ epoch 29 | loss 0.0988 | Train Sat 0.901 | Test Sat 0.849 | Train Acc 0.434 | Test Acc 0.480 |
+ ((hierarchical reduced data result)
+
+ --------------------------------------------------------------------------------------------------------
