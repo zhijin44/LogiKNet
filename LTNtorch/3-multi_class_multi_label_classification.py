@@ -146,6 +146,11 @@ def compute_sat_level(loader):
             Forall(x, Not(And(P(x, l_blue), P(x, l_orange)))),
             Forall(x, Not(And(P(x, l_male), P(x, l_female))))
         )
+        # label_list = [l_blue, l_orange, l_male]
+        # variable = x
+        #
+        # for label in list:
+
     mean_sat /= len(loader)
     return mean_sat
 

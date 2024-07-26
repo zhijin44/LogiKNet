@@ -122,6 +122,7 @@ P = ltn.Predicate(LogitsToPredicate(mlp))
 Not = ltn.Connective(ltn.fuzzy_ops.NotStandard())
 And = ltn.Connective(ltn.fuzzy_ops.AndProd())
 Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
+Exist = ltn.Quantifier(ltn.fuzzy_ops.AggregMean)
 SatAgg = ltn.fuzzy_ops.SatAgg()
 
 print("LTN setting done.")
@@ -238,6 +239,7 @@ def compute_sat_level(loader):
         #     Forall(x, Not(And(P(x, l_DoS_Publish_Flood), P(x, l_Malformed_Data))))
         # ]
         # valid_forall_expressions.extend(mutual_exclusive_constraints)
+        valid_forall_expressions.append(Forall(x, Not(And(P(x, l_DDoS_Connect_Flood), P(x, l_DDoS_Publish_Flood), P(x, l_DoS_Connect_Flood)))))
 
         mean_sat += SatAgg(*valid_forall_expressions)
     mean_sat /= len(loader)
