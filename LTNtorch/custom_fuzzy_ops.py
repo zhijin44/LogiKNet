@@ -1,5 +1,5 @@
 import torch
-from ltn.fuzzy_ops import ConnectiveOperator
+from ltn.fuzzy_ops import ConnectiveOperator, pi_0
 
 
 class MultiConnectiveOperator(ConnectiveOperator):
