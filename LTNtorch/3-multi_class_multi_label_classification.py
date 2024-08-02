@@ -3,6 +3,7 @@ import pandas as pd
 import ltn
 from sklearn.metrics import accuracy_score
 import numpy as np
+import custom_fuzzy_ops
 
 df = pd.read_csv("datasets/crabs.dat", sep=" ", skipinitialspace=True)
 df = df.sample(frac=1)  # shuffle dataset
@@ -91,7 +92,8 @@ P = ltn.Predicate(LogitsToPredicate(mlp))
 
 # we define the connectives, quantifiers, and the SatAgg
 Not = ltn.Connective(ltn.fuzzy_ops.NotStandard())
-And = ltn.Connective(ltn.fuzzy_ops.AndProd())
+And = ltn.Connective(custom_fuzzy_ops.AndProd())
+# And = ltn.Connective(ltn.fuzzy_ops.AndProd())
 Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
 SatAgg = ltn.fuzzy_ops.SatAgg()
 
@@ -143,13 +145,10 @@ def compute_sat_level(loader):
             Forall(x_orange, P(x_orange, l_orange)),
             Forall(x_male, P(x_male, l_male)),
             Forall(x_female, P(x_female, l_female)),
-            Forall(x, Not(And(P(x, l_blue), P(x, l_orange)))),
+            Forall(x, Not(And(P(x, l_blue), P(x, l_orange), P(x, l_male)))),
+            # Forall(x, Not(And(P(x, l_blue), P(x, l_orange)))),
             Forall(x, Not(And(P(x, l_male), P(x, l_female))))
         )
-        # label_list = [l_blue, l_orange, l_male]
-        # variable = x
-        #
-        # for label in list:
 
     mean_sat /= len(loader)
     return mean_sat
