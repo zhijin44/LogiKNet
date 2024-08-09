@@ -3,6 +3,7 @@ import pandas as pd
 import ltn
 import numpy as np
 from sklearn.preprocessing import StandardScaler, label_binarize
+import custom_fuzzy_ops
 
 # 加载数据集
 processed_train_file = '../CIC_IoMT/19classes/reduced_train_data.csv'
@@ -139,7 +140,8 @@ P = ltn.Predicate(LogitsToPredicate(mlp))
 
 # we define the connectives, quantifiers, and the SatAgg
 Not = ltn.Connective(ltn.fuzzy_ops.NotStandard())
-And = ltn.Connective(ltn.fuzzy_ops.AndProd())
+And = ltn.Connective(custom_fuzzy_ops.AndProd())
+# And = ltn.Connective(ltn.fuzzy_ops.AndProd())
 Or = ltn.Connective(ltn.fuzzy_ops.OrProbSum())
 Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
 SatAgg = ltn.fuzzy_ops.SatAgg()
@@ -290,21 +292,20 @@ def compute_sat_level(loader):
                                                                          P(x_TCP_IP_DoS_UDP, l_TCP_IP_DOS))))
 
         mutual_exclusive_constraints = [
-            Forall(x, Not(And(P(x, l_Benign), P(x, l_MQTT)))),
-            Forall(x, Not(And(P(x, l_Benign), P(x, l_Recon)))),
-            Forall(x, Not(And(P(x, l_Benign), P(x, l_ARP_Spoofing)))),
-            Forall(x, Not(And(P(x, l_Benign), P(x, l_TCP_IP_DDOS)))),
-            Forall(x, Not(And(P(x, l_Benign), P(x, l_TCP_IP_DOS)))),
-            Forall(x, Not(And(P(x, l_MQTT), P(x, l_Recon)))),
-            Forall(x, Not(And(P(x, l_MQTT), P(x, l_ARP_Spoofing)))),
-            Forall(x, Not(And(P(x, l_MQTT), P(x, l_TCP_IP_DDOS)))),
-            Forall(x, Not(And(P(x, l_MQTT), P(x, l_TCP_IP_DOS)))),
-            Forall(x, Not(And(P(x, l_Recon), P(x, l_ARP_Spoofing)))),
-            Forall(x, Not(And(P(x, l_Recon), P(x, l_TCP_IP_DDOS)))),
-            Forall(x, Not(And(P(x, l_Recon), P(x, l_TCP_IP_DOS)))),
-            Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DDOS)))),
-            Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DOS)))),
-            Forall(x, Not(And(P(x, l_TCP_IP_DDOS), P(x, l_TCP_IP_DOS))))
+            Forall(x, Not(And(P(x, l_Benign), P(x, l_MQTT), P(x, l_Recon), P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DDOS), P(x, l_TCP_IP_DOS)))),
+            Forall(x_MQTT, Not(And(P(x_MQTT, l_MQTT_DDoS_Connect_Flood), P(x_MQTT, l_MQTT_DDoS_Publish_Flood), P(x_MQTT, l_MQTT_DoS_Connect_Flood), 
+                                   P(x_MQTT, l_MQTT_DoS_Publish_Flood), P(x_MQTT, l_MQTT_Malformed_Data)))),
+            Forall(x_Recon, Not(And(P(x_Recon, l_Recon_OS_Scan), P(x_Recon, l_Recon_Ping_Sweep), P(x_Recon, l_Recon_Port_Scan), 
+                                    P(x_Recon, l_Recon_VulScan)))),
+            Forall(x_TCP_IP_DDOS, Not(And(P(x_TCP_IP_DDOS, l_TCP_IP_DDoS_ICMP), P(x_TCP_IP_DDOS, l_TCP_IP_DDoS_SYN), 
+                                          P(x_TCP_IP_DDOS, l_TCP_IP_DDoS_TCP), P(x_TCP_IP_DDOS, l_TCP_IP_DDoS_UDP)))),
+            Forall(x_TCP_IP_DOS, Not(And(P(x_TCP_IP_DOS, l_TCP_IP_DoS_ICMP), P(x_TCP_IP_DOS, l_TCP_IP_DoS_SYN), 
+                                         P(x_TCP_IP_DOS, l_TCP_IP_DoS_TCP), P(x_TCP_IP_DOS, l_TCP_IP_DoS_UDP))))
+            # Forall(x, Not(And(P(x, l_MQTT_DDoS_Connect_Flood), P(x, l_MQTT_DDoS_Publish_Flood), P(x, l_MQTT_DoS_Connect_Flood), 
+            #                   P(x, l_MQTT_DoS_Publish_Flood), P(x, l_MQTT_Malformed_Data)))),
+            # Forall(x, Not(And(P(x, l_Recon_OS_Scan), P(x, l_Recon_Ping_Sweep), P(x, l_Recon_Port_Scan), P(x, l_Recon_VulScan)))),
+            # Forall(x, Not(And(P(x, l_TCP_IP_DDoS_ICMP), P(x, l_TCP_IP_DDoS_SYN), P(x, l_TCP_IP_DDoS_TCP), P(x, l_TCP_IP_DDoS_UDP)))),
+            # Forall(x, Not(And(P(x, l_TCP_IP_DoS_ICMP), P(x, l_TCP_IP_DoS_SYN), P(x, l_TCP_IP_DoS_TCP), P(x, l_TCP_IP_DoS_UDP))))
         ]
         valid_forall_expressions.extend(mutual_exclusive_constraints)
 
@@ -363,8 +364,8 @@ def compute_accuracy(loader, threshold=0.5):
 
 
 # create train and test loader
-train_loader = DataLoader(train_data, (train_label_L1, train_label_L2), 128, shuffle=True)
-test_loader = DataLoader(test_data, (test_label_L1, test_label_L2), 128, shuffle=True)
+train_loader = DataLoader(train_data, (train_label_L1, train_label_L2), 512, shuffle=True)
+test_loader = DataLoader(test_data, (test_label_L1, test_label_L2), 512, shuffle=True)
 print("Create train and test loader done.")
 
 
@@ -375,7 +376,7 @@ print("Create train and test loader done.")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
 print("Start training...")
 
-for epoch in range(30):
+for epoch in range(5):
     train_loss = 0.0
     for batch_idx, (data, label_L1, label_L2) in enumerate(train_loader):
         optimizer.zero_grad()
@@ -485,22 +486,21 @@ for epoch in range(30):
                                                                          P(x_TCP_IP_DoS_UDP, l_TCP_IP_DOS))))
 
         mutual_exclusive_constraints = [
-                Forall(x, Not(And(P(x, l_Benign), P(x, l_MQTT)))),
-                Forall(x, Not(And(P(x, l_Benign), P(x, l_Recon)))),
-                Forall(x, Not(And(P(x, l_Benign), P(x, l_ARP_Spoofing)))),
-                Forall(x, Not(And(P(x, l_Benign), P(x, l_TCP_IP_DDOS)))),
-                Forall(x, Not(And(P(x, l_Benign), P(x, l_TCP_IP_DOS)))),
-                Forall(x, Not(And(P(x, l_MQTT), P(x, l_Recon)))),
-                Forall(x, Not(And(P(x, l_MQTT), P(x, l_ARP_Spoofing)))),
-                Forall(x, Not(And(P(x, l_MQTT), P(x, l_TCP_IP_DDOS)))),
-                Forall(x, Not(And(P(x, l_MQTT), P(x, l_TCP_IP_DOS)))),
-                Forall(x, Not(And(P(x, l_Recon), P(x, l_ARP_Spoofing)))),
-                Forall(x, Not(And(P(x, l_Recon), P(x, l_TCP_IP_DDOS)))),
-                Forall(x, Not(And(P(x, l_Recon), P(x, l_TCP_IP_DOS)))),
-                Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DDOS)))),
-                Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DOS)))),
-                Forall(x, Not(And(P(x, l_TCP_IP_DDOS), P(x, l_TCP_IP_DOS))))
-            ]
+            Forall(x, Not(And(P(x, l_Benign), P(x, l_MQTT), P(x, l_Recon), P(x, l_ARP_Spoofing), P(x, l_TCP_IP_DDOS), P(x, l_TCP_IP_DOS)))),
+            Forall(x_MQTT, Not(And(P(x_MQTT, l_MQTT_DDoS_Connect_Flood), P(x_MQTT, l_MQTT_DDoS_Publish_Flood), P(x_MQTT, l_MQTT_DoS_Connect_Flood), 
+                                   P(x_MQTT, l_MQTT_DoS_Publish_Flood), P(x_MQTT, l_MQTT_Malformed_Data)))),
+            Forall(x_Recon, Not(And(P(x_Recon, l_Recon_OS_Scan), P(x_Recon, l_Recon_Ping_Sweep), P(x_Recon, l_Recon_Port_Scan), 
+                                    P(x_Recon, l_Recon_VulScan)))),
+            Forall(x_TCP_IP_DDOS, Not(And(P(x_TCP_IP_DDOS, l_TCP_IP_DDoS_ICMP), P(x_TCP_IP_DDOS, l_TCP_IP_DDoS_SYN), 
+                                          P(x_TCP_IP_DDOS, l_TCP_IP_DDoS_TCP), P(x_TCP_IP_DDOS, l_TCP_IP_DDoS_UDP)))),
+            Forall(x_TCP_IP_DOS, Not(And(P(x_TCP_IP_DOS, l_TCP_IP_DoS_ICMP), P(x_TCP_IP_DOS, l_TCP_IP_DoS_SYN), 
+                                         P(x_TCP_IP_DOS, l_TCP_IP_DoS_TCP), P(x_TCP_IP_DOS, l_TCP_IP_DoS_UDP))))
+            # Forall(x, Not(And(P(x, l_MQTT_DDoS_Connect_Flood), P(x, l_MQTT_DDoS_Publish_Flood), P(x, l_MQTT_DoS_Connect_Flood), 
+            #                   P(x, l_MQTT_DoS_Publish_Flood), P(x, l_MQTT_Malformed_Data)))),
+            # Forall(x, Not(And(P(x, l_Recon_OS_Scan), P(x, l_Recon_Ping_Sweep), P(x, l_Recon_Port_Scan), P(x, l_Recon_VulScan)))),
+            # Forall(x, Not(And(P(x, l_TCP_IP_DDoS_ICMP), P(x, l_TCP_IP_DDoS_SYN), P(x, l_TCP_IP_DDoS_TCP), P(x, l_TCP_IP_DDoS_UDP)))),
+            # Forall(x, Not(And(P(x, l_TCP_IP_DoS_ICMP), P(x, l_TCP_IP_DoS_SYN), P(x, l_TCP_IP_DoS_TCP), P(x, l_TCP_IP_DoS_UDP))))
+        ]
         valid_forall_expressions.extend(mutual_exclusive_constraints)
 
         sat_agg = SatAgg(*valid_forall_expressions)
@@ -511,7 +511,7 @@ for epoch in range(30):
         train_loss += loss.item()
     train_loss = train_loss / len(train_loader)
 
-    # we print metrics every 20 epochs of training
+    # we print metrics every epochs of training
     if epoch % 1 == 0:
         print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f | " %
               (epoch, train_loss, compute_sat_level(train_loader),

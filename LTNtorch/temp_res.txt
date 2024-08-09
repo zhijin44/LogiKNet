@@ -144,6 +144,17 @@ Start training...
  epoch 27 | loss 0.0991 | Train Sat 0.901 | Test Sat 0.848 | Train Acc 0.430 | Test Acc 0.470 |
  epoch 28 | loss 0.0991 | Train Sat 0.901 | Test Sat 0.849 | Train Acc 0.430 | Test Acc 0.479 |
  epoch 29 | loss 0.0988 | Train Sat 0.901 | Test Sat 0.849 | Train Acc 0.434 | Test Acc 0.480 |
- ((hierarchical reduced data result)
+ (hierarchical reduced data result)
 
  --------------------------------------------------------------------------------------------------------
+ _cicIOT/LTNtorch/LTN_IoMT_hierarchy.py
+Data processing and scaling done.
+LTN setting done.
+Create train and test loader done.
+Start training...
+ epoch 0 | loss 0.0300 | Train Sat 0.991 | Test Sat 0.985 | Train Acc 0.351 | Test Acc 0.346 | 
+ epoch 1 | loss 0.0083 | Train Sat 0.993 | Test Sat 0.990 | Train Acc 0.367 | Test Acc 0.359 | 
+ epoch 2 | loss 0.0064 | Train Sat 0.997 | Test Sat 0.971 | Train Acc 0.385 | Test Acc 0.376 | 
+ epoch 3 | loss 0.0030 | Train Sat 0.998 | Test Sat 0.974 | Train Acc 0.372 | Test Acc 0.363 | 
+ epoch 4 | loss 0.0024 | Train Sat 0.997 | Test Sat 0.968 | Train Acc 0.396 | Test Acc 0.400 |
+ (after solve the multi-operand problem, 1st attempt)
