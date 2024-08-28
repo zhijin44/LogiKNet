@@ -245,7 +245,7 @@ def compute_metrics(loader, model):
 
 
 # create train and test loader
-batch_size = 512
+batch_size = 16
 train_loader = DataLoader(train_data, train_labels, batch_size, shuffle=True)
 test_loader = DataLoader(test_data, test_labels, batch_size, shuffle=False)
 
