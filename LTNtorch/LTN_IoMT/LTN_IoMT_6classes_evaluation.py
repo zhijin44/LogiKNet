@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.metrics import precision_recall_curve, auc
 from sklearn.preprocessing import StandardScaler, label_binarize
 import matplotlib.pyplot as plt
-from LTN_IoMT_6classes import MLP, DataLoader
+from LTNtorch.LTN_IoMT.utils import MLP, DataLoader
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -32,7 +32,7 @@ mlp.load_state_dict(torch.load('LTN_reduce.pth'))
 mlp.eval()
 
 # 加载test数据和test loader
-processed_test_file = '../CIC_IoMT/6classes/6classes_1700_test.csv'
+processed_test_file = '.../CIC_IoMT/6classes/6classes_1700_test.csv'
 test_data = pd.read_csv(processed_test_file)
 test_labels = test_data.pop("label")
 
