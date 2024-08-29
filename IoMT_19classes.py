@@ -98,7 +98,7 @@ if os.path.exists(model_save_path):
 else:
     print("Training model...")
     # Model training code
-    model = MLPClassifier(hidden_layer_sizes=(16, 16, 8), max_iter=50, activation='relu', solver='adam', random_state=1, verbose=True)
+    model = MLPClassifier(hidden_layer_sizes=(32, 32), max_iter=50, activation='relu', solver='adam', random_state=1, verbose=True)
     model.fit(training_data[X_columns], training_data['label_L2'])
     # model.fit(training_data[X_columns], training_data['label'])
     # Save the trained model
