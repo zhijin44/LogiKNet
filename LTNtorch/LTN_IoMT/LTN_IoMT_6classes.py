@@ -144,7 +144,7 @@ l_F = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 1]).to(device))
 
 
 # 创建模型实例并移动到设备
-mlp = MLP().to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
+mlp = MLP(layer_sizes=(45, 64, 32, 6)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
 P = ltn.Predicate(LogitsToPredicate(mlp))
 
 # we define the connectives, quantifiers, and the SatAgg

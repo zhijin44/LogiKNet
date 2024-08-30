@@ -12,7 +12,7 @@ class MLP(torch.nn.Module):
     to understand it.
     """
 
-    def __init__(self, layer_sizes=(45, 32, 32, 6)):
+    def __init__(self, layer_sizes):
         super(MLP, self).__init__()
         self.elu = torch.nn.ELU()
         self.dropout = torch.nn.Dropout(0.2)

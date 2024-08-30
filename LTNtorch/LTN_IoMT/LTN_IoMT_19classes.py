@@ -12,16 +12,6 @@ import custom_fuzzy_ops
 # it computes the overall accuracy of the predictions of the trained model using the given data loader
 # (train or test)
 def compute_accuracy(loader):
-    # mean_accuracy = 0.0
-    # for data, labels in loader:
-    #     # 确保数据在正确的设备上
-    #     data, labels = data.to(device), labels.to(device)
-    #     predictions = mlp(data).detach().numpy()
-    #     predictions = np.argmax(predictions, axis=1)
-    #     mean_accuracy += accuracy_score(labels, predictions)
-    #
-    # return mean_accuracy / len(loader)
-
     mean_accuracy = 0.0
     for data, labels in loader:
         # 确保数据在正确的设备上
@@ -163,7 +153,7 @@ l_TCP_IP_DoS_SYN = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 l_TCP_IP_DoS_UDP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]))
 
 # 创建模型实例并移动到设备
-mlp = MLP().to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
+mlp = MLP(layer_sizes=(45, 64, 32, 19)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
 P = ltn.Predicate(LogitsToPredicate(mlp))
 
 # define the connectives, quantifiers, and the SatAgg
