@@ -1,13 +1,13 @@
 import pandas as pd
 
 # 读取训练集和测试集文件
-# processed_train_file = '../CIC_IoMT/19classes/reduced_train_data.csv'
-# processed_test_file = '../CIC_IoMT/19classes/reduced_test_data.csv'
+# processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_train_data.csv'
+# processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_test_data.csv'
 # processed_train_file = '../CIC_IoMT/19classes/filtered_train_data.csv'
 # processed_test_file = '../CIC_IoMT/19classes/filtered_test_data.csv'
 # processed_train_file = '../CIC_IOT/0.1percent_8classes.csv'
-processed_train_file = '../CIC_IoMT/19classes/processed_train_data.csv'
-processed_test_file = '../CIC_IoMT/19classes/processed_test_data.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/processed_train_data.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/processed_test_data.csv'
 
 
 # processed_train_file = '../CIC_IoMT/6classes/processed_train_data_6classes.csv'
@@ -213,13 +213,15 @@ def reduce_data(train_file, test_file, selected_labels, max_samples=20000):
     reduced_train_data = pd.DataFrame()
     reduced_test_data = pd.DataFrame()
 
+    double_max_samples = max_samples*2
+
     # 遍历每个标签并缩减数据
     for label in selected_labels:
         train_subset = train_data[train_data['label'] == label]
         test_subset = test_data[test_data['label'] == label]
 
-        if len(train_subset) > max_samples:
-            train_subset = train_subset.head(max_samples)
+        if len(train_subset) > double_max_samples:
+            train_subset = train_subset.head(double_max_samples)
         if len(test_subset) > max_samples:
             test_subset = test_subset.head(max_samples)
 
@@ -251,9 +253,13 @@ def extend_labels(train_data, test_data, label_L1_mapping):
     train_data.rename(columns={'label': 'label_L2'}, inplace=True)
     test_data.rename(columns={'label': 'label_L2'}, inplace=True)
 
+    # Modify specific values in the 'label_L2' column
+    train_data['label_L2'] = train_data['label_L2'].replace({"Benign": "benign", "ARP_Spoofing": "arp_spoofing"})
+    test_data['label_L2'] = test_data['label_L2'].replace({"Benign": "benign", "ARP_Spoofing": "arp_spoofing"})
+
     # 生成新的文件名
-    extended_train_file = '../CIC_IoMT/19classes/reduced_train_data.csv'
-    extended_test_file = '../CIC_IoMT/19classes/reduced_test_data.csv'
+    extended_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_train_data.csv'
+    extended_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_test_data.csv'
 
     # 保存扩展后的数据集到新的CSV文件
     train_data.to_csv(extended_train_file, index=False)
@@ -284,8 +290,8 @@ reduced_train_data, reduced_test_data = reduce_data(processed_train_file, proces
 # 然后扩展标签并保存数据
 extend_labels(reduced_train_data, reduced_test_data, label_L1_mapping)
 
-extended_train_data = pd.read_csv('../CIC_IoMT/19classes/reduced_train_data.csv')
-extended_test_data = pd.read_csv('../CIC_IoMT/19classes/reduced_test_data.csv')
+extended_train_data = pd.read_csv('/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_train_data.csv')
+extended_test_data = pd.read_csv('/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_test_data.csv')
 # 打印扩展标签的统计信息
 print("Train Data:")
 print_extended_label_counts(extended_train_data)
