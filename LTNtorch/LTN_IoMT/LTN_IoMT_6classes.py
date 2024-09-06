@@ -262,8 +262,8 @@ def collect_predictions_and_labels(loader, model):
     return all_labels, all_probabilities
 
 
-# # 在训练循环结束后绘制PR曲线
-# all_labels, all_probabilities = collect_predictions_and_labels(test_loader, mlp)
-# save_path = "../outputs/LTN_6classes_reduce_PR_curve.png"  # 设定保存路径和文件名
-# # save_path = "outputs/LTN_6classes_PR_curve.png"
-# plot_pr_curves(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)
+# 在训练循环结束后绘制PR曲线
+all_labels, all_probabilities = collect_predictions_and_labels(test_loader, mlp)
+save_path = "../outputs/LTN_6classes_reduce_PR_curve.png"  # 设定保存路径和文件名
+# save_path = "outputs/LTN_6classes_PR_curve.png"
+plot_pr_curves(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)

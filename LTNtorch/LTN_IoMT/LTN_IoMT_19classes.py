@@ -59,29 +59,58 @@ def compute_metrics(loader, model):
 # it computes the overall satisfaction level on the knowledge base using the given data loader (train or test)
 def compute_sat_level(loader):
     mean_sat = 0
-    # for data, labels in loader:
-    #     x_A = ltn.Variable("x_A", data[labels == 0])
-    #     x_B = ltn.Variable("x_B", data[labels == 1])
-    #     x_C = ltn.Variable("x_C", data[labels == 2])
-    #     x_D = ltn.Variable("x_D", data[labels == 3])
-    #     x_E = ltn.Variable("x_E", data[labels == 4])
-    #     x_F = ltn.Variable("x_F", data[labels == 5])
-    #     ###########################################################
-    #     valid_forall_expressions = []
-    #     variables_labels = [(x_A, l_A),
-    #                         (x_B, l_B),
-    #                         (x_C, l_C),
-    #                         (x_D, l_D),
-    #                         (x_E, l_E),
-    #                         (x_F, l_F),
-    #                         ]
-    #     for variable, label in variables_labels:
-    #         if variable.value.size(0) != 0:
-    #             valid_forall_expressions.append(Forall(variable, P(variable, label, training=True)))
-    #     mean_sat += SatAgg(*valid_forall_expressions)
-    #     ##############################################################
-    # mean_sat /= len(loader)
-    # return mean_sat
+    for data, label_L2 in loader:
+        x_MQTT_DDoS_Connect_Flood = ltn.Variable("x_MQTT_DDoS_Connect_Flood", data[label_L2 == 6])
+        x_MQTT_DDoS_Publish_Flood = ltn.Variable("x_MQTT_DDoS_Publish_Flood", data[label_L2 == 7])
+        x_MQTT_DoS_Connect_Flood = ltn.Variable("x_MQTT_DoS_Connect_Flood", data[label_L2 == 8])
+        x_MQTT_DoS_Publish_Flood = ltn.Variable("x_MQTT_DoS_Publish_Flood", data[label_L2 == 9])
+        x_MQTT_Malformed_Data = ltn.Variable("x_MQTT_Malformed_Data", data[label_L2 == 10])
+        x_Recon_Port_Scan = ltn.Variable("x_Recon_Port_Scan", data[label_L2 == 11])
+        x_Recon_OS_Scan = ltn.Variable("x_Recon_OS_Scan", data[label_L2 == 12])
+        x_Recon_VulScan = ltn.Variable("x_Recon_VulScan", data[label_L2 == 13])
+        x_Recon_Ping_Sweep = ltn.Variable("x_Recon_Ping_Sweep", data[label_L2 == 14])
+        x_TCP_IP_DDoS_TCP = ltn.Variable("x_TCP_IP_DDoS_TCP", data[label_L2 == 15])
+        x_TCP_IP_DDoS_ICMP = ltn.Variable("x_TCP_IP_DDoS_ICMP", data[label_L2 == 16])
+        x_TCP_IP_DDoS_SYN = ltn.Variable("x_TCP_IP_DDoS_SYN", data[label_L2 == 17])
+        x_TCP_IP_DDoS_UDP = ltn.Variable("x_TCP_IP_DDoS_UDP", data[label_L2 == 18])
+        x_TCP_IP_DoS_TCP = ltn.Variable("x_TCP_IP_DoS_TCP", data[label_L2 == 19])
+        x_TCP_IP_DoS_ICMP = ltn.Variable("x_TCP_IP_DoS_ICMP", data[label_L2 == 20])
+        x_TCP_IP_DoS_SYN = ltn.Variable("x_TCP_IP_DoS_SYN", data[label_L2 == 21])
+        x_TCP_IP_DoS_UDP = ltn.Variable("x_TCP_IP_DoS_UDP", data[label_L2 == 22])
+        x_benign = ltn.Variable("x_benign", data[label_L2 == 23])
+        x_arp_spoofing = ltn.Variable("x_arp_spoofing", data[label_L2 == 24])
+
+        # rules - single class exclusive
+        valid_forall_expressions = []
+        variables_labels = [
+            (x_MQTT_DDoS_Connect_Flood, l_MQTT_DDoS_Connect_Flood),
+            (x_MQTT_DDoS_Publish_Flood, l_MQTT_DDoS_Publish_Flood),
+            (x_MQTT_DoS_Connect_Flood, l_MQTT_DoS_Connect_Flood),
+            (x_MQTT_DoS_Publish_Flood, l_MQTT_DoS_Publish_Flood),
+            (x_MQTT_Malformed_Data, l_MQTT_Malformed_Data),
+            (x_Recon_Port_Scan, l_Recon_Port_Scan),
+            (x_Recon_OS_Scan, l_Recon_OS_Scan),
+            (x_Recon_VulScan, l_Recon_VulScan),
+            (x_Recon_Ping_Sweep, l_Recon_Ping_Sweep),
+            (x_TCP_IP_DDoS_TCP, l_TCP_IP_DDoS_TCP),
+            (x_TCP_IP_DDoS_ICMP, l_TCP_IP_DDoS_ICMP),
+            (x_TCP_IP_DDoS_SYN, l_TCP_IP_DDoS_SYN),
+            (x_TCP_IP_DDoS_UDP, l_TCP_IP_DDoS_UDP),
+            (x_TCP_IP_DoS_TCP, l_TCP_IP_DoS_TCP),
+            (x_TCP_IP_DoS_ICMP, l_TCP_IP_DoS_ICMP),
+            (x_TCP_IP_DoS_SYN, l_TCP_IP_DoS_SYN),
+            (x_TCP_IP_DoS_UDP, l_TCP_IP_DoS_UDP),
+            (x_benign, l_benign),
+            (x_arp_spoofing, l_arp_spoofing),
+        ]
+        for variable, label in variables_labels:
+            if variable.value.size(0) != 0:
+                valid_forall_expressions.append(Forall(variable, P(variable, label, training=True)))
+        mean_sat += SatAgg(*valid_forall_expressions)
+    # In the loop: mean_sat accumulates the satisfaction levels for all the logical rules across the batches.
+    # After the loop: mean_sat becomes the average satisfaction level of the logical rules over the entire dataset.
+    mean_sat /= len(loader)
+    return mean_sat
 
 
 
@@ -179,10 +208,80 @@ batch_size = 64
 train_loader = DataLoader(train_data, train_label_L2, batch_size, shuffle=True)
 test_loader = DataLoader(test_data, test_label_L2, batch_size, shuffle=False)
 
-# Learning
+print("Create train and test loader done.")
+
+print("Start training...")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
 
-for epoch in range(100):
+for epoch in range(1):
     train_loss = 0.0
-    for batch_idx, (data, labels) in enumerate(train_loader):
+
+    for batch_idx, (data, label_L2) in enumerate(train_loader):
         optimizer.zero_grad()
+        # we ground the variables with current batch data
+        x = ltn.Variable("x", data)
+        x_MQTT_DDoS_Connect_Flood = ltn.Variable("x_MQTT_DDoS_Connect_Flood", data[label_L2 == 6])
+        x_MQTT_DDoS_Publish_Flood = ltn.Variable("x_MQTT_DDoS_Publish_Flood", data[label_L2 == 7])
+        x_MQTT_DoS_Connect_Flood = ltn.Variable("x_MQTT_DoS_Connect_Flood", data[label_L2 == 8])
+        x_MQTT_DoS_Publish_Flood = ltn.Variable("x_MQTT_DoS_Publish_Flood", data[label_L2 == 9])
+        x_MQTT_Malformed_Data = ltn.Variable("x_MQTT_Malformed_Data", data[label_L2 == 10])
+        x_Recon_Port_Scan = ltn.Variable("x_Recon_Port_Scan", data[label_L2 == 11])
+        x_Recon_OS_Scan = ltn.Variable("x_Recon_OS_Scan", data[label_L2 == 12])
+        x_Recon_VulScan = ltn.Variable("x_Recon_VulScan", data[label_L2 == 13])
+        x_Recon_Ping_Sweep = ltn.Variable("x_Recon_Ping_Sweep", data[label_L2 == 14])
+        x_TCP_IP_DDoS_TCP = ltn.Variable("x_TCP_IP_DDoS_TCP", data[label_L2 == 15])
+        x_TCP_IP_DDoS_ICMP = ltn.Variable("x_TCP_IP_DDoS_ICMP", data[label_L2 == 16])
+        x_TCP_IP_DDoS_SYN = ltn.Variable("x_TCP_IP_DDoS_SYN", data[label_L2 == 17])
+        x_TCP_IP_DDoS_UDP = ltn.Variable("x_TCP_IP_DDoS_UDP", data[label_L2 == 18])
+        x_TCP_IP_DoS_TCP = ltn.Variable("x_TCP_IP_DoS_TCP", data[label_L2 == 19])
+        x_TCP_IP_DoS_ICMP = ltn.Variable("x_TCP_IP_DoS_ICMP", data[label_L2 == 20])
+        x_TCP_IP_DoS_SYN = ltn.Variable("x_TCP_IP_DoS_SYN", data[label_L2 == 21])
+        x_TCP_IP_DoS_UDP = ltn.Variable("x_TCP_IP_DoS_UDP", data[label_L2 == 22])
+        x_benign = ltn.Variable("x_benign", data[label_L2 == 23])
+        x_arp_spoofing = ltn.Variable("x_arp_spoofing", data[label_L2 == 24])
+
+        # rules - single class exclusive
+        valid_forall_expressions = []
+
+        variables_labels = [
+            (x_MQTT_DDoS_Connect_Flood, l_MQTT_DDoS_Connect_Flood),
+            (x_MQTT_DDoS_Publish_Flood, l_MQTT_DDoS_Publish_Flood),
+            (x_MQTT_DoS_Connect_Flood, l_MQTT_DoS_Connect_Flood),
+            (x_MQTT_DoS_Publish_Flood, l_MQTT_DoS_Publish_Flood),
+            (x_MQTT_Malformed_Data, l_MQTT_Malformed_Data),
+            (x_Recon_Port_Scan, l_Recon_Port_Scan),
+            (x_Recon_OS_Scan, l_Recon_OS_Scan),
+            (x_Recon_VulScan, l_Recon_VulScan),
+            (x_Recon_Ping_Sweep, l_Recon_Ping_Sweep),
+            (x_TCP_IP_DDoS_TCP, l_TCP_IP_DDoS_TCP),
+            (x_TCP_IP_DDoS_ICMP, l_TCP_IP_DDoS_ICMP),
+            (x_TCP_IP_DDoS_SYN, l_TCP_IP_DDoS_SYN),
+            (x_TCP_IP_DDoS_UDP, l_TCP_IP_DDoS_UDP),
+            (x_TCP_IP_DoS_TCP, l_TCP_IP_DoS_TCP),
+            (x_TCP_IP_DoS_ICMP, l_TCP_IP_DoS_ICMP),
+            (x_TCP_IP_DoS_SYN, l_TCP_IP_DoS_SYN),
+            (x_TCP_IP_DoS_UDP, l_TCP_IP_DoS_UDP),
+            (x_benign, l_benign),
+            (x_arp_spoofing, l_arp_spoofing),
+        ]
+
+        for variable, label in variables_labels:
+            if variable.value.size(0) != 0:
+                valid_forall_expressions.append(Forall(variable, P(variable, label, training=True)))
+
+        sat_agg = SatAgg(*valid_forall_expressions) # the satisfaction level over the current batch
+        loss = 1. - sat_agg
+        loss.backward()
+        optimizer.step()
+        train_loss += loss.item()
+    
+    train_loss = train_loss / len(train_loader)
+
+    # print metrics
+    if epoch % 1 == 0:
+        print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f"
+              % (epoch, train_loss, compute_sat_level(train_loader), compute_sat_level(test_loader),
+                 compute_accuracy(train_loader), compute_accuracy(test_loader)))
+        # Evaluate
+        precision, recall, f1 = compute_metrics(test_loader, mlp)
+        print(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
