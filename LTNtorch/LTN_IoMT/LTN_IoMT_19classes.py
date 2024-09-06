@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler, label_binarize
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score, auc, precision_recall_curve
 import matplotlib.pyplot as plt
 from utils import MLP, LogitsToPredicate, DataLoader
-import custom_fuzzy_ops
+import custom_fuzzy_ops as custom_fuzzy_ops
 
 
 # it computes the overall accuracy of the predictions of the trained model using the given data loader
@@ -123,19 +123,22 @@ train_data = pd.read_csv(processed_train_file)
 test_data = pd.read_csv(processed_test_file)
 
 # 将标签映射到整数，适用于19个类别的场景 ('label_L1' remains in the train_data and test_data)
-train_label_L1, train_label_L2 = train_data("label_L1"), train_data.pop("label_L2")
-test_label_L1, test_label_L2 = test_data("label_L1"), test_data.pop("label_L2")
-
-label_mapping = {"Benign": 0, "MQTT": 1, "Recon": 2, "ARP_Spoofing": 3, "TCP_IP-DDOS": 4, "TCP_IP-DOS": 5,
-                 "MQTT-DDoS-Connect_Flood": 6, "MQTT-DDoS-Publish_Flood": 7, "MQTT-DoS-Connect_Flood": 8,
-                 "MQTT-DoS-Publish_Flood": 9, "MQTT-Malformed_Data": 10,
+label_L1_mapping = {"Benign": 0, "MQTT": 1, "Recon": 2, "ARP_Spoofing": 3, "TCP_IP-DDOS": 4, "TCP_IP-DOS": 5}
+label_L2_mapping = {"MQTT-DDoS-Connect_Flood": 6, "MQTT-DDoS-Publish_Flood": 7, "MQTT-DoS-Connect_Flood": 8, "MQTT-DoS-Publish_Flood": 9, "MQTT-Malformed_Data": 10,
                  "Recon-Port_Scan": 11, "Recon-OS_Scan": 12, "Recon-VulScan": 13, "Recon-Ping_Sweep": 14,
                  "TCP_IP-DDoS-TCP": 15, "TCP_IP-DDoS-ICMP": 16,  "TCP_IP-DDoS-SYN": 17, "TCP_IP-DDoS-UDP": 18,
                  "TCP_IP-DoS-TCP": 19, "TCP_IP-DoS-ICMP": 20, "TCP_IP-DoS-SYN": 21, "TCP_IP-DoS-UDP": 22,
-                 "benign": 23,
-                 "arp_spoofing": 24}
-train_label_L1, train_label_L2 = train_label_L1.map(label_mapping), train_label_L2.map(label_mapping)
-test_label_L1, test_label_L2 = test_label_L1.map(label_mapping), test_label_L2.map(label_mapping)
+                 "benign": 23, "arp_spoofing": 24}
+# 应用标签映射并确保存回列
+train_data["label_L1"] = train_data["label_L1"].map(label_L1_mapping)
+train_data["label_L2"] = train_data["label_L2"].map(label_L2_mapping)
+test_data["label_L1"] = test_data["label_L1"].map(label_L1_mapping)
+test_data["label_L2"] = test_data["label_L2"].map(label_L2_mapping)
+
+# 移除 'label_L2' 并保留 'label_L1'
+train_label_L1, train_label_L2 = train_data["label_L1"], train_data.pop("label_L2")
+test_label_L1, test_label_L2 = test_data["label_L1"], test_data.pop("label_L2")
+
 
 # 使用 StandardScaler 对数据进行缩放
 scaler = StandardScaler()
@@ -160,32 +163,34 @@ print("Data processing and scaling done.")
 # we define the constants
 # 并移动到设备
 # we define the constants with 25 classes, including 'benign' and 'arp_spoofing'
-l_Benign = ltn.Constant(torch.tensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-l_MQTT = ltn.Constant(torch.tensor([0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-l_Recon = ltn.Constant(torch.tensor([0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-l_ARP_Spoofing = ltn.Constant(torch.tensor([0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-l_TCP_IP_DDOS = ltn.Constant(torch.tensor([0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-l_TCP_IP_DOS = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
 
-l_MQTT_DDoS_Connect_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-l_MQTT_DDoS_Publish_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-l_MQTT_DoS_Connect_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-l_MQTT_DoS_Publish_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-l_MQTT_Malformed_Data = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-l_Recon_Port_Scan = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-l_Recon_OS_Scan = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-l_Recon_VulScan = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-l_Recon_Ping_Sweep = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
-l_TCP_IP_DDoS_TCP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]))
-l_TCP_IP_DDoS_ICMP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]))
-l_TCP_IP_DDoS_SYN = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]))
-l_TCP_IP_DDoS_UDP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]))
-l_TCP_IP_DoS_TCP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]))
-l_TCP_IP_DoS_ICMP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]))
-l_TCP_IP_DoS_SYN = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0]))
-l_TCP_IP_DoS_UDP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]))
-l_benign = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]))
-l_arp_spoofing = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]))
+# l_Benign = ltn.Constant(torch.tensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+# l_MQTT = ltn.Constant(torch.tensor([0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+# l_Recon = ltn.Constant(torch.tensor([0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+# l_ARP_Spoofing = ltn.Constant(torch.tensor([0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+# l_TCP_IP_DDOS = ltn.Constant(torch.tensor([0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+# l_TCP_IP_DOS = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+
+# one-hot encoded vector of length 19
+l_MQTT_DDoS_Connect_Flood = ltn.Constant(torch.tensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_MQTT_DDoS_Publish_Flood = ltn.Constant(torch.tensor([0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_MQTT_DoS_Connect_Flood = ltn.Constant(torch.tensor([0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_MQTT_DoS_Publish_Flood = ltn.Constant(torch.tensor([0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_MQTT_Malformed_Data = ltn.Constant(torch.tensor([0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_Recon_Port_Scan = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_Recon_OS_Scan = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_Recon_VulScan = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_Recon_Ping_Sweep = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_TCP_IP_DDoS_TCP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_TCP_IP_DDoS_ICMP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_TCP_IP_DDoS_SYN = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]))
+l_TCP_IP_DDoS_UDP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]))
+l_TCP_IP_DoS_TCP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]))
+l_TCP_IP_DoS_ICMP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]))
+l_TCP_IP_DoS_SYN = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]))
+l_TCP_IP_DoS_UDP = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0]))
+l_benign = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]))
+l_arp_spoofing = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]))
 
 # 创建模型实例并移动到设备 
 # Notice: Input layer has 46 features
@@ -194,7 +199,8 @@ P = ltn.Predicate(LogitsToPredicate(mlp))
 
 # define the connectives, quantifiers, and the SatAgg
 Not = ltn.Connective(ltn.fuzzy_ops.NotStandard())
-And = ltn.Connective(custom_fuzzy_ops.AndProd())
+# And = ltn.Connective(custom_fuzzy_ops.AndProd())
+And = ltn.Connective(ltn.fuzzy_ops.AndProd())
 Or = ltn.Connective(ltn.fuzzy_ops.OrProbSum())
 Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
 SatAgg = ltn.fuzzy_ops.SatAgg()

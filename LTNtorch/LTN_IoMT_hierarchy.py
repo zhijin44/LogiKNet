@@ -3,7 +3,7 @@ import pandas as pd
 import ltn
 import numpy as np
 from sklearn.preprocessing import StandardScaler, label_binarize
-import custom_fuzzy_ops
+import LTNtorch.LTN_IoMT.custom_fuzzy_ops as custom_fuzzy_ops
 
 # 加载数据集
 processed_train_file = '../CIC_IoMT/19classes/reduced_train_data.csv'

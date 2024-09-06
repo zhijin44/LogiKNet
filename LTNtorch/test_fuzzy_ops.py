@@ -1,4 +1,4 @@
-import custom_fuzzy_ops as cfo
+import LTNtorch.LTN_IoMT.custom_fuzzy_ops as cfo
 import torch
 import ltn
 

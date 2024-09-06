@@ -3,7 +3,7 @@ import pandas as pd
 import ltn
 from sklearn.metrics import accuracy_score
 import numpy as np
-import custom_fuzzy_ops
+import LTNtorch.LTN_IoMT.custom_fuzzy_ops as custom_fuzzy_ops
 
 df = pd.read_csv("datasets/crabs.dat", sep=" ", skipinitialspace=True)
 df = df.sample(frac=1)  # shuffle dataset
