@@ -158,3 +158,17 @@ Start training...
  epoch 3 | loss 0.0030 | Train Sat 0.998 | Test Sat 0.974 | Train Acc 0.372 | Test Acc 0.363 | 
  epoch 4 | loss 0.0024 | Train Sat 0.997 | Test Sat 0.968 | Train Acc 0.396 | Test Acc 0.400 |
  (after solve the multi-operand problem, 1st attempt)
+
+
+--------------------------------------------------------------------------------------------------------
+  epoch 0 | loss 0.3914 | Train Sat 0.736 | Test Sat 0.835 | Train Acc 0.953 | Test Acc 0.944
+Macro Recall: 0.7607, Macro Precision: 0.7961, Macro F1-Score: 0.7373
+ epoch 1 | loss 0.2434 | Train Sat 0.769 | Test Sat 0.873 | Train Acc 0.963 | Test Acc 0.949
+Macro Recall: 0.8090, Macro Precision: 0.8379, Macro F1-Score: 0.7947
+ epoch 2 | loss 0.2245 | Train Sat 0.781 | Test Sat 0.882 | Train Acc 0.966 | Test Acc 0.951
+Macro Recall: 0.8227, Macro Precision: 0.8405, Macro F1-Score: 0.8062
+ epoch 3 | loss 0.2149 | Train Sat 0.790 | Test Sat 0.887 | Train Acc 0.970 | Test Acc 0.954
+Macro Recall: 0.8258, Macro Precision: 0.8596, Macro F1-Score: 0.8171
+ epoch 4 | loss 0.2070 | Train Sat 0.795 | Test Sat 0.898 | Train Acc 0.971 | Test Acc 0.955
+Macro Recall: 0.8275, Macro Precision: 0.8652, Macro F1-Score: 0.8211
+（back to native 19 classification with LTN）

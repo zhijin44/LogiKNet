@@ -163,7 +163,7 @@ test_loader = DataLoader(test_data, test_labels, batch_size, shuffle=False)
 # Learning
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
 
-for epoch in range(100):
+for epoch in range(1):
     train_loss = 0.0
     for batch_idx, (data, labels) in enumerate(train_loader):
         optimizer.zero_grad()

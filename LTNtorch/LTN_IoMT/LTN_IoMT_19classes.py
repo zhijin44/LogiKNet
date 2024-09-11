@@ -60,25 +60,25 @@ def compute_metrics(loader, model):
 def compute_sat_level(loader):
     mean_sat = 0
     for data, label_L2 in loader:
-        x_MQTT_DDoS_Connect_Flood = ltn.Variable("x_MQTT_DDoS_Connect_Flood", data[label_L2 == 6])
-        x_MQTT_DDoS_Publish_Flood = ltn.Variable("x_MQTT_DDoS_Publish_Flood", data[label_L2 == 7])
-        x_MQTT_DoS_Connect_Flood = ltn.Variable("x_MQTT_DoS_Connect_Flood", data[label_L2 == 8])
-        x_MQTT_DoS_Publish_Flood = ltn.Variable("x_MQTT_DoS_Publish_Flood", data[label_L2 == 9])
-        x_MQTT_Malformed_Data = ltn.Variable("x_MQTT_Malformed_Data", data[label_L2 == 10])
-        x_Recon_Port_Scan = ltn.Variable("x_Recon_Port_Scan", data[label_L2 == 11])
-        x_Recon_OS_Scan = ltn.Variable("x_Recon_OS_Scan", data[label_L2 == 12])
-        x_Recon_VulScan = ltn.Variable("x_Recon_VulScan", data[label_L2 == 13])
-        x_Recon_Ping_Sweep = ltn.Variable("x_Recon_Ping_Sweep", data[label_L2 == 14])
-        x_TCP_IP_DDoS_TCP = ltn.Variable("x_TCP_IP_DDoS_TCP", data[label_L2 == 15])
-        x_TCP_IP_DDoS_ICMP = ltn.Variable("x_TCP_IP_DDoS_ICMP", data[label_L2 == 16])
-        x_TCP_IP_DDoS_SYN = ltn.Variable("x_TCP_IP_DDoS_SYN", data[label_L2 == 17])
-        x_TCP_IP_DDoS_UDP = ltn.Variable("x_TCP_IP_DDoS_UDP", data[label_L2 == 18])
-        x_TCP_IP_DoS_TCP = ltn.Variable("x_TCP_IP_DoS_TCP", data[label_L2 == 19])
-        x_TCP_IP_DoS_ICMP = ltn.Variable("x_TCP_IP_DoS_ICMP", data[label_L2 == 20])
-        x_TCP_IP_DoS_SYN = ltn.Variable("x_TCP_IP_DoS_SYN", data[label_L2 == 21])
-        x_TCP_IP_DoS_UDP = ltn.Variable("x_TCP_IP_DoS_UDP", data[label_L2 == 22])
-        x_benign = ltn.Variable("x_benign", data[label_L2 == 23])
-        x_arp_spoofing = ltn.Variable("x_arp_spoofing", data[label_L2 == 24])
+        x_MQTT_DDoS_Connect_Flood = ltn.Variable("x_MQTT_DDoS_Connect_Flood", data[label_L2 == 0])
+        x_MQTT_DDoS_Publish_Flood = ltn.Variable("x_MQTT_DDoS_Publish_Flood", data[label_L2 == 1])
+        x_MQTT_DoS_Connect_Flood = ltn.Variable("x_MQTT_DoS_Connect_Flood", data[label_L2 == 2])
+        x_MQTT_DoS_Publish_Flood = ltn.Variable("x_MQTT_DoS_Publish_Flood", data[label_L2 == 3])
+        x_MQTT_Malformed_Data = ltn.Variable("x_MQTT_Malformed_Data", data[label_L2 == 4])
+        x_Recon_Port_Scan = ltn.Variable("x_Recon_Port_Scan", data[label_L2 == 5])
+        x_Recon_OS_Scan = ltn.Variable("x_Recon_OS_Scan", data[label_L2 == 6])
+        x_Recon_VulScan = ltn.Variable("x_Recon_VulScan", data[label_L2 == 7])
+        x_Recon_Ping_Sweep = ltn.Variable("x_Recon_Ping_Sweep", data[label_L2 == 8])
+        x_TCP_IP_DDoS_TCP = ltn.Variable("x_TCP_IP_DDoS_TCP", data[label_L2 == 9])
+        x_TCP_IP_DDoS_ICMP = ltn.Variable("x_TCP_IP_DDoS_ICMP", data[label_L2 == 10])
+        x_TCP_IP_DDoS_SYN = ltn.Variable("x_TCP_IP_DDoS_SYN", data[label_L2 == 11])
+        x_TCP_IP_DDoS_UDP = ltn.Variable("x_TCP_IP_DDoS_UDP", data[label_L2 == 12])
+        x_TCP_IP_DoS_TCP = ltn.Variable("x_TCP_IP_DoS_TCP", data[label_L2 == 13])
+        x_TCP_IP_DoS_ICMP = ltn.Variable("x_TCP_IP_DoS_ICMP", data[label_L2 == 14])
+        x_TCP_IP_DoS_SYN = ltn.Variable("x_TCP_IP_DoS_SYN", data[label_L2 == 15])
+        x_TCP_IP_DoS_UDP = ltn.Variable("x_TCP_IP_DoS_UDP", data[label_L2 == 16])
+        x_benign = ltn.Variable("x_benign", data[label_L2 == 17])
+        x_arp_spoofing = ltn.Variable("x_arp_spoofing", data[label_L2 == 18])
 
         # rules - single class exclusive
         valid_forall_expressions = []
@@ -124,11 +124,11 @@ test_data = pd.read_csv(processed_test_file)
 
 # 将标签映射到整数，适用于19个类别的场景 ('label_L1' remains in the train_data and test_data)
 label_L1_mapping = {"Benign": 0, "MQTT": 1, "Recon": 2, "ARP_Spoofing": 3, "TCP_IP-DDOS": 4, "TCP_IP-DOS": 5}
-label_L2_mapping = {"MQTT-DDoS-Connect_Flood": 6, "MQTT-DDoS-Publish_Flood": 7, "MQTT-DoS-Connect_Flood": 8, "MQTT-DoS-Publish_Flood": 9, "MQTT-Malformed_Data": 10,
-                 "Recon-Port_Scan": 11, "Recon-OS_Scan": 12, "Recon-VulScan": 13, "Recon-Ping_Sweep": 14,
-                 "TCP_IP-DDoS-TCP": 15, "TCP_IP-DDoS-ICMP": 16,  "TCP_IP-DDoS-SYN": 17, "TCP_IP-DDoS-UDP": 18,
-                 "TCP_IP-DoS-TCP": 19, "TCP_IP-DoS-ICMP": 20, "TCP_IP-DoS-SYN": 21, "TCP_IP-DoS-UDP": 22,
-                 "benign": 23, "arp_spoofing": 24}
+label_L2_mapping = {"MQTT-DDoS-Connect_Flood": 0, "MQTT-DDoS-Publish_Flood": 1, "MQTT-DoS-Connect_Flood": 2, "MQTT-DoS-Publish_Flood": 3, "MQTT-Malformed_Data": 4,
+                 "Recon-Port_Scan": 5, "Recon-OS_Scan": 6, "Recon-VulScan": 7, "Recon-Ping_Sweep": 8,
+                 "TCP_IP-DDoS-TCP": 9, "TCP_IP-DDoS-ICMP": 10,  "TCP_IP-DDoS-SYN": 11, "TCP_IP-DDoS-UDP": 12,
+                 "TCP_IP-DoS-TCP": 13, "TCP_IP-DoS-ICMP": 14, "TCP_IP-DoS-SYN": 15, "TCP_IP-DoS-UDP": 16,
+                 "benign": 17, "arp_spoofing": 18}
 # 应用标签映射并确保存回列
 train_data["label_L1"] = train_data["label_L1"].map(label_L1_mapping)
 train_data["label_L2"] = train_data["label_L2"].map(label_L2_mapping)
@@ -219,32 +219,32 @@ print("Create train and test loader done.")
 print("Start training...")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
 
-for epoch in range(1):
+for epoch in range(5):
     train_loss = 0.0
 
     for batch_idx, (data, label_L2) in enumerate(train_loader):
         optimizer.zero_grad()
         # we ground the variables with current batch data
         x = ltn.Variable("x", data)
-        x_MQTT_DDoS_Connect_Flood = ltn.Variable("x_MQTT_DDoS_Connect_Flood", data[label_L2 == 6])
-        x_MQTT_DDoS_Publish_Flood = ltn.Variable("x_MQTT_DDoS_Publish_Flood", data[label_L2 == 7])
-        x_MQTT_DoS_Connect_Flood = ltn.Variable("x_MQTT_DoS_Connect_Flood", data[label_L2 == 8])
-        x_MQTT_DoS_Publish_Flood = ltn.Variable("x_MQTT_DoS_Publish_Flood", data[label_L2 == 9])
-        x_MQTT_Malformed_Data = ltn.Variable("x_MQTT_Malformed_Data", data[label_L2 == 10])
-        x_Recon_Port_Scan = ltn.Variable("x_Recon_Port_Scan", data[label_L2 == 11])
-        x_Recon_OS_Scan = ltn.Variable("x_Recon_OS_Scan", data[label_L2 == 12])
-        x_Recon_VulScan = ltn.Variable("x_Recon_VulScan", data[label_L2 == 13])
-        x_Recon_Ping_Sweep = ltn.Variable("x_Recon_Ping_Sweep", data[label_L2 == 14])
-        x_TCP_IP_DDoS_TCP = ltn.Variable("x_TCP_IP_DDoS_TCP", data[label_L2 == 15])
-        x_TCP_IP_DDoS_ICMP = ltn.Variable("x_TCP_IP_DDoS_ICMP", data[label_L2 == 16])
-        x_TCP_IP_DDoS_SYN = ltn.Variable("x_TCP_IP_DDoS_SYN", data[label_L2 == 17])
-        x_TCP_IP_DDoS_UDP = ltn.Variable("x_TCP_IP_DDoS_UDP", data[label_L2 == 18])
-        x_TCP_IP_DoS_TCP = ltn.Variable("x_TCP_IP_DoS_TCP", data[label_L2 == 19])
-        x_TCP_IP_DoS_ICMP = ltn.Variable("x_TCP_IP_DoS_ICMP", data[label_L2 == 20])
-        x_TCP_IP_DoS_SYN = ltn.Variable("x_TCP_IP_DoS_SYN", data[label_L2 == 21])
-        x_TCP_IP_DoS_UDP = ltn.Variable("x_TCP_IP_DoS_UDP", data[label_L2 == 22])
-        x_benign = ltn.Variable("x_benign", data[label_L2 == 23])
-        x_arp_spoofing = ltn.Variable("x_arp_spoofing", data[label_L2 == 24])
+        x_MQTT_DDoS_Connect_Flood = ltn.Variable("x_MQTT_DDoS_Connect_Flood", data[label_L2 == 0])
+        x_MQTT_DDoS_Publish_Flood = ltn.Variable("x_MQTT_DDoS_Publish_Flood", data[label_L2 == 1])
+        x_MQTT_DoS_Connect_Flood = ltn.Variable("x_MQTT_DoS_Connect_Flood", data[label_L2 == 2])
+        x_MQTT_DoS_Publish_Flood = ltn.Variable("x_MQTT_DoS_Publish_Flood", data[label_L2 == 3])
+        x_MQTT_Malformed_Data = ltn.Variable("x_MQTT_Malformed_Data", data[label_L2 == 4])
+        x_Recon_Port_Scan = ltn.Variable("x_Recon_Port_Scan", data[label_L2 == 5])
+        x_Recon_OS_Scan = ltn.Variable("x_Recon_OS_Scan", data[label_L2 == 6])
+        x_Recon_VulScan = ltn.Variable("x_Recon_VulScan", data[label_L2 == 7])
+        x_Recon_Ping_Sweep = ltn.Variable("x_Recon_Ping_Sweep", data[label_L2 == 8])
+        x_TCP_IP_DDoS_TCP = ltn.Variable("x_TCP_IP_DDoS_TCP", data[label_L2 == 9])
+        x_TCP_IP_DDoS_ICMP = ltn.Variable("x_TCP_IP_DDoS_ICMP", data[label_L2 == 10])
+        x_TCP_IP_DDoS_SYN = ltn.Variable("x_TCP_IP_DDoS_SYN", data[label_L2 == 11])
+        x_TCP_IP_DDoS_UDP = ltn.Variable("x_TCP_IP_DDoS_UDP", data[label_L2 == 12])
+        x_TCP_IP_DoS_TCP = ltn.Variable("x_TCP_IP_DoS_TCP", data[label_L2 == 13])
+        x_TCP_IP_DoS_ICMP = ltn.Variable("x_TCP_IP_DoS_ICMP", data[label_L2 == 14])
+        x_TCP_IP_DoS_SYN = ltn.Variable("x_TCP_IP_DoS_SYN", data[label_L2 == 15])
+        x_TCP_IP_DoS_UDP = ltn.Variable("x_TCP_IP_DoS_UDP", data[label_L2 == 16])
+        x_benign = ltn.Variable("x_benign", data[label_L2 == 17])
+        x_arp_spoofing = ltn.Variable("x_arp_spoofing", data[label_L2 == 18])
 
         # rules - single class exclusive
         valid_forall_expressions = []
@@ -270,7 +270,7 @@ for epoch in range(1):
             (x_benign, l_benign),
             (x_arp_spoofing, l_arp_spoofing),
         ]
-
+        
         for variable, label in variables_labels:
             if variable.value.size(0) != 0:
                 valid_forall_expressions.append(Forall(variable, P(variable, label, training=True)))
@@ -280,7 +280,6 @@ for epoch in range(1):
         loss.backward()
         optimizer.step()
         train_loss += loss.item()
-    
     train_loss = train_loss / len(train_loader)
 
     # print metrics
