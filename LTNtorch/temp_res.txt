@@ -171,4 +171,17 @@ Macro Recall: 0.8227, Macro Precision: 0.8405, Macro F1-Score: 0.8062
 Macro Recall: 0.8258, Macro Precision: 0.8596, Macro F1-Score: 0.8171
  epoch 4 | loss 0.2070 | Train Sat 0.795 | Test Sat 0.898 | Train Acc 0.971 | Test Acc 0.955
 Macro Recall: 0.8275, Macro Precision: 0.8652, Macro F1-Score: 0.8211
-（back to native 19 classification with LTN）
+（native 19 classification with LTN）
+
+Start training...
+ epoch 0 | loss 0.5144 | Train Sat 0.538 | Test Sat 0.580 | Train Acc 0.792 | Test Acc 0.664
+Macro Recall: 0.5682, Macro Precision: 0.5718, Macro F1-Score: 0.4972
+ epoch 1 | loss 0.4370 | Train Sat 0.572 | Test Sat 0.600 | Train Acc 0.821 | Test Acc 0.698
+Macro Recall: 0.5998, Macro Precision: 0.6083, Macro F1-Score: 0.5343
+ epoch 2 | loss 0.4235 | Train Sat 0.580 | Test Sat 0.611 | Train Acc 0.822 | Test Acc 0.687
+Macro Recall: 0.5895, Macro Precision: 0.6079, Macro F1-Score: 0.5249
+ epoch 3 | loss 0.4169 | Train Sat 0.585 | Test Sat 0.615 | Train Acc 0.825 | Test Acc 0.687
+Macro Recall: 0.5965, Macro Precision: 0.6052, Macro F1-Score: 0.5247
+ epoch 4 | loss 0.4128 | Train Sat 0.588 | Test Sat 0.612 | Train Acc 0.818 | Test Acc 0.696
+Macro Recall: 0.6067, Macro Precision: 0.6125, Macro F1-Score: 0.5497
+(without label_L1)
