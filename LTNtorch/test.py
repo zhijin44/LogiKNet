@@ -1,5 +1,7 @@
 import os
 import pandas as pd
-print(os.getcwd())
 
-df = pd.read_csv("datasets/crabs.dat", sep=" ", skipinitialspace=True)
+
+save_path = "LTNtorch/outputs/LTN_19classes_reduce_PR_curve.txt"  # 设定保存路径和文件名
+
+

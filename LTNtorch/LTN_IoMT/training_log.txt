@@ -1,0 +1,22 @@
+2024-09-20 11:37:43,903 - epoch 0 | loss 0.3809 | Train Sat 0.722 | Test Sat 0.842 | Train Acc 0.956 | Test Acc 0.943
+2024-09-20 11:37:45,290 - Macro Recall: 0.7373, Macro Precision: 0.7414, Macro F1-Score: 0.7080
+2024-09-20 11:37:45,290 - Scores by Class:
+2024-09-20 11:37:45,290 - Class MQTT-DDoS-Connect_Flood: Recall: 0.990290, Precision: 0.987275, F1: 0.988780
+2024-09-20 11:37:45,290 - Class MQTT-DDoS-Publish_Flood: Recall: 0.104682, Precision: 0.913900, F1: 0.187846
+2024-09-20 11:37:45,290 - Class MQTT-DoS-Connect_Flood: Recall: 0.957841, Precision: 0.881022, F1: 0.917827
+2024-09-20 11:37:45,290 - Class MQTT-DoS-Publish_Flood: Recall: 0.998942, Precision: 0.504244, F1: 0.670190
+2024-09-20 11:37:45,290 - Class MQTT-Malformed_Data: Recall: 0.000000, Precision: 0.000000, F1: 0.000000
+2024-09-20 11:37:45,290 - Class Recon-Port_Scan: Recall: 0.929847, Precision: 0.863187, F1: 0.895278
+2024-09-20 11:37:45,290 - Class Recon-OS_Scan: Recall: 0.048252, Precision: 0.407489, F1: 0.086287
+2024-09-20 11:37:45,290 - Class Recon-VulScan: Recall: 0.000000, Precision: 0.000000, F1: 0.000000
+2024-09-20 11:37:45,290 - Class Recon-Ping_Sweep: Recall: 0.000000, Precision: 0.000000, F1: 0.000000
+2024-09-20 11:37:45,290 - Class TCP_IP-DDoS-TCP: Recall: 0.998050, Precision: 1.000000, F1: 0.999024
+2024-09-20 11:37:45,290 - Class TCP_IP-DDoS-ICMP: Recall: 0.997650, Precision: 0.999950, F1: 0.998799
+2024-09-20 11:37:45,290 - Class TCP_IP-DDoS-SYN: Recall: 0.997050, Precision: 0.998398, F1: 0.997723
+2024-09-20 11:37:45,290 - Class TCP_IP-DDoS-UDP: Recall: 0.998450, Precision: 0.999049, F1: 0.998750
+2024-09-20 11:37:45,290 - Class TCP_IP-DoS-TCP: Recall: 0.999050, Precision: 0.998251, F1: 0.998651
+2024-09-20 11:37:45,290 - Class TCP_IP-DoS-ICMP: Recall: 0.999800, Precision: 0.997356, F1: 0.998577
+2024-09-20 11:37:45,291 - Class TCP_IP-DoS-SYN: Recall: 0.998450, Precision: 0.992989, F1: 0.995712
+2024-09-20 11:37:45,291 - Class TCP_IP-DoS-UDP: Recall: 1.000000, Precision: 0.998004, F1: 0.999001
+2024-09-20 11:37:45,291 - Class benign: Recall: 0.998591, Precision: 0.946469, F1: 0.971832
+2024-09-20 11:37:45,291 - Class arp_spoofing: Recall: 0.991972, Precision: 0.598823, F1: 0.746816

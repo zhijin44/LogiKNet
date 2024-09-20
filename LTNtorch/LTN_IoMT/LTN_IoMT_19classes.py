@@ -7,6 +7,17 @@ from sklearn.metrics import precision_recall_fscore_support, accuracy_score, auc
 import matplotlib.pyplot as plt
 from utils import MLP, LogitsToPredicate, DataLoader
 import custom_fuzzy_ops as custom_fuzzy_ops
+import logging
+import sys
+
+# Set up logging
+log_file = "/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/training_log.txt"
+logging.basicConfig(level=logging.INFO, 
+                    format='%(asctime)s - %(message)s',
+                    handlers=[
+                        logging.FileHandler(log_file),
+                        logging.StreamHandler(sys.stdout)  # This allows printing to both console and log file
+                    ])
 
 
 # it computes the overall accuracy of the predictions of the trained model using the given data loader
@@ -287,11 +298,18 @@ for epoch in range(1):
         print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f"
               % (epoch, train_loss, compute_sat_level(train_loader), compute_sat_level(test_loader),
                  compute_accuracy(train_loader), compute_accuracy(test_loader)))
+        train_sat = compute_sat_level(train_loader)
+        test_sat = compute_sat_level(test_loader)
+        train_acc = compute_accuracy(train_loader)
+        test_acc = compute_accuracy(test_loader)
+        logging.info(f"epoch {epoch} | loss {train_loss:.4f} | Train Sat {train_sat:.3f} | "
+                     f"Test Sat {test_sat:.3f} | Train Acc {train_acc:.3f} | Test Acc {test_acc:.3f}")
+
     # if epoch % 3 == 0: # Evaluate
     #     precision, recall, f1 = compute_metrics(test_loader, mlp)
     #     print(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
 
-
+print("Evaluating...")
 class_names = [
     "MQTT-DDoS-Connect_Flood", 
     "MQTT-DDoS-Publish_Flood", 
@@ -315,15 +333,19 @@ class_names = [
 ]
 precision, recall, f1 = compute_metrics(test_loader, mlp)
 print(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
+logging.info(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
+
 print("Scores by Class:")
+logging.info("Scores by Class:")
 for i, class_name in enumerate(class_names):
     print(f"Class {class_name}: Recall: {recall[i]:.6f}, Precision: {precision[i]:.6f}, F1: {f1[i]:.6f}")
+    logging.info(f"Class {class_name}: Recall: {recall[i]:.6f}, Precision: {precision[i]:.6f}, F1: {f1[i]:.6f}")
 
 
 ###################################SAVE MODEL AND EVALUATION########################################
 
 # 训练循环结束后保存模型
-model_save_path = 'LTN_reduce_19classes.pth'
+model_save_path = '/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/LTN_reduce_19classes.pth'
 torch.save(mlp.state_dict(), model_save_path)
 print(f"Model saved to {model_save_path}")
 
