@@ -219,7 +219,7 @@ print("Create train and test loader done.")
 print("Start training...")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
 
-for epoch in range(4):
+for epoch in range(1):
     train_loss = 0.0
 
     for batch_idx, (data, label_L2) in enumerate(train_loader):
@@ -287,9 +287,9 @@ for epoch in range(4):
         print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f"
               % (epoch, train_loss, compute_sat_level(train_loader), compute_sat_level(test_loader),
                  compute_accuracy(train_loader), compute_accuracy(test_loader)))
-    if epoch % 3 == 0: # Evaluate
-        precision, recall, f1 = compute_metrics(test_loader, mlp)
-        print(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
+    # if epoch % 3 == 0: # Evaluate
+    #     precision, recall, f1 = compute_metrics(test_loader, mlp)
+    #     print(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
 
 
 class_names = [
@@ -367,6 +367,6 @@ def collect_predictions_and_labels(loader, model):
 
 # 在训练循环结束后绘制PR曲线
 all_labels, all_probabilities = collect_predictions_and_labels(test_loader, mlp)
-save_path = "../outputs/LTN_19classes_reduce_PR_curve.png"  # 设定保存路径和文件名
+save_path = "/home/zyang44/Github/baseline_cicIOT/LTNtorch/outputs/LTN_19classes_reduce_PR_curve.png"  # 设定保存路径和文件名
 # save_path = "outputs/LTN_6classes_PR_curve.png"
 plot_pr_curves(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)

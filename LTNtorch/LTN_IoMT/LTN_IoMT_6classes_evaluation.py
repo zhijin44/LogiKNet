@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.metrics import precision_recall_curve, auc
 from sklearn.preprocessing import StandardScaler, label_binarize
 import matplotlib.pyplot as plt
-from LTNtorch.LTN_IoMT.utils import MLP, DataLoader
+from utils import MLP, DataLoader
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -27,12 +27,12 @@ def collect_predictions_and_labels(loader, model):
 
 
 # 创建模型实例并加载权重
-mlp = MLP().to(device)
+mlp = MLP(layer_sizes=(45, 64, 32, 6)).to(device)
 mlp.load_state_dict(torch.load('LTN_reduce.pth'))
 mlp.eval()
 
 # 加载test数据和test loader
-processed_test_file = '.../CIC_IoMT/6classes/6classes_1700_test.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_test_data.csv'
 test_data = pd.read_csv(processed_test_file)
 test_labels = test_data.pop("label")
 
@@ -46,7 +46,7 @@ test_labels = torch.tensor(test_labels.to_numpy()).long()
 
 test_data = test_data_scaled.to(device)
 test_labels = test_labels.to(device)
-batch_size = 512
+batch_size = 64
 test_loader = DataLoader(test_data, test_labels, batch_size, shuffle=False)
 
 # 收集预测和标签，计算评估指标

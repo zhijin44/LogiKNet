@@ -186,3 +186,25 @@ Macro Recall: 0.5965, Macro Precision: 0.6052, Macro F1-Score: 0.5247
 Macro Recall: 0.6067, Macro Precision: 0.6125, Macro F1-Score: 0.5497
 (without label_L1)
 --------------------------------------------------------------------------------------------------------
+
+Macro Recall: 0.7532, Macro Precision: 0.7681, Macro F1-Score: 0.7398
+Scores by Class:
+Class MQTT-DDoS-Connect_Flood: Recall: 0.993749, Precision: 0.989876, F1: 0.991809
+Class MQTT-DDoS-Publish_Flood: Recall: 0.150428, Precision: 0.996066, F1: 0.261381
+Class MQTT-DoS-Connect_Flood: Recall: 0.976365, Precision: 0.900177, F1: 0.936724
+Class MQTT-DoS-Publish_Flood: Recall: 0.999882, Precision: 0.542139, F1: 0.703071
+Class MQTT-Malformed_Data: Recall: 0.000000, Precision: 0.000000, F1: 0.000000
+Class Recon-Port_Scan: Recall: 0.970029, Precision: 0.873289, F1: 0.919120
+Class Recon-OS_Scan: Recall: 0.238915, Precision: 0.359216, F1: 0.286967
+Class Recon-VulScan: Recall: 0.000000, Precision: 0.000000, F1: 0.000000
+Class Recon-Ping_Sweep: Recall: 0.000000, Precision: 0.000000, F1: 0.000000
+Class TCP_IP-DDoS-TCP: Recall: 0.999300, Precision: 0.999750, F1: 0.999525
+Class TCP_IP-DDoS-ICMP: Recall: 0.998100, Precision: 0.998449, F1: 0.998275
+Class TCP_IP-DDoS-SYN: Recall: 0.999900, Precision: 0.999950, F1: 0.999925
+Class TCP_IP-DDoS-UDP: Recall: 0.999050, Precision: 1.000000, F1: 0.999525
+Class TCP_IP-DoS-TCP: Recall: 1.000000, Precision: 0.997904, F1: 0.998951
+Class TCP_IP-DoS-ICMP: Recall: 0.992950, Precision: 0.998191, F1: 0.995563
+Class TCP_IP-DoS-SYN: Recall: 1.000000, Precision: 0.995570, F1: 0.997780
+Class TCP_IP-DoS-UDP: Recall: 1.000000, Precision: 0.999350, F1: 0.999675
+Class benign: Recall: 0.999548, Precision: 0.967443, F1: 0.983234
+Class arp_spoofing: Recall: 0.991972, Precision: 0.975747, F1: 0.983793
