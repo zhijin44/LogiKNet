@@ -219,7 +219,7 @@ print("Create train and test loader done.")
 print("Start training...")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
 
-for epoch in range(5):
+for epoch in range(4):
     train_loss = 0.0
 
     for batch_idx, (data, label_L2) in enumerate(train_loader):
@@ -287,6 +287,86 @@ for epoch in range(5):
         print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f"
               % (epoch, train_loss, compute_sat_level(train_loader), compute_sat_level(test_loader),
                  compute_accuracy(train_loader), compute_accuracy(test_loader)))
-        # Evaluate
+    if epoch % 3 == 0: # Evaluate
         precision, recall, f1 = compute_metrics(test_loader, mlp)
         print(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
+
+
+class_names = [
+    "MQTT-DDoS-Connect_Flood", 
+    "MQTT-DDoS-Publish_Flood", 
+    "MQTT-DoS-Connect_Flood", 
+    "MQTT-DoS-Publish_Flood", 
+    "MQTT-Malformed_Data",
+    "Recon-Port_Scan", 
+    "Recon-OS_Scan", 
+    "Recon-VulScan", 
+    "Recon-Ping_Sweep", 
+    "TCP_IP-DDoS-TCP", 
+    "TCP_IP-DDoS-ICMP",  
+    "TCP_IP-DDoS-SYN", 
+    "TCP_IP-DDoS-UDP", 
+    "TCP_IP-DoS-TCP", 
+    "TCP_IP-DoS-ICMP", 
+    "TCP_IP-DoS-SYN", 
+    "TCP_IP-DoS-UDP", 
+    "benign", 
+    "arp_spoofing"
+]
+precision, recall, f1 = compute_metrics(test_loader, mlp)
+print(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
+print("Scores by Class:")
+for i, class_name in enumerate(class_names):
+    print(f"Class {class_name}: Recall: {recall[i]:.6f}, Precision: {precision[i]:.6f}, F1: {f1[i]:.6f}")
+
+
+###################################SAVE MODEL AND EVALUATION########################################
+
+# 训练循环结束后保存模型
+model_save_path = 'LTN_reduce_19classes.pth'
+torch.save(mlp.state_dict(), model_save_path)
+print(f"Model saved to {model_save_path}")
+
+def plot_pr_curves(labels, probabilities, class_names, save_path):
+    # Binarize labels for each class
+    labels_binarized = label_binarize(labels, classes=list(range(len(class_names))))
+
+    plt.figure(figsize=(12, 8))
+    for i, class_name in enumerate(class_names):
+        precision, recall, _ = precision_recall_curve(labels_binarized[:, i], probabilities[:, i])
+        pr_auc = auc(recall, precision)
+        plt.plot(recall, precision, lw=2, label=f'Class {class_name} (AUC = {pr_auc:.2f})')
+
+    plt.xlabel('Recall')
+    plt.ylabel('Precision')
+    plt.title('Precision-Recall curve per class')
+    plt.legend(loc="best")
+    plt.grid(True)
+    # Save the plot to a file
+    plt.savefig(save_path, format='png', dpi=300, bbox_inches='tight')
+    plt.show()
+    plt.close()  # Close the figure to free up memory
+
+
+def collect_predictions_and_labels(loader, model):
+    model.eval()  # Set the model to evaluation mode
+    all_labels = []
+    all_probabilities = []
+    with torch.no_grad():
+        for data, labels in loader:
+            data = data.to(device)
+            probabilities = torch.softmax(model(data), dim=1)  # Assuming model outputs raw logits
+            all_labels.append(labels.cpu())
+            all_probabilities.append(probabilities.cpu())
+
+    # Concatenate all batches
+    all_labels = torch.cat(all_labels)
+    all_probabilities = torch.cat(all_probabilities)
+    return all_labels, all_probabilities
+
+
+# 在训练循环结束后绘制PR曲线
+all_labels, all_probabilities = collect_predictions_and_labels(test_loader, mlp)
+save_path = "../outputs/LTN_19classes_reduce_PR_curve.png"  # 设定保存路径和文件名
+# save_path = "outputs/LTN_6classes_PR_curve.png"
+plot_pr_curves(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)

@@ -185,3 +185,4 @@ Macro Recall: 0.5965, Macro Precision: 0.6052, Macro F1-Score: 0.5247
  epoch 4 | loss 0.4128 | Train Sat 0.588 | Test Sat 0.612 | Train Acc 0.818 | Test Acc 0.696
 Macro Recall: 0.6067, Macro Precision: 0.6125, Macro F1-Score: 0.5497
 (without label_L1)
+--------------------------------------------------------------------------------------------------------

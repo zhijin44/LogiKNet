@@ -198,7 +198,7 @@ for epoch in range(1):
         train_loss += loss.item()
     train_loss = train_loss / len(train_loader)
 
-    # we print metrics every 20 epochs of training
+    # we print metrics every epochs of training
     if epoch % 1 == 0:
         print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f"
               % (epoch, train_loss, compute_sat_level(train_loader), compute_sat_level(test_loader),
@@ -220,7 +220,7 @@ for i, class_name in enumerate(class_names):
 ###################################SAVE MODEL AND EVALUATION########################################
 
 # 训练循环结束后保存模型
-model_save_path = 'LTN_reduce.pth'
+model_save_path = 'LTN_reduce_6classes.pth'
 torch.save(mlp.state_dict(), model_save_path)
 print(f"Model saved to {model_save_path}")
 
