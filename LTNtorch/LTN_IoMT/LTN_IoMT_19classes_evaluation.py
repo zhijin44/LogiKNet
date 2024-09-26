@@ -28,19 +28,25 @@ def collect_predictions_and_labels(loader, model):
 
 
 # 创建模型实例并加载权重
-mlp = MLP(layer_sizes=(45, 64, 32, 6)).to(device)
-mlp.load_state_dict(torch.load('LTN_reduce.pth'))
+mlp = MLP(layer_sizes=(46, 64, 32, 19)).to(device)
+mlp.load_state_dict(torch.load('/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/LTN_reduce_19classes.pth'))
 mlp.eval()
 
 # 加载test数据和test loader
-processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/reduced_test_data.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_test_data.csv'
 test_data = pd.read_csv(processed_test_file)
-test_labels = test_data.pop("label")
+test_labels = test_data.pop("label_L2")
 
-label_mapping = {"ARP_Spoofing": 0, "Benign": 1, "MQTT": 2, "Recon": 3, "TCP_IP-DDOS": 4, "TCP_IP-DOS": 5}
-test_labels = test_labels.map(label_mapping)
+label_L1_mapping = {"Benign": 0, "MQTT": 1, "Recon": 2, "ARP_Spoofing": 3, "TCP_IP-DDOS": 4, "TCP_IP-DOS": 5}
+label_L2_mapping = {"MQTT-DDoS-Connect_Flood": 0, "MQTT-DDoS-Publish_Flood": 1, "MQTT-DoS-Connect_Flood": 2, "MQTT-DoS-Publish_Flood": 3, "MQTT-Malformed_Data": 4,
+                 "Recon-Port_Scan": 5, "Recon-OS_Scan": 6, "Recon-VulScan": 7, "Recon-Ping_Sweep": 8,
+                 "TCP_IP-DDoS-TCP": 9, "TCP_IP-DDoS-ICMP": 10,  "TCP_IP-DDoS-SYN": 11, "TCP_IP-DDoS-UDP": 12,
+                 "TCP_IP-DoS-TCP": 13, "TCP_IP-DoS-ICMP": 14, "TCP_IP-DoS-SYN": 15, "TCP_IP-DoS-UDP": 16,
+                 "benign": 17, "arp_spoofing": 18}
+test_data["label_L1"] = test_data["label_L1"].map(label_L1_mapping)
+test_labels = test_labels.map(label_L2_mapping)
 
-scaler = StandardScaler()
+scaler = joblib.load('/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/scaler_reduced_46features.joblib')
 test_data_scaled = scaler.transform(test_data)
 test_data_scaled = torch.tensor(test_data_scaled).float()
 test_labels = torch.tensor(test_labels.to_numpy()).long()
@@ -54,7 +60,7 @@ test_loader = DataLoader(test_data, test_labels, batch_size, shuffle=False)
 all_labels, all_probabilities = collect_predictions_and_labels(test_loader, mlp)
 
 # Binarize labels for each class
-n_classes = 6  # Update this with your number of classes
+n_classes = 19  # Update this with your number of classes
 labels_binarized = label_binarize(all_labels.numpy(), classes=[*range(n_classes)])
 
 # Compute Precision-Recall for each class
@@ -66,7 +72,27 @@ for i in range(n_classes):
                                                                     all_probabilities[:, i])
 
 # Define class names if you have them
-class_names = ["ARP_Spoofing", "Benign", "MQTT", "Recon", "TCP_IP-DDOS", "TCP_IP-DOS"]
+class_names = [
+    "MQTT-DDoS-Connect_Flood", 
+    "MQTT-DDoS-Publish_Flood", 
+    "MQTT-DoS-Connect_Flood", 
+    "MQTT-DoS-Publish_Flood", 
+    "MQTT-Malformed_Data",
+    "Recon-Port_Scan", 
+    "Recon-OS_Scan", 
+    "Recon-VulScan", 
+    "Recon-Ping_Sweep", 
+    "TCP_IP-DDoS-TCP", 
+    "TCP_IP-DDoS-ICMP",  
+    "TCP_IP-DDoS-SYN", 
+    "TCP_IP-DDoS-UDP", 
+    "TCP_IP-DoS-TCP", 
+    "TCP_IP-DoS-ICMP", 
+    "TCP_IP-DoS-SYN", 
+    "TCP_IP-DoS-UDP", 
+    "benign", 
+    "arp_spoofing"
+]
 
 # Plot PR curve for each class
 plt.figure(figsize=(10, 8))

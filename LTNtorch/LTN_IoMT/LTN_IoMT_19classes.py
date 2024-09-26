@@ -9,6 +9,7 @@ from utils import MLP, LogitsToPredicate, DataLoader
 import custom_fuzzy_ops as custom_fuzzy_ops
 import logging
 import sys
+import joblib
 
 # Set up logging
 log_file = "/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/training_log.txt"
