@@ -3,21 +3,18 @@ import pandas as pd
 # 读取训练集和测试集文件
 # processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_train_data.csv'
 # processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_test_data.csv'
-# processed_train_file = '../CIC_IoMT/19classes/filtered_train_data.csv'
-# processed_test_file = '../CIC_IoMT/19classes/filtered_test_data.csv'
-# processed_train_file = '../CIC_IOT/0.1percent_8classes.csv'
-processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/processed_train_data.csv'
-processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/processed_test_data.csv'
+# processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/processed_train_data.csv'
+# processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/processed_test_data.csv'
 
 
-# processed_train_file = '../CIC_IoMT/6classes/processed_train_data_6classes.csv'
-# processed_test_file = '../CIC_IoMT/6classes/processed_test_data_6classes.csv'
-# processed_train_file = '../CIC_IoMT/6classes/reduce_6classes_train.csv'
-# processed_test_file = '../CIC_IoMT/6classes/reduce_6classes_test.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/processed_train_data_6classes.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/processed_test_data_6classes.csv'
+# processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_15k_train.csv'
+# processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_1700_test.csv'
 
 # 加载数据
-# train_data = pd.read_csv(processed_train_file)
-# test_data = pd.read_csv(processed_test_file)
+train_data = pd.read_csv(processed_train_file)
+test_data = pd.read_csv(processed_test_file)
 
 # 输出数据信息
 # print("Training data shape:", train_data.shape)
@@ -126,13 +123,21 @@ def reduce_instances(df, labels_to_reduce, reduction_fraction=0.01):
 
 
 # 调用函数
-# reduced_train_data = reduce_instances(train_data, ["TCP_IP-DDOS", "TCP_IP-DOS"], 0.01)
-# reduced_test_data = reduce_instances(test_data, ["TCP_IP-DDOS", "TCP_IP-DOS"], 0.01)
+reduced_train_data = reduce_instances(train_data, ["TCP_IP-DDOS", "TCP_IP-DOS"], 0.1)
+reduced_test_data = reduce_instances(test_data, ["TCP_IP-DDOS", "TCP_IP-DOS"], 0.1)
+
+# print("Training data shape:", reduced_train_data.shape)
+# print_label_counts(reduced_train_data)
+# print("Test data shape:", reduced_test_data.shape)
+# print_label_counts(reduced_test_data)
+
+reduced_train_data.to_csv("/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_big_train.csv", index=False)
+reduced_test_data.to_csv("/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_big_test.csv", index=False)
 
 
 ###############################################################################
 
-def create_reduced_dataset(data, n_samples=64):
+def reduce_to_n_samples(data, n_samples=64):
     # Get the unique labels
     labels = data['label'].unique()  # Assuming 'label' is the name of your label column
 
@@ -147,8 +152,8 @@ def create_reduced_dataset(data, n_samples=64):
 
 
 # # Create reduced datasets
-# reduced_train_data = create_reduced_dataset(train_data, 15000)
-# reduced_test_data = create_reduced_dataset(test_data, 1700)
+# reduced_train_data = reduce_to_n_samples(train_data, 15000)
+# reduced_test_data = reduce_to_n_samples(test_data, 1700)
 #
 # print("Training data shape:", reduced_train_data.shape)
 # print("Test data shape:", reduced_test_data.shape)
@@ -284,16 +289,16 @@ label_L1_mapping = [
     "ARP_Spoofing", "Benign", "MQTT", "Recon", "TCP_IP-DDOS", "TCP_IP-DOS"
 ]
 
-# 先进行数据缩减
-reduced_train_data, reduced_test_data = reduce_data(processed_train_file, processed_test_file, selected_labels)
+# # 先进行数据缩减
+# reduced_train_data, reduced_test_data = reduce_data(processed_train_file, processed_test_file, selected_labels)
 
-# 然后扩展标签并保存数据
-extend_labels(reduced_train_data, reduced_test_data, label_L1_mapping)
+# # 然后扩展标签并保存数据
+# extend_labels(reduced_train_data, reduced_test_data, label_L1_mapping)
 
-extended_train_data = pd.read_csv('/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_train_data.csv')
-extended_test_data = pd.read_csv('/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_test_data.csv')
-# 打印扩展标签的统计信息
-print("Train Data:")
-print_extended_label_counts(extended_train_data)
-print("\nTest Data:")
-print_extended_label_counts(extended_test_data)
+# extended_train_data = pd.read_csv('/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_train_data.csv')
+# extended_test_data = pd.read_csv('/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_test_data.csv')
+# # 打印扩展标签的统计信息
+# print("Train Data:")
+# print_extended_label_counts(extended_train_data)
+# print("\nTest Data:")
+# print_extended_label_counts(extended_test_data)

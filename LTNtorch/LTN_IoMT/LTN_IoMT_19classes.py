@@ -9,7 +9,6 @@ from utils import MLP, LogitsToPredicate, DataLoader
 import custom_fuzzy_ops as custom_fuzzy_ops
 import logging
 import sys
-import joblib
 
 # Set up logging
 log_file = "/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/training_log.txt"
@@ -383,13 +382,13 @@ def collect_predictions_and_labels(loader, model):
 
 
 # 训练循环结束后保存模型
-model_save_path = '/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/LTN_reduce_19classes.pth'
+model_save_path = '/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/LTN_big_19classes.pth'
 torch.save(mlp.state_dict(), model_save_path)
 print(f"Model saved to {model_save_path}")
 
 
 # 在训练循环结束后绘制PR曲线
 all_labels, all_probabilities = collect_predictions_and_labels(test_loader, mlp)
-save_path = "/home/zyang44/Github/baseline_cicIOT/LTNtorch/outputs/LTN_19classes_reduce_PR_curve.png"  # 设定保存路径和文件名
+save_path = "/home/zyang44/Github/baseline_cicIOT/LTNtorch/outputs/LTN_19classes_big_PR_curve.png"  # 设定保存路径和文件名
 plot_pr_curves(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)
 

@@ -6,20 +6,22 @@ from sklearn.preprocessing import StandardScaler, label_binarize
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score, auc, precision_recall_curve
 import matplotlib.pyplot as plt
 from utils import MLP, LogitsToPredicate, DataLoader
+import logging
+import sys
+
+# Set up logging
+log_file = "/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/training_log.txt"
+logging.basicConfig(level=logging.INFO, 
+                    format='%(asctime)s - %(message)s',
+                    handlers=[
+                        logging.FileHandler(log_file),
+                        logging.StreamHandler(sys.stdout)  # This allows printing to both console and log file
+                    ])
+
 
 # it computes the overall accuracy of the predictions of the trained model using the given data loader
 # (train or test)
 def compute_accuracy(loader):
-    # mean_accuracy = 0.0
-    # for data, labels in loader:
-    #     # 确保数据在正确的设备上
-    #     data, labels = data.to(device), labels.to(device)
-    #     predictions = mlp(data).detach().numpy()
-    #     predictions = np.argmax(predictions, axis=1)
-    #     mean_accuracy += accuracy_score(labels, predictions)
-    #
-    # return mean_accuracy / len(loader)
-
     mean_accuracy = 0.0
     for data, labels in loader:
         # 确保数据在正确的设备上
@@ -93,14 +95,13 @@ def compute_sat_level(loader):
 
 
 
-
 #################################DATA PREPROCESSING#########################################
 # 6类 全部数据集路径
 # processed_train_file = '../CIC_IoMT/6classes/processed_train_data_6classes.csv'
 # processed_test_file = '../CIC_IoMT/6classes/processed_test_data_6classes.csv'
 # 6类 缩减版数据集路径
-processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_15k_train.csv'
-processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_1700_test.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_big_train.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_big_test.csv'
 
 # 加载数据集
 train_data = pd.read_csv(processed_train_file)
@@ -122,18 +123,17 @@ scaler = StandardScaler()
 train_data_scaled = scaler.fit_transform(train_data)
 test_data_scaled = scaler.transform(test_data)
 
-# 将缩放后的数据和标签转换为Tensor
-train_data_scaled = torch.tensor(train_data_scaled).float()
-test_data_scaled = torch.tensor(test_data_scaled).float()
-train_labels = torch.tensor(train_labels.to_numpy()).long()
-test_labels = torch.tensor(test_labels.to_numpy()).long()
-
 # 定义设备并移动数据和标签到设备
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-train_data, test_data = train_data_scaled.to(device), test_data_scaled.to(device)
-# train_data, test_data = train_data.to(device), test_data.to(device)
-train_labels, test_labels = train_labels.to(device), test_labels.to(device)
+train_data = torch.tensor(train_data_scaled).float().to(device)
+test_data = torch.tensor(test_data_scaled).float().to(device)
+train_labels = torch.tensor(train_labels.to_numpy()).long().to(device)
+test_labels = torch.tensor(test_labels.to_numpy()).long().to(device)
 
+print("Data processing and scaling done.")
+
+
+#####################Setting#################################
 # 定义常量并移动到设备，适用于6个类别
 l_A = ltn.Constant(torch.tensor([1, 0, 0, 0, 0, 0]).to(device))
 l_B = ltn.Constant(torch.tensor([0, 1, 0, 0, 0, 0]).to(device))
@@ -141,7 +141,6 @@ l_C = ltn.Constant(torch.tensor([0, 0, 1, 0, 0, 0]).to(device))
 l_D = ltn.Constant(torch.tensor([0, 0, 0, 1, 0, 0]).to(device))
 l_E = ltn.Constant(torch.tensor([0, 0, 0, 0, 1, 0]).to(device))
 l_F = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 1]).to(device))
-
 
 # 创建模型实例并移动到设备
 mlp = MLP(layer_sizes=(45, 64, 32, 6)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
@@ -151,7 +150,7 @@ P = ltn.Predicate(LogitsToPredicate(mlp))
 Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
 SatAgg = ltn.fuzzy_ops.SatAgg()
 
-
+print("LTN setting done.")
 
 
 #####################################TRAIN#######################################
@@ -159,11 +158,12 @@ SatAgg = ltn.fuzzy_ops.SatAgg()
 batch_size = 64
 train_loader = DataLoader(train_data, train_labels, batch_size, shuffle=True)
 test_loader = DataLoader(test_data, test_labels, batch_size, shuffle=False)
+print("Create train and test loader done.")
 
-# Learning
+print("Start training...")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
 
-for epoch in range(1):
+for epoch in range(30):
     train_loss = 0.0
     for batch_idx, (data, labels) in enumerate(train_loader):
         optimizer.zero_grad()
@@ -203,7 +203,14 @@ for epoch in range(1):
         print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f"
               % (epoch, train_loss, compute_sat_level(train_loader), compute_sat_level(test_loader),
                  compute_accuracy(train_loader), compute_accuracy(test_loader)))
+        train_sat = compute_sat_level(train_loader)
+        test_sat = compute_sat_level(test_loader)
+        train_acc = compute_accuracy(train_loader)
+        test_acc = compute_accuracy(test_loader)
+        logging.info(f"epoch {epoch} | loss {train_loss:.4f} | Train Sat {train_sat:.3f} | "
+                     f"Test Sat {test_sat:.3f} | Train Acc {train_acc:.3f} | Test Acc {test_acc:.3f}")
         ###############################################################################################
+    if epoch % 10 == 0: # Evaluate
         precision, recall, f1 = compute_metrics(test_loader, mlp)
         print(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
 
@@ -218,12 +225,6 @@ for i, class_name in enumerate(class_names):
 
 
 ###################################SAVE MODEL AND EVALUATION########################################
-
-# 训练循环结束后保存模型
-model_save_path = 'LTN_reduce_6classes.pth'
-torch.save(mlp.state_dict(), model_save_path)
-print(f"Model saved to {model_save_path}")
-
 def plot_pr_curves(labels, probabilities, class_names, save_path):
     # Binarize labels for each class
     labels_binarized = label_binarize(labels, classes=list(range(len(class_names))))
@@ -262,8 +263,13 @@ def collect_predictions_and_labels(loader, model):
     return all_labels, all_probabilities
 
 
+# 训练循环结束后保存模型
+model_save_path = '/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/LTN_big_6classes.pth'
+torch.save(mlp.state_dict(), model_save_path)
+print(f"Model saved to {model_save_path}")
+
+
 # 在训练循环结束后绘制PR曲线
 all_labels, all_probabilities = collect_predictions_and_labels(test_loader, mlp)
-save_path = "../outputs/LTN_6classes_reduce_PR_curve.png"  # 设定保存路径和文件名
-# save_path = "outputs/LTN_6classes_PR_curve.png"
+save_path = "/home/zyang44/Github/baseline_cicIOT/LTNtorch/outputs/LTN_6classes_big_PR_curve.png"  # 设定保存路径和文件名
 plot_pr_curves(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)

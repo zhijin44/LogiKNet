@@ -73,3 +73,8 @@
 2024-09-20 16:44:54,781 - Class TCP_IP-DoS-UDP: Recall: 1.000000, Precision: 0.999550, F1: 0.999775
 2024-09-20 16:44:54,781 - Class benign: Recall: 0.999920, Precision: 0.999894, F1: 0.999907
 2024-09-20 16:44:54,781 - Class arp_spoofing: Recall: 0.997133, Precision: 0.996562, F1: 0.996847
+
+
+2024-09-26 15:45:36,733 - epoch 0 | loss 0.3986 | Train Sat 0.633 | Test Sat 0.677 | Train Acc 0.790 | Test Acc 0.801
+
+

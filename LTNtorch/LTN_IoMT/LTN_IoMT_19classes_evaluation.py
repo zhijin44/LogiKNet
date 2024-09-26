@@ -70,7 +70,7 @@ def plot_confusion_matrix(labels, probabilities, class_names, save_path):
 
 # 创建模型实例并加载权重
 mlp = MLP(layer_sizes=(46, 64, 32, 19)).to(device)
-mlp.load_state_dict(torch.load('/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/LTN_reduce_19classes.pth'))
+mlp.load_state_dict(torch.load('/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/LTN_big_19classes.pth'))
 mlp.eval()
 
 # 加载test数据和test loader
