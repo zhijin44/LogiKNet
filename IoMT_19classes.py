@@ -3,10 +3,8 @@ import numpy as np
 import os
 import re
 from tqdm import tqdm
-from joblib import dump, load
+import joblib
 import warnings
-
-
 warnings.filterwarnings('ignore')
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
@@ -78,23 +76,23 @@ else:
     test_data.to_csv(processed_test_file, index=False)
     print("Processed data saved.")
 
+
 print("Scaling data...")
 scaler = StandardScaler()
 scaler.fit(training_data[X_columns])
 training_data[X_columns] = scaler.transform(training_data[X_columns])
 test_data[X_columns] = scaler.transform(test_data[X_columns])
-# After scaling your training data in the training script
-scaler_save_path = 'CIC_IoMT/19classes/scaler_reduced.joblib'
-    # scaler_save_path = 'CIC_IoMT/19classes/scaler.joblib'
-dump(scaler, scaler_save_path)
+scaler_save_path = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/scaler_reduced_baseline.joblib'
+joblib.dump(scaler, scaler_save_path)
 print("Data scaled.")
 
+
 # Check if the model already exists
-model_save_path = 'CIC_IoMT/19classes/reduced_mlp_classifier_model.joblib'
+model_save_path = 'CIC_IoMT/19classes/mlp_classifier_reduced_model.joblib'
 # model_save_path = 'CIC_IoMT/19classes/mlp_classifier_model.joblib'
 if os.path.exists(model_save_path):
     print("Loading existing model...")
-    model = load(model_save_path)
+    model = joblib.load(model_save_path)
 else:
     print("Training model...")
     # Model training code
@@ -102,7 +100,7 @@ else:
     model.fit(training_data[X_columns], training_data['label_L2'])
     # model.fit(training_data[X_columns], training_data['label'])
     # Save the trained model
-    dump(model, model_save_path)
+    joblib.dump(model, model_save_path)
     print("Model saved to", model_save_path)
 
 print("Making predictions...")
@@ -110,6 +108,7 @@ y_test = test_data['label_L2']
 # y_test = test_data['label']
 y_pred = model.predict(test_data[X_columns])
 print("Predictions made.")
+
 
 print("Evaluating model...")
 # 计算和打印评估指标

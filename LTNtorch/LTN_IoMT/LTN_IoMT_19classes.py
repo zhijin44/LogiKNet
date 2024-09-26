@@ -310,7 +310,7 @@ for epoch in range(30):
     #     precision, recall, f1 = compute_metrics(test_loader, mlp)
     #     print(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
 
-print("Evaluating...")
+
 class_names = [
     "MQTT-DDoS-Connect_Flood", 
     "MQTT-DDoS-Publish_Flood", 
@@ -344,12 +344,6 @@ for i, class_name in enumerate(class_names):
 
 
 ###################################SAVE MODEL AND EVALUATION########################################
-
-# 训练循环结束后保存模型
-model_save_path = '/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/LTN_reduce_19classes.pth'
-torch.save(mlp.state_dict(), model_save_path)
-print(f"Model saved to {model_save_path}")
-
 def plot_pr_curves(labels, probabilities, class_names, save_path):
     # Binarize labels for each class
     labels_binarized = label_binarize(labels, classes=list(range(len(class_names))))
@@ -388,8 +382,14 @@ def collect_predictions_and_labels(loader, model):
     return all_labels, all_probabilities
 
 
+# 训练循环结束后保存模型
+model_save_path = '/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/LTN_reduce_19classes.pth'
+torch.save(mlp.state_dict(), model_save_path)
+print(f"Model saved to {model_save_path}")
+
+
 # 在训练循环结束后绘制PR曲线
 all_labels, all_probabilities = collect_predictions_and_labels(test_loader, mlp)
 save_path = "/home/zyang44/Github/baseline_cicIOT/LTNtorch/outputs/LTN_19classes_reduce_PR_curve.png"  # 设定保存路径和文件名
-# save_path = "outputs/LTN_6classes_PR_curve.png"
 plot_pr_curves(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)
+

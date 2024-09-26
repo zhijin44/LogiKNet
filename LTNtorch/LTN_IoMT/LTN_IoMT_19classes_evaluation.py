@@ -1,6 +1,8 @@
 import torch
 import pandas as pd
-from sklearn.metrics import precision_recall_curve, auc
+import numpy as np
+import seaborn as sns
+from sklearn.metrics import precision_recall_curve, auc, confusion_matrix
 from sklearn.preprocessing import StandardScaler, label_binarize
 import matplotlib.pyplot as plt
 import joblib
@@ -25,6 +27,45 @@ def collect_predictions_and_labels(loader, model):
     all_labels = torch.cat(all_labels)
     all_probabilities = torch.cat(all_probabilities)
     return all_labels, all_probabilities
+
+
+def plot_pr_curves(labels, probabilities, class_names, save_path):
+    # Binarize labels for each class
+    labels_binarized = label_binarize(labels, classes=list(range(len(class_names))))
+
+    plt.figure(figsize=(12, 8))
+    for i, class_name in enumerate(class_names):
+        precision, recall, _ = precision_recall_curve(labels_binarized[:, i], probabilities[:, i])
+        pr_auc = auc(recall, precision)
+        plt.plot(recall, precision, lw=2, label=f'Class {class_name} (AUC = {pr_auc:.2f})')
+
+    plt.xlabel('Recall')
+    plt.ylabel('Precision')
+    plt.title('Precision-Recall curve per class')
+    plt.legend(loc="best")
+    plt.grid(True)
+    # Save the plot to a file
+    plt.savefig(save_path, format='png', dpi=300, bbox_inches='tight')
+    plt.close()  # Close the figure to free up memory
+
+
+def plot_confusion_matrix(labels, probabilities, class_names, save_path):
+    # Get the predicted labels by taking the class with the highest probability
+    predicted_labels = np.argmax(probabilities, axis=1)
+    
+    # Compute the confusion matrix
+    conf_matrix = confusion_matrix(labels, predicted_labels)
+    
+    # Plot the confusion matrix using seaborn heatmap
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=class_names, yticklabels=class_names)
+    plt.xlabel('Predicted')
+    plt.ylabel('True')
+    plt.title('Confusion Matrix')
+    
+    # Save the plot to a file
+    plt.savefig(save_path, format='png', dpi=300, bbox_inches='tight')
+    plt.close()  # Close the figure to free up memory
 
 
 # 创建模型实例并加载权重
@@ -58,20 +99,6 @@ test_loader = DataLoader(test_data, test_labels, batch_size, shuffle=False)
 
 # 收集预测和标签，计算评估指标
 all_labels, all_probabilities = collect_predictions_and_labels(test_loader, mlp)
-
-# Binarize labels for each class
-n_classes = 19  # Update this with your number of classes
-labels_binarized = label_binarize(all_labels.numpy(), classes=[*range(n_classes)])
-
-# Compute Precision-Recall for each class
-precision = dict()
-recall = dict()
-thresholds = dict()
-for i in range(n_classes):
-    precision[i], recall[i], thresholds[i] = precision_recall_curve(labels_binarized[:, i],
-                                                                    all_probabilities[:, i])
-
-# Define class names if you have them
 class_names = [
     "MQTT-DDoS-Connect_Flood", 
     "MQTT-DDoS-Publish_Flood", 
@@ -94,14 +121,10 @@ class_names = [
     "arp_spoofing"
 ]
 
-# Plot PR curve for each class
-plt.figure(figsize=(10, 8))
-for i in range(n_classes):
-    plt.plot(recall[i], precision[i], lw=2, label='PR curve of class {0} (area = {1:0.2f})'
-             ''.format(class_names[i], auc(recall[i], precision[i])))
+# draw PR curve
+save_path = '/home/zyang44/Github/baseline_cicIOT/LTNtorch/outputs/temp_pr.png'
+plot_pr_curves(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)
 
-plt.xlabel('Recall')
-plt.ylabel('Precision')
-plt.title('Precision-Recall curve per class')
-plt.legend(loc="best")
-plt.show()
+# draw confusion matrix
+save_path = '/home/zyang44/Github/baseline_cicIOT/LTNtorch/outputs/temp_conf.png'
+plot_confusion_matrix(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)
