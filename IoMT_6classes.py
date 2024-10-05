@@ -15,8 +15,8 @@ TEST_DIR = 'CIC_IoMT/test/'
 
 # processed_train_file = 'CIC_IoMT/6classes/processed_train_data_6classes.csv'
 # processed_test_file = 'CIC_IoMT/6classes/processed_test_data_6classes.csv'
-processed_train_file = 'CIC_IoMT/6classes/6classes_15k_train.csv'
-processed_test_file = 'CIC_IoMT/6classes/6classes_1700_test.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_100k_train.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_10k_test.csv'
 
 # 特征列名称
 X_columns = [
@@ -87,13 +87,13 @@ training_data[X_columns] = scaler.transform(training_data[X_columns])
 test_data[X_columns] = scaler.transform(test_data[X_columns])
 # After scaling your training data in the training script
 # scaler_save_path = 'CIC_IoMT/6classes/scaler_6classes.joblib'
-scaler_save_path = 'CIC_IoMT/6classes/scaler_6classes_reduced.joblib'
+scaler_save_path = 'CIC_IoMT/6classes/scaler_100k.joblib'
 dump(scaler, scaler_save_path)
 print("Data scaled.")
 
 # Check if the model already exists
 # model_save_path = 'CIC_IoMT/6classes/mlp_classifier_model_6classes.joblib'
-model_save_path = 'CIC_IoMT/6classes/mlp_classifier_model_6classes_reduced.joblib'
+model_save_path = 'CIC_IoMT/6classes/model_100k.joblib'
 if os.path.exists(model_save_path):
     print("Loading existing model...")
     model = load(model_save_path)
