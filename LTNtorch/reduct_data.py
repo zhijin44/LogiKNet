@@ -8,12 +8,12 @@ label_L1_mapping = [
 # 读取训练集和测试集文件
 # processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_train_data.csv'
 # processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_test_data.csv'
-processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/processed_train_data.csv'
-processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/processed_test_data.csv'
+# processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/processed_train_data.csv'
+# processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/processed_test_data.csv'
 
 
-# processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/processed_train_data_6classes.csv'
-# processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/processed_test_data_6classes.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/processed_train_data_6classes.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/processed_test_data_6classes.csv'
 # processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_100k_train.csv'
 # processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_10k_test.csv'
 
@@ -158,14 +158,14 @@ def reduce_to_n_samples(data, n_samples=64):
 
 
 # Create reduced datasets
-# reduced_train_data = reduce_to_n_samples(train_data, 16047)
-# reduced_test_data = reduce_to_n_samples(test_data, 1744)
+reduced_train_data = reduce_to_n_samples(train_data, 16047)
+reduced_test_data = reduce_to_n_samples(test_data, 1744)
 
-# print("Training data shape:", reduced_train_data.shape)
-# print("Test data shape:", reduced_test_data.shape)
+print("Training data shape:", reduced_train_data.shape)
+print("Test data shape:", reduced_test_data.shape)
 
-# reduced_train_data.to_csv("/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_100k_train.csv", index=False)
-# reduced_test_data.to_csv("/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_10k_test.csv", index=False)
+reduced_train_data.to_csv("/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_100k_train.csv", index=False)
+reduced_test_data.to_csv("/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_10k_test.csv", index=False)
 
 #####################################################################################
 ############# Part of the data from IoMT (benign & MQTT)#####################
@@ -293,35 +293,35 @@ selected_labels = [
 
 #####################################################################################
 ########## for 19 classes, combining train and test together and divide later#####
-# Combine the datasets by concatenating rows
-combined_data = pd.concat([train_data, test_data], axis=0, ignore_index=True)
-# print_label_counts(combined_data)
+# # Combine the datasets by concatenating rows
+# combined_data = pd.concat([train_data, test_data], axis=0, ignore_index=True)
+# # print_label_counts(combined_data)
 
-# Step 1: Calculate total entries per class
-label_counts = combined_data['label'].value_counts()
-# Step 2: Define threshold for minority vs majority classes
-## minority_threshold = 10000
-minority_threshold = 1000
-# Step 3: Separate minority and majority classes
-minority_classes = label_counts[label_counts <= minority_threshold].index
-majority_classes = label_counts[label_counts > minority_threshold].index
-# Step 4: Keep all entries from minority classes
-minority_data = combined_data[combined_data['label'].isin(minority_classes)]
-majority_data = combined_data[combined_data['label'].isin(majority_classes)]
-## majority_data = reduce_to_n_samples(majority_data, 15000)
-majority_data = reduce_to_n_samples(majority_data, 1000)
+# # Step 1: Calculate total entries per class
+# label_counts = combined_data['label'].value_counts()
+# # Step 2: Define threshold for minority vs majority classes
+# ## minority_threshold = 10000
+# minority_threshold = 1000
+# # Step 3: Separate minority and majority classes
+# minority_classes = label_counts[label_counts <= minority_threshold].index
+# majority_classes = label_counts[label_counts > minority_threshold].index
+# # Step 4: Keep all entries from minority classes
+# minority_data = combined_data[combined_data['label'].isin(minority_classes)]
+# majority_data = combined_data[combined_data['label'].isin(majority_classes)]
+# ## majority_data = reduce_to_n_samples(majority_data, 15000)
+# majority_data = reduce_to_n_samples(majority_data, 1000)
 
-combined_data = pd.concat([minority_data, majority_data], axis=0, ignore_index=True)
-# print_label_counts(combined_data)
+# combined_data = pd.concat([minority_data, majority_data], axis=0, ignore_index=True)
+# # print_label_counts(combined_data)
 
-extended_data = extend_labels(combined_data, label_L1_mapping)
-print_extended_label_counts(extended_data)
+# extended_data = extend_labels(combined_data, label_L1_mapping)
+# print_extended_label_counts(extended_data)
 
-train_data, test_data = train_test_split(extended_data, test_size=0.1, random_state=42, stratify=extended_data['label_L2'])
-extended_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/19classes_small_train.csv'
-extended_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/19classes_small_test.csv'
-train_data.to_csv(extended_train_file, index=False)
-test_data.to_csv(extended_test_file, index=False)
-print("Training and testing datasets saved successfully.")
+# train_data, test_data = train_test_split(extended_data, test_size=0.1, random_state=42, stratify=extended_data['label_L2'])
+# extended_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_100k_train.csv'
+# extended_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_10k_test.csv'
+# train_data.to_csv(extended_train_file, index=False)
+# test_data.to_csv(extended_test_file, index=False)
+# print("Training and testing datasets saved successfully.")
 
 

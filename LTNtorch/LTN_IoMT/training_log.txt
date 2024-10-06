@@ -389,3 +389,41 @@
 
 
 
+2024-10-06 11:39:24,575 - epoch 0 | loss 0.5583 | Train Sat 0.544 | Test Sat 0.536 | Train Acc 0.736 | Test Acc 0.709
+2024-10-06 11:39:56,489 - epoch 1 | loss 0.4300 | Train Sat 0.591 | Test Sat 0.589 | Train Acc 0.771 | Test Acc 0.761
+2024-10-06 11:40:27,188 - epoch 2 | loss 0.3982 | Train Sat 0.611 | Test Sat 0.607 | Train Acc 0.780 | Test Acc 0.773
+2024-10-06 11:40:58,152 - epoch 3 | loss 0.3847 | Train Sat 0.619 | Test Sat 0.616 | Train Acc 0.788 | Test Acc 0.783
+2024-10-06 11:41:28,892 - epoch 4 | loss 0.3778 | Train Sat 0.624 | Test Sat 0.621 | Train Acc 0.795 | Test Acc 0.783
+2024-10-06 11:41:59,582 - epoch 5 | loss 0.3735 | Train Sat 0.628 | Test Sat 0.623 | Train Acc 0.796 | Test Acc 0.785
+2024-10-06 11:42:30,408 - epoch 6 | loss 0.3705 | Train Sat 0.631 | Test Sat 0.622 | Train Acc 0.791 | Test Acc 0.788
+2024-10-06 11:43:01,384 - epoch 7 | loss 0.3685 | Train Sat 0.633 | Test Sat 0.627 | Train Acc 0.800 | Test Acc 0.787
+2024-10-06 11:43:32,254 - epoch 8 | loss 0.3667 | Train Sat 0.634 | Test Sat 0.629 | Train Acc 0.800 | Test Acc 0.785
+2024-10-06 11:44:02,764 - epoch 9 | loss 0.3652 | Train Sat 0.636 | Test Sat 0.628 | Train Acc 0.802 | Test Acc 0.788
+2024-10-06 11:44:33,383 - epoch 10 | loss 0.3634 | Train Sat 0.636 | Test Sat 0.631 | Train Acc 0.803 | Test Acc 0.788
+2024-10-06 11:45:03,799 - epoch 11 | loss 0.3622 | Train Sat 0.638 | Test Sat 0.629 | Train Acc 0.804 | Test Acc 0.789
+2024-10-06 11:45:34,214 - epoch 12 | loss 0.3616 | Train Sat 0.639 | Test Sat 0.630 | Train Acc 0.806 | Test Acc 0.791
+2024-10-06 11:46:05,161 - epoch 13 | loss 0.3606 | Train Sat 0.640 | Test Sat 0.632 | Train Acc 0.806 | Test Acc 0.790
+2024-10-06 11:46:35,935 - epoch 14 | loss 0.3601 | Train Sat 0.640 | Test Sat 0.635 | Train Acc 0.808 | Test Acc 0.793
+2024-10-06 11:47:06,427 - epoch 15 | loss 0.3599 | Train Sat 0.640 | Test Sat 0.632 | Train Acc 0.807 | Test Acc 0.804
+2024-10-06 11:47:36,896 - epoch 16 | loss 0.3587 | Train Sat 0.642 | Test Sat 0.634 | Train Acc 0.807 | Test Acc 0.804
+2024-10-06 11:48:07,477 - epoch 17 | loss 0.3582 | Train Sat 0.642 | Test Sat 0.635 | Train Acc 0.810 | Test Acc 0.804
+2024-10-06 11:48:37,865 - epoch 18 | loss 0.3579 | Train Sat 0.643 | Test Sat 0.637 | Train Acc 0.811 | Test Acc 0.806
+2024-10-06 11:49:08,182 - epoch 19 | loss 0.3573 | Train Sat 0.642 | Test Sat 0.636 | Train Acc 0.810 | Test Acc 0.792
+2024-10-06 11:49:38,559 - epoch 20 | loss 0.3568 | Train Sat 0.643 | Test Sat 0.637 | Train Acc 0.811 | Test Acc 0.805
+2024-10-06 11:50:09,016 - epoch 21 | loss 0.3565 | Train Sat 0.644 | Test Sat 0.634 | Train Acc 0.810 | Test Acc 0.805
+2024-10-06 11:50:39,511 - epoch 22 | loss 0.3561 | Train Sat 0.645 | Test Sat 0.638 | Train Acc 0.811 | Test Acc 0.804
+2024-10-06 11:51:09,932 - epoch 23 | loss 0.3551 | Train Sat 0.645 | Test Sat 0.637 | Train Acc 0.811 | Test Acc 0.804
+2024-10-06 11:51:40,376 - epoch 24 | loss 0.3542 | Train Sat 0.645 | Test Sat 0.636 | Train Acc 0.812 | Test Acc 0.804
+2024-10-06 11:52:10,792 - epoch 25 | loss 0.3554 | Train Sat 0.646 | Test Sat 0.637 | Train Acc 0.813 | Test Acc 0.804
+2024-10-06 11:52:41,198 - epoch 26 | loss 0.3547 | Train Sat 0.645 | Test Sat 0.638 | Train Acc 0.812 | Test Acc 0.804
+2024-10-06 11:53:11,796 - epoch 27 | loss 0.3543 | Train Sat 0.647 | Test Sat 0.637 | Train Acc 0.813 | Test Acc 0.804
+2024-10-06 11:53:42,205 - epoch 28 | loss 0.3535 | Train Sat 0.646 | Test Sat 0.636 | Train Acc 0.815 | Test Acc 0.806
+2024-10-06 11:54:12,522 - epoch 29 | loss 0.3531 | Train Sat 0.647 | Test Sat 0.638 | Train Acc 0.815 | Test Acc 0.805
+2024-10-06 11:54:12,582 - Macro Recall: 0.8051, Macro Precision: 0.8180, Macro F1-Score: 0.8018
+2024-10-06 11:54:12,582 - Scores by Class:
+2024-10-06 11:54:12,582 - Class ARP_Spoofing: Recall: 0.949541, Precision: 0.758937, F1: 0.843607
+2024-10-06 11:54:12,582 - Class Benign: Recall: 0.781537, Precision: 0.932285, F1: 0.850281
+2024-10-06 11:54:12,582 - Class MQTT: Recall: 0.978784, Precision: 0.998830, F1: 0.988705
+2024-10-06 11:54:12,582 - Class Recon: Recall: 0.928899, Precision: 0.998152, F1: 0.962281
+2024-10-06 11:54:12,582 - Class TCP_IP-DDOS: Recall: 0.772362, Precision: 0.570521, F1: 0.656273
+2024-10-06 11:54:12,582 - Class TCP_IP-DOS: Recall: 0.419725, Precision: 0.649512, F1: 0.509927
