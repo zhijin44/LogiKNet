@@ -70,12 +70,15 @@ def plot_confusion_matrix(labels, probabilities, class_names, save_path):
 
 # 创建模型实例并加载权重
 mlp = MLP(layer_sizes=(46, 64, 32, 19)).to(device)
-mlp.load_state_dict(torch.load('/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/LTN_big_19classes.pth'))
+mlp.load_state_dict(torch.load('/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/xxxx'))
 mlp.eval()
 
 # 加载test数据和test loader
-processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_test_data.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/xxxx.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/xxxxx'
+train_data = pd.read_csv(processed_train_file)
 test_data = pd.read_csv(processed_test_file)
+train_labels = train_data.pop("label_L2")
 test_labels = test_data.pop("label_L2")
 
 label_L1_mapping = {"Benign": 0, "MQTT": 1, "Recon": 2, "ARP_Spoofing": 3, "TCP_IP-DDOS": 4, "TCP_IP-DOS": 5}
@@ -83,11 +86,13 @@ label_L2_mapping = {"MQTT-DDoS-Connect_Flood": 0, "MQTT-DDoS-Publish_Flood": 1, 
                  "Recon-Port_Scan": 5, "Recon-OS_Scan": 6, "Recon-VulScan": 7, "Recon-Ping_Sweep": 8,
                  "TCP_IP-DDoS-TCP": 9, "TCP_IP-DDoS-ICMP": 10,  "TCP_IP-DDoS-SYN": 11, "TCP_IP-DDoS-UDP": 12,
                  "TCP_IP-DoS-TCP": 13, "TCP_IP-DoS-ICMP": 14, "TCP_IP-DoS-SYN": 15, "TCP_IP-DoS-UDP": 16,
-                 "benign": 17, "arp_spoofing": 18}
+                 "Benign": 17, "ARP_Spoofing": 18}
+train_data["label_L1"] = train_data["label_L1"].map(label_L1_mapping)
 test_data["label_L1"] = test_data["label_L1"].map(label_L1_mapping)
 test_labels = test_labels.map(label_L2_mapping)
 
-scaler = joblib.load('/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/scaler_reduced_46features.joblib')
+scaler = StandardScaler()
+scaler.fit_transform(train_data)
 test_data_scaled = scaler.transform(test_data)
 test_data_scaled = torch.tensor(test_data_scaled).float()
 test_labels = torch.tensor(test_labels.to_numpy()).long()
@@ -122,9 +127,9 @@ class_names = [
 ]
 
 # draw PR curve
-save_path = '/home/zyang44/Github/baseline_cicIOT/LTNtorch/outputs/temp_pr.png'
+save_path = '/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/temp_pr.png'
 plot_pr_curves(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)
 
 # draw confusion matrix
-save_path = '/home/zyang44/Github/baseline_cicIOT/LTNtorch/outputs/temp_conf.png'
+save_path = '/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/temp_conf.png'
 plot_confusion_matrix(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)

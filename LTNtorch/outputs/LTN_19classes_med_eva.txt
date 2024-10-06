@@ -1,0 +1,52 @@
+epoch 0 | loss 0.7095 | Train Sat 0.444 | Test Sat 0.444 | Train Acc 0.787 | Test Acc 0.788
+epoch 1 | loss 0.4896 | Train Sat 0.570 | Test Sat 0.573 | Train Acc 0.860 | Test Acc 0.861
+epoch 2 | loss 0.3963 | Train Sat 0.627 | Test Sat 0.628 | Train Acc 0.875 | Test Acc 0.875
+epoch 3 | loss 0.3630 | Train Sat 0.646 | Test Sat 0.650 | Train Acc 0.879 | Test Acc 0.879
+epoch 4 | loss 0.3465 | Train Sat 0.660 | Test Sat 0.663 | Train Acc 0.885 | Test Acc 0.888
+epoch 5 | loss 0.3338 | Train Sat 0.672 | Test Sat 0.679 | Train Acc 0.891 | Test Acc 0.892
+epoch 6 | loss 0.3234 | Train Sat 0.681 | Test Sat 0.684 | Train Acc 0.893 | Test Acc 0.896
+epoch 7 | loss 0.3164 | Train Sat 0.684 | Test Sat 0.689 | Train Acc 0.895 | Test Acc 0.899
+epoch 8 | loss 0.3132 | Train Sat 0.689 | Test Sat 0.693 | Train Acc 0.898 | Test Acc 0.901
+epoch 9 | loss 0.3077 | Train Sat 0.694 | Test Sat 0.700 | Train Acc 0.898 | Test Acc 0.901
+epoch 10 | loss 0.3050 | Train Sat 0.697 | Test Sat 0.702 | Train Acc 0.900 | Test Acc 0.902
+epoch 11 | loss 0.3019 | Train Sat 0.699 | Test Sat 0.703 | Train Acc 0.900 | Test Acc 0.903
+epoch 12 | loss 0.2987 | Train Sat 0.701 | Test Sat 0.709 | Train Acc 0.901 | Test Acc 0.906
+epoch 13 | loss 0.2963 | Train Sat 0.704 | Test Sat 0.709 | Train Acc 0.902 | Test Acc 0.906
+epoch 14 | loss 0.2955 | Train Sat 0.705 | Test Sat 0.712 | Train Acc 0.902 | Test Acc 0.906
+epoch 15 | loss 0.2936 | Train Sat 0.707 | Test Sat 0.713 | Train Acc 0.903 | Test Acc 0.906
+epoch 16 | loss 0.2925 | Train Sat 0.709 | Test Sat 0.717 | Train Acc 0.904 | Test Acc 0.908
+epoch 17 | loss 0.2908 | Train Sat 0.711 | Test Sat 0.717 | Train Acc 0.905 | Test Acc 0.908
+epoch 18 | loss 0.2887 | Train Sat 0.712 | Test Sat 0.718 | Train Acc 0.905 | Test Acc 0.908
+epoch 19 | loss 0.2876 | Train Sat 0.713 | Test Sat 0.718 | Train Acc 0.905 | Test Acc 0.909
+epoch 20 | loss 0.2884 | Train Sat 0.711 | Test Sat 0.719 | Train Acc 0.906 | Test Acc 0.909
+epoch 21 | loss 0.2861 | Train Sat 0.714 | Test Sat 0.720 | Train Acc 0.906 | Test Acc 0.908
+epoch 22 | loss 0.2855 | Train Sat 0.715 | Test Sat 0.720 | Train Acc 0.907 | Test Acc 0.910
+epoch 23 | loss 0.2854 | Train Sat 0.716 | Test Sat 0.721 | Train Acc 0.907 | Test Acc 0.910
+epoch 24 | loss 0.2849 | Train Sat 0.717 | Test Sat 0.720 | Train Acc 0.907 | Test Acc 0.910
+epoch 25 | loss 0.2830 | Train Sat 0.717 | Test Sat 0.723 | Train Acc 0.907 | Test Acc 0.909
+epoch 26 | loss 0.2839 | Train Sat 0.718 | Test Sat 0.723 | Train Acc 0.908 | Test Acc 0.909
+epoch 27 | loss 0.2828 | Train Sat 0.719 | Test Sat 0.721 | Train Acc 0.908 | Test Acc 0.910
+epoch 28 | loss 0.2817 | Train Sat 0.718 | Test Sat 0.724 | Train Acc 0.908 | Test Acc 0.910
+epoch 29 | loss 0.2811 | Train Sat 0.719 | Test Sat 0.724 | Train Acc 0.908 | Test Acc 0.909
+Macro Recall: 0.9006, Macro Precision: 0.8906, Macro F1-Score: 0.8926
+
+Scores by Class:
+Class MQTT-DDoS-Connect_Flood: Recall: 0.985333, Precision: 0.858304, F1: 0.917443
+Class MQTT-DDoS-Publish_Flood: Recall: 0.825333, Precision: 0.990400, F1: 0.900364
+Class MQTT-DoS-Connect_Flood: Recall: 0.954667, Precision: 0.966262, F1: 0.960429
+Class MQTT-DoS-Publish_Flood: Recall: 0.986667, Precision: 0.847652, F1: 0.911892
+Class MQTT-Malformed_Data: Recall: 0.857558, Precision: 0.981697, F1: 0.915438
+Class Recon-Port_Scan: Recall: 0.410667, Precision: 0.562044, F1: 0.474576
+Class Recon-OS_Scan: Recall: 0.565333, Precision: 0.483466, F1: 0.521205
+Class Recon-VulScan: Recall: 0.638629, Precision: 0.587393, F1: 0.611940
+Class Recon-Ping_Sweep: Recall: 0.913043, Precision: 0.672000, F1: 0.774194
+Class TCP_IP-DDoS-TCP: Recall: 0.998667, Precision: 0.993369, F1: 0.996011
+Class TCP_IP-DDoS-ICMP: Recall: 0.997333, Precision: 1.000000, F1: 0.998665
+Class TCP_IP-DDoS-SYN: Recall: 0.996000, Precision: 0.998663, F1: 0.997330
+Class TCP_IP-DDoS-UDP: Recall: 0.998667, Precision: 1.000000, F1: 0.999333
+Class TCP_IP-DoS-TCP: Recall: 0.997333, Precision: 1.000000, F1: 0.998665
+Class TCP_IP-DoS-ICMP: Recall: 0.996000, Precision: 0.998663, F1: 0.997330
+Class TCP_IP-DoS-SYN: Recall: 0.998667, Precision: 0.997337, F1: 0.998001
+Class TCP_IP-DoS-UDP: Recall: 0.998667, Precision: 0.998667, F1: 0.998667
+Class benign: Recall: 0.998667, Precision: 0.997337, F1: 0.998001
+Class arp_spoofing: Recall: 0.993333, Precision: 0.988064, F1: 0.990691

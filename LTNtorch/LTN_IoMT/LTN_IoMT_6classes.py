@@ -96,12 +96,8 @@ def compute_sat_level(loader):
 
 
 #################################DATA PREPROCESSING#########################################
-# 6类 全部数据集路径
-# processed_train_file = '../CIC_IoMT/6classes/processed_train_data_6classes.csv'
-# processed_test_file = '../CIC_IoMT/6classes/processed_test_data_6classes.csv'
-# 6类 缩减版数据集路径
-processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_big_train.csv'
-processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_big_test.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_100k_train.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_10k_test.csv'
 
 # 加载数据集
 train_data = pd.read_csv(processed_train_file)
@@ -163,7 +159,7 @@ print("Create train and test loader done.")
 print("Start training...")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
 
-for epoch in range(30):
+for epoch in range(60):
     train_loss = 0.0
     for batch_idx, (data, labels) in enumerate(train_loader):
         optimizer.zero_grad()
@@ -210,7 +206,7 @@ for epoch in range(30):
         logging.info(f"epoch {epoch} | loss {train_loss:.4f} | Train Sat {train_sat:.3f} | "
                      f"Test Sat {test_sat:.3f} | Train Acc {train_acc:.3f} | Test Acc {test_acc:.3f}")
         ###############################################################################################
-    if epoch % 10 == 0: # Evaluate
+    if epoch % 20 == 0: # Evaluate
         precision, recall, f1 = compute_metrics(test_loader, mlp)
         print(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
 
@@ -264,12 +260,12 @@ def collect_predictions_and_labels(loader, model):
 
 
 # 训练循环结束后保存模型
-model_save_path = '/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/LTN_big_6classes.pth'
+model_save_path = '/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/model/LTN_6classes_small.pth'
 torch.save(mlp.state_dict(), model_save_path)
 print(f"Model saved to {model_save_path}")
 
 
 # 在训练循环结束后绘制PR曲线
 all_labels, all_probabilities = collect_predictions_and_labels(test_loader, mlp)
-save_path = "/home/zyang44/Github/baseline_cicIOT/LTNtorch/outputs/LTN_6classes_big_PR_curve.png"  # 设定保存路径和文件名
+save_path = "/home/zyang44/Github/baseline_cicIOT/LTNtorch/outputs/LTN_6classes_small_PR_curve.png"  # 设定保存路径和文件名
 plot_pr_curves(all_labels.numpy(), all_probabilities.numpy(), class_names, save_path)

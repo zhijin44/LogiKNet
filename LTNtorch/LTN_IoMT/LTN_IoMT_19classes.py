@@ -127,8 +127,8 @@ def compute_sat_level(loader):
 
 
 # 加载数据集
-processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_train_data.csv'
-processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_test_data.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/19classes_big_train.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/19classes_big_test.csv'
 
 train_data = pd.read_csv(processed_train_file)
 test_data = pd.read_csv(processed_test_file)
@@ -139,7 +139,7 @@ label_L2_mapping = {"MQTT-DDoS-Connect_Flood": 0, "MQTT-DDoS-Publish_Flood": 1, 
                  "Recon-Port_Scan": 5, "Recon-OS_Scan": 6, "Recon-VulScan": 7, "Recon-Ping_Sweep": 8,
                  "TCP_IP-DDoS-TCP": 9, "TCP_IP-DDoS-ICMP": 10,  "TCP_IP-DDoS-SYN": 11, "TCP_IP-DDoS-UDP": 12,
                  "TCP_IP-DoS-TCP": 13, "TCP_IP-DoS-ICMP": 14, "TCP_IP-DoS-SYN": 15, "TCP_IP-DoS-UDP": 16,
-                 "benign": 17, "arp_spoofing": 18}
+                 "Benign": 17, "ARP_Spoofing": 18}
 # 应用标签映射并确保存回列
 train_data["label_L1"] = train_data["label_L1"].map(label_L1_mapping)
 train_data["label_L2"] = train_data["label_L2"].map(label_L2_mapping)
@@ -230,7 +230,7 @@ print("Create train and test loader done.")
 print("Start training...")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
 
-for epoch in range(30):
+for epoch in range(26):
     train_loss = 0.0
 
     for batch_idx, (data, label_L2) in enumerate(train_loader):
@@ -382,7 +382,7 @@ def collect_predictions_and_labels(loader, model):
 
 
 # 训练循环结束后保存模型
-model_save_path = '/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/LTN_big_19classes.pth'
+model_save_path = '/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/model/LTN_19classes_big.pth'
 torch.save(mlp.state_dict(), model_save_path)
 print(f"Model saved to {model_save_path}")
 
