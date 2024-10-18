@@ -6,14 +6,14 @@ label_L1_mapping = [
 ]
 
 # 读取训练集和测试集文件
-# processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_train_data.csv'
-# processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_test_data.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/19classes_med_train.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/19classes_med_test.csv'
 # processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/processed_train_data.csv'
 # processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/processed_test_data.csv'
 
 
-processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/processed_train_data_6classes.csv'
-processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/processed_test_data_6classes.csv'
+# processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/processed_train_data_6classes.csv'
+# processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/processed_test_data_6classes.csv'
 # processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_100k_train.csv'
 # processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_10k_test.csv'
 
@@ -157,32 +157,39 @@ def reduce_to_n_samples(data, n_samples=64):
     return reduced_data
 
 
-# Create reduced datasets
-reduced_train_data = reduce_to_n_samples(train_data, 16047)
-reduced_test_data = reduce_to_n_samples(test_data, 1744)
+# # Create reduced datasets
+# reduced_train_data = reduce_to_n_samples(train_data, 16047)
+# reduced_test_data = reduce_to_n_samples(test_data, 1744)
 
-print("Training data shape:", reduced_train_data.shape)
-print("Test data shape:", reduced_test_data.shape)
+# print("Training data shape:", reduced_train_data.shape)
+# print("Test data shape:", reduced_test_data.shape)
 
-reduced_train_data.to_csv("/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_100k_train.csv", index=False)
-reduced_test_data.to_csv("/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_10k_test.csv", index=False)
+# reduced_train_data.to_csv("/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_100k_train.csv", index=False)
+# reduced_test_data.to_csv("/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_10k_test.csv", index=False)
 
 #####################################################################################
 ############# Part of the data from IoMT (benign & MQTT)#####################
 
-# # 要提取的六类标签
-# selected_labels = [
-#     "Benign",
-#     "MQTT-DDoS-Connect_Flood",
-#     "MQTT-DoS-Publish_Flood",
-#     "MQTT-DDoS-Publish_Flood",
-#     "MQTT-DoS-Connect_Flood",
-#     "MQTT-Malformed_Data"
-# ]
+# 要提取的六类标签
+selected_labels = [
+    "Benign",
+    "MQTT-DDoS-Connect_Flood",
+    "MQTT-DoS-Publish_Flood",
+    "MQTT-DDoS-Publish_Flood",
+    "MQTT-DoS-Connect_Flood",
+    "MQTT-Malformed_Data"
+]
 
 # 提取对应标签的数据
-# filtered_train_data = train_data[train_data['label'].isin(selected_labels)]
-# filtered_test_data = test_data[test_data['label'].isin(selected_labels)]
+filtered_train_data = train_data[train_data['label_L2'].isin(selected_labels)]
+filtered_test_data = test_data[test_data['label_L2'].isin(selected_labels)]
+
+print_extended_label_counts(filtered_train_data)
+print_extended_label_counts(filtered_test_data)
+# 导出新的数据集
+filtered_train_data.to_csv('/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_data.csv', index=False)
+filtered_test_data.to_csv('/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_data.csv', index=False)
+
 
 # 新建feature列label_L1和label_L2
 def create_labels(row):

@@ -5,14 +5,14 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler, label_binarize
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score, auc, precision_recall_curve
 import matplotlib.pyplot as plt
-from utils import MLP, LogitsToPredicate, DataLoader
+from utils import MLP, LogitsToPredicate, DataLoaderMulti
 import custom_fuzzy_ops as custom_fuzzy_ops
 import logging
 import sys
 
 # Set up logging
 log_file = "/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/training_log.txt"
-logging.basicConfig(level=logging.INFO, 
+logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(message)s',
                     handlers=[
                         logging.FileHandler(log_file),
@@ -31,7 +31,7 @@ def compute_sat_level(loader):
         x_MQTT_DoS_Connect_Flood = ltn.Variable("x_MQTT_DoS_Connect_Flood", data[label_L2 == 4])
         x_MQTT_DoS_Publish_Flood = ltn.Variable("x_MQTT_DoS_Publish_Flood", data[label_L2 == 5])
         x_MQTT_Malformed_Data = ltn.Variable("x_MQTT_Malformed_Data", data[label_L2 == 6])
-        x_benign = ltn.Variable("x_MQTT_Malformed_Data", data[label_L2 == 7])
+        x_benign = ltn.Variable("x_benign", data[label_L2 == 7])
 
         # rules - single class exclusive
         valid_forall_expressions = []
@@ -56,41 +56,41 @@ def compute_sat_level(loader):
 
 # it computes the overall accuracy of the predictions of the trained model using the given data loader
 # (train or test)
-def compute_accuracy(loader, threshold=0.5):
-    mean_accuracy = 0.0
+def compute_accuracy(loader):
+    mean_accuracy_L1 = 0.0
+    mean_accuracy_L2 = 0.0
     total_samples = 0
-    for data, (label_L1, label_L2) in loader:
+    for data, label_L1, label_L2 in loader:
         # Get predictions from the MLP model
         predictions = mlp(data).detach().cpu().numpy()  # Ensure predictions are on CPU for numpy operations
         
-        # Assuming the model outputs two sets of predictions:
-        # - Binary predictions for Label_L1 (1 value per sample)
-        # - Multiclass predictions for Label_L2 (6 values per sample)
-        pred_L1 = predictions[:, 0]  # Binary prediction for Label_L1
-        pred_L2 = predictions[:, 1:]  # Multiclass predictions for Label_L2
-        # For Label_L1 (binary classification)
-        predicted_binary = (pred_L1 > threshold).astype(int)
-        true_binary = label_L1.cpu().numpy()  # Convert tensor to numpy for comparison
-        # For Label_L2 (multiclass classification)
-        predicted_multiclass = np.argmax(pred_L2, axis=-1)
-        true_multiclass = label_L2.cpu().numpy()  # Convert tensor to numpy
-        
+        # Predicted class for Label_L1 (binary classification)
+        pred_L1 = np.argmax(predictions[:, 0:2], axis=-1)
+        true_L1 = label_L1.cpu().numpy()  # Convert tensor to numpy for comparison
+
+        # Predicted class for Label_L2 (multiclass classification)
+        pred_L2 = np.argmax(predictions[:, 2:], axis=-1) + 2  # Shift range from [0, 5] to [2, 7]
+        true_L2 = label_L2.cpu().numpy()  # Convert tensor to numpy
+
         # Compute binary accuracy for Label_L1
-        binary_accuracy = np.mean(predicted_binary == true_binary)
+        accuracy_L1 = np.mean(pred_L1 == true_L1)
         # Compute multiclass accuracy for Label_L2
-        multiclass_accuracy = np.mean(predicted_multiclass == true_multiclass)
-        # Combine the accuracy from both binary and multiclass predictions
-        accuracy = (binary_accuracy + multiclass_accuracy) / 2
-        
+        accuracy_L2 = np.mean(pred_L2 == true_L2)
+
         # Accumulate mean accuracy over all batches
-        mean_accuracy += accuracy
+        mean_accuracy_L1 += accuracy_L1
+        mean_accuracy_L2 += accuracy_L2
         total_samples += 1
-    return mean_accuracy / total_samples
+    # Return mean accuracies for Label_L1 and Label_L2
+    mean_accuracy_L1 /= total_samples
+    mean_accuracy_L2 /= total_samples
+
+    return mean_accuracy_L1, mean_accuracy_L2
 
 #####################Preprocess#################################
 # 加载数据集
-processed_train_file = '../CIC_IoMT/19classes/filtered_train_data.csv'
-processed_test_file = '../CIC_IoMT/19classes/filtered_test_data.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_data.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_data.csv'
 
 train_data = pd.read_csv(processed_train_file)
 test_data = pd.read_csv(processed_test_file)
@@ -100,8 +100,10 @@ label_L1_mapping = {"MQTT": 0, "Benign": 1}
 label_L2_mapping = {"MQTT-DDoS-Connect_Flood": 2, "MQTT-DDoS-Publish_Flood": 3, 
                     "MQTT-DoS-Connect_Flood": 4, "MQTT-DoS-Publish_Flood": 5,
                     "MQTT-Malformed_Data": 6, "Benign": 7}
-train_label_L1, train_label_L2 = train_data.pop("label_L1"), train_data.pop("label_L2"),
-test_label_L1, test_label_L2 = test_data.pop("label_L1"), test_data.pop("label_L2")
+train_label_L1 = train_data.pop("label_L1").map(label_L1_mapping)
+train_label_L2 = train_data.pop("label_L2").map(label_L2_mapping)
+test_label_L1 = test_data.pop("label_L1").map(label_L1_mapping)
+test_label_L2 = test_data.pop("label_L2").map(label_L2_mapping)
 
 # 使用 StandardScaler 对数据进行缩放
 scaler = StandardScaler()
@@ -138,8 +140,8 @@ P = ltn.Predicate(LogitsToPredicate(mlp))
 
 # define the connectives, quantifiers, and the SatAgg
 Not = ltn.Connective(ltn.fuzzy_ops.NotStandard())
-And = ltn.Connective(custom_fuzzy_ops.AndProd())
-# And = ltn.Connective(ltn.fuzzy_ops.AndProd())
+# And = ltn.Connective(custom_fuzzy_ops.AndProd())
+And = ltn.Connective(ltn.fuzzy_ops.AndProd())
 Or = ltn.Connective(ltn.fuzzy_ops.OrProbSum())
 Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
 SatAgg = ltn.fuzzy_ops.SatAgg()
@@ -150,5 +152,82 @@ print("LTN setting done.")
 #####################Training#################################
 # create train and test loader (train_sex_labels, train_color_labels)
 batch_size = 64
-train_loader = DataLoader(train_data, (train_label_L1, train_label_L2), batch_size, shuffle=True)
-test_loader = DataLoader(test_data, (test_label_L1, test_label_L2), batch_size, shuffle=False)
+train_loader = DataLoaderMulti(train_data, (train_label_L1, train_label_L2), batch_size, shuffle=True)
+test_loader = DataLoaderMulti(test_data, (test_label_L1, test_label_L2), batch_size, shuffle=False)
+
+print("Create train and test loader done.")
+
+print("Start training...")
+optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
+
+for epoch in range(1):
+    train_loss = 0.0
+
+    for batch_idx, (data, label_L1, label_L2) in enumerate(train_loader):
+        optimizer.zero_grad()
+
+        x = ltn.Variable("x", data)
+        x_MQTT = ltn.Variable("x_MQTT", data[label_L1 == 0])
+        x_Benign = ltn.Variable("x_Benign", data[label_L1 == 1])
+        x_MQTT_DDoS_Connect_Flood = ltn.Variable("x_MQTT_DDoS_Connect_Flood", data[label_L2 == 2])
+        x_MQTT_DDoS_Publish_Flood = ltn.Variable("x_MQTT_DDoS_Publish_Flood", data[label_L2 == 3])
+        x_MQTT_DoS_Connect_Flood = ltn.Variable("x_MQTT_DoS_Connect_Flood", data[label_L2 == 4])
+        x_MQTT_DoS_Publish_Flood = ltn.Variable("x_MQTT_DoS_Publish_Flood", data[label_L2 == 5])
+        x_MQTT_Malformed_Data = ltn.Variable("x_MQTT_Malformed_Data", data[label_L2 == 6])
+        x_benign = ltn.Variable("x_benign", data[label_L2 == 7])
+
+        # rules - single class exclusive
+        valid_forall_expressions = []
+        variables_labels = [
+            (x_MQTT, l_MQTT),
+            (x_Benign, l_Benign),
+            (x_MQTT_DDoS_Connect_Flood, l_MQTT_DDoS_Connect_Flood),
+            (x_MQTT_DDoS_Publish_Flood, l_MQTT_DDoS_Publish_Flood),
+            (x_MQTT_DoS_Connect_Flood, l_MQTT_DoS_Connect_Flood),
+            (x_MQTT_DoS_Publish_Flood, l_MQTT_DoS_Publish_Flood),
+            (x_MQTT_Malformed_Data, l_MQTT_Malformed_Data),
+            (x_benign, l_benign)
+        ]
+        for variable, label in variables_labels:
+            if variable.value.size(0) != 0:
+                valid_forall_expressions.append(Forall(variable, P(variable, label, training=True)))
+        
+        sat_agg = SatAgg(*valid_forall_expressions) # the satisfaction level over the current batch
+        loss = 1. - sat_agg
+        loss.backward()
+        optimizer.step()
+        train_loss += loss.item()
+    train_loss = train_loss / len(train_loader)
+
+    # print metrics
+    if epoch % 1 == 0:
+        train_sat = compute_sat_level(train_loader)
+        test_sat = compute_sat_level(test_loader)
+        train_acc = compute_accuracy(train_loader)
+        test_acc = compute_accuracy(test_loader)
+        print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f"
+              % (epoch, train_loss, train_sat, test_sat, train_acc, test_acc))
+        
+        logging.info(f"epoch {epoch} | loss {train_loss:.4f} | Train Sat {train_sat:.3f} | "
+                     f"Test Sat {test_sat:.3f} | Train Acc {train_acc:.3f} | Test Acc {test_acc:.3f}")
+
+
+#####################Evaluation#################################
+# class_names = [
+#     "MQTT-DDoS-Connect_Flood", 
+#     "MQTT-DDoS-Publish_Flood", 
+#     "MQTT-DoS-Connect_Flood", 
+#     "MQTT-DoS-Publish_Flood", 
+#     "MQTT-Malformed_Data",
+#     "benign"
+# ]
+# precision, recall, f1 = compute_metrics(test_loader, mlp)
+# print(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
+# print("Scores by Class:")
+
+# logging.info(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
+# logging.info("Scores by Class:")
+
+# for i, class_name in enumerate(class_names):
+#     print(f"Class {class_name}: Recall: {recall[i]:.6f}, Precision: {precision[i]:.6f}, F1: {f1[i]:.6f}")
+#     logging.info(f"Class {class_name}: Recall: {recall[i]:.6f}, Precision: {precision[i]:.6f}, F1: {f1[i]:.6f}")

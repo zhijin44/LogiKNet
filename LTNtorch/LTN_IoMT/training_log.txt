@@ -502,3 +502,4 @@
 2024-10-06 21:53:07,361 - Class arp_spoofing: Recall: 0.960000, Precision: 0.989691, F1: 0.974619
 
 
+2024-10-18 13:38:47,137 - epoch 0 | loss 0.6566 | Train Sat 0.544 | Test Sat 0.543 | Train Acc 0.000 | Test Acc 0.001

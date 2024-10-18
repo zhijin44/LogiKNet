@@ -99,3 +99,37 @@ class DataLoader(object):
             yield data, labels
 
 
+
+class DataLoaderMulti(object):
+    def __init__(self,
+                 data,
+                 labels,
+                 batch_size=1,
+                 shuffle=True):
+        self.data = data
+        self.label_L1 = labels[0]
+        self.label_L2 = labels[1]
+        self.batch_size = batch_size
+        self.shuffle = shuffle
+
+    def __len__(self):
+        return int(np.ceil(self.data.shape[0] / self.batch_size))
+
+    def __iter__(self):
+        n = self.data.shape[0]
+        idxlist = list(range(n))
+        if self.shuffle:
+            np.random.shuffle(idxlist)
+
+        for _, start_idx in enumerate(range(0, n, self.batch_size)):
+            end_idx = min(start_idx + self.batch_size, n)
+            data = self.data[idxlist[start_idx:end_idx]]
+            label_L1 = self.label_L1[idxlist[start_idx:end_idx]]
+            label_L2 = self.label_L2[idxlist[start_idx:end_idx]]
+
+            yield data, label_L1, label_L2
+
+
+
+
+
