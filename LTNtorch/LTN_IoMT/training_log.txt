@@ -500,3 +500,5 @@
 2024-10-06 21:53:07,361 - Class TCP_IP-DoS-UDP: Recall: 1.000000, Precision: 1.000000, F1: 1.000000
 2024-10-06 21:53:07,361 - Class benign: Recall: 0.980000, Precision: 0.980000, F1: 0.980000
 2024-10-06 21:53:07,361 - Class arp_spoofing: Recall: 0.960000, Precision: 0.989691, F1: 0.974619
+
+

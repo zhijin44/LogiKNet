@@ -87,20 +87,22 @@ training_data[X_columns] = scaler.transform(training_data[X_columns])
 test_data[X_columns] = scaler.transform(test_data[X_columns])
 # After scaling your training data in the training script
 # scaler_save_path = 'CIC_IoMT/6classes/scaler_6classes.joblib'
-scaler_save_path = 'CIC_IoMT/6classes/scaler_100k.joblib'
-dump(scaler, scaler_save_path)
+
+# scaler_save_path = 'CIC_IoMT/6classes/scaler.joblib'
+# dump(scaler, scaler_save_path)
+
 print("Data scaled.")
 
 # Check if the model already exists
 # model_save_path = 'CIC_IoMT/6classes/mlp_classifier_model_6classes.joblib'
-model_save_path = 'CIC_IoMT/6classes/model_100k.joblib'
+model_save_path = 'CIC_IoMT/6classes/model_temp.joblib'
 if os.path.exists(model_save_path):
     print("Loading existing model...")
     model = load(model_save_path)
 else:
     print("Training model...")
     # Model training code
-    model = MLPClassifier(hidden_layer_sizes=(32, 32), max_iter=200, activation='relu', solver='adam', random_state=1,
+    model = MLPClassifier(hidden_layer_sizes=(32, 32), max_iter=300, activation='relu', solver='adam', random_state=1,
                           verbose=True)
     model.fit(training_data[X_columns], training_data['label'])
     # Save the trained model
@@ -120,6 +122,6 @@ print('Precision Score (Macro):', precision_score(y_test, y_pred, average='macro
 print('F1 Score (Macro):', f1_score(y_test, y_pred, average='macro'))
 # print('Recall Scores by Class:', recall_score(y_test, y_pred, average=None))
 # print('Precision Scores by Class:', precision_score(y_test, y_pred, average=None))
-# print('F1 Scores by Class:', f1_score(y_test, y_pred, average=None))
+print('F1 Scores by Class:', f1_score(y_test, y_pred, average=None))
 print("Model evaluation complete.")
 
