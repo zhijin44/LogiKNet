@@ -15,8 +15,11 @@ TEST_DIR = 'CIC_IoMT/test/'
 
 # processed_train_file = 'CIC_IoMT/6classes/processed_train_data_6classes.csv'
 # processed_test_file = 'CIC_IoMT/6classes/processed_test_data_6classes.csv'
-processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_100k_train.csv'
-processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_10k_test.csv'
+# processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_100k_train.csv'
+# processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_10k_test.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_tiny_train.csv'
+# processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_data.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_data.csv'
 
 # 特征列名称
 X_columns = [
@@ -102,15 +105,17 @@ if os.path.exists(model_save_path):
 else:
     print("Training model...")
     # Model training code
-    model = MLPClassifier(hidden_layer_sizes=(32, 32), max_iter=300, activation='relu', solver='adam', random_state=1,
+    model = MLPClassifier(hidden_layer_sizes=(32, 32), max_iter=100, activation='relu', solver='adam', random_state=1,
                           verbose=True)
-    model.fit(training_data[X_columns], training_data['label'])
+    # model.fit(training_data[X_columns], training_data['label'])
+    model.fit(training_data[X_columns], training_data['label_L2'])
     # Save the trained model
-    dump(model, model_save_path)
-    print("Model saved to", model_save_path)
+    # dump(model, model_save_path)
+    # print("Model saved to", model_save_path)
 
 print("Making predictions...")
-y_test = test_data['label']
+# y_test = test_data['label']
+y_test = test_data['label_L2']
 y_pred = model.predict(test_data[X_columns])
 print("Predictions made.")
 

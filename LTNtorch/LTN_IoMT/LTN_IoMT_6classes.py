@@ -159,7 +159,7 @@ print("Create train and test loader done.")
 print("Start training...")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
 
-for epoch in range(30):
+for epoch in range(10):
     train_loss = 0.0
     for batch_idx, (data, labels) in enumerate(train_loader):
         optimizer.zero_grad()

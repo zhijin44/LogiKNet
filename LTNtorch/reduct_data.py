@@ -6,8 +6,8 @@ label_L1_mapping = [
 ]
 
 # 读取训练集和测试集文件
-processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/19classes_med_train.csv'
-processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/19classes_med_test.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_data.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_data.csv'
 # processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/processed_train_data.csv'
 # processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/processed_test_data.csv'
 
@@ -145,26 +145,27 @@ def reduce_instances(df, labels_to_reduce, reduction_fraction=0.5):
 
 def reduce_to_n_samples(data, n_samples=64):
     # Get the unique labels
-    labels = data['label'].unique()  # Assuming 'label' is the name of your label column
+    label_col = "label_L2"
+    labels = data[label_col].unique()  # Assuming 'label' is the name of your label column
 
     reduced_data = pd.DataFrame()  # Initialize an empty DataFrame to store the reduced dataset
 
     for label in labels:
         # For each label, randomly select n_samples
-        sampled_data = data[data['label'] == label].sample(n=n_samples, random_state=42)
+        sampled_data = data[data[label_col] == label].sample(n=n_samples, random_state=42)
         reduced_data = pd.concat([reduced_data, sampled_data], ignore_index=True)
 
     return reduced_data
 
 
-# # Create reduced datasets
-# reduced_train_data = reduce_to_n_samples(train_data, 16047)
+# Create reduced datasets
+reduced_train_data = reduce_to_n_samples(train_data, 100)
 # reduced_test_data = reduce_to_n_samples(test_data, 1744)
 
-# print("Training data shape:", reduced_train_data.shape)
+print("Training data shape:", reduced_train_data.shape)
 # print("Test data shape:", reduced_test_data.shape)
 
-# reduced_train_data.to_csv("/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_100k_train.csv", index=False)
+reduced_train_data.to_csv("/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_tiny_train.csv", index=False)
 # reduced_test_data.to_csv("/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_10k_test.csv", index=False)
 
 #####################################################################################
@@ -180,15 +181,15 @@ selected_labels = [
     "MQTT-Malformed_Data"
 ]
 
-# 提取对应标签的数据
-filtered_train_data = train_data[train_data['label_L2'].isin(selected_labels)]
-filtered_test_data = test_data[test_data['label_L2'].isin(selected_labels)]
+# # 提取对应标签的数据
+# filtered_train_data = train_data[train_data['label_L2'].isin(selected_labels)]
+# filtered_test_data = test_data[test_data['label_L2'].isin(selected_labels)]
 
-print_extended_label_counts(filtered_train_data)
-print_extended_label_counts(filtered_test_data)
-# 导出新的数据集
-filtered_train_data.to_csv('/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_data.csv', index=False)
-filtered_test_data.to_csv('/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_data.csv', index=False)
+# print_extended_label_counts(filtered_train_data)
+# print_extended_label_counts(filtered_test_data)
+# # 导出新的数据集
+# filtered_train_data.to_csv('/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_data.csv', index=False)
+# filtered_test_data.to_csv('/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_data.csv', index=False)
 
 
 # 新建feature列label_L1和label_L2

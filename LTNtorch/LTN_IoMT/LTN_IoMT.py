@@ -3,6 +3,7 @@ import pandas as pd
 import ltn
 import numpy as np
 from sklearn.preprocessing import StandardScaler, label_binarize
+from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.metrics import precision_recall_fscore_support, accuracy_score, auc, precision_recall_curve
 import matplotlib.pyplot as plt
 from utils import MLP, LogitsToPredicate, DataLoaderMulti
@@ -14,6 +15,7 @@ import sys
 log_file = "/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/training_log.txt"
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S',
                     handlers=[
                         logging.FileHandler(log_file),
                         logging.StreamHandler(sys.stdout)  # This allows printing to both console and log file
@@ -47,19 +49,49 @@ def compute_sat_level(loader):
         ]
         for variable, label in variables_labels:
             if variable.value.size(0) != 0:
-                valid_forall_expressions.append(Forall(variable, P(variable, label, training=True)))
+                # valid_forall_expressions.append(Forall(variable, P(variable, label, training=True)))
+                valid_forall_expressions.append(Forall(variable, P(variable, label)))
+
+        # rules - L1 class exclusive for each other
+        valid_forall_expressions.append(Forall(x, Not(And(P(x, l_MQTT), P(x, l_Benign)))))
+        
         mean_sat += SatAgg(*valid_forall_expressions)
     # In the loop: mean_sat accumulates the satisfaction levels for all the logical rules across the batches.
     # After the loop: mean_sat becomes the average satisfaction level of the logical rules over the entire dataset.
     mean_sat /= len(loader)
     return mean_sat
 
+
+def compute_metrics(loader, model):
+    all_preds = []
+    all_labels = []
+    
+    for data, _, label_L2 in loader:
+        # Get predictions from the model
+        predictions = model(data).detach().cpu().numpy()  # Ensure predictions are on CPU for numpy operations
+        
+        # Predicted class for Label_L2 (multiclass classification)
+        pred_L2 = np.argmax(predictions[:, 2:], axis=-1) + 2  # Shift range from [0, 5] to [2, 7]
+        true_L2 = label_L2.cpu().numpy()  # Convert tensor to numpy
+
+        # Accumulate predictions and true labels
+        all_preds.extend(pred_L2)
+        all_labels.extend(true_L2)
+    
+    # Compute metrics for each class
+    precision = precision_score(all_labels, all_preds, labels=np.arange(2, 8), average=None)
+    recall = recall_score(all_labels, all_preds, labels=np.arange(2, 8), average=None)
+    f1 = f1_score(all_labels, all_preds, labels=np.arange(2, 8), average=None)
+
+    return precision, recall, f1
+
+
 # it computes the overall accuracy of the predictions of the trained model using the given data loader
 # (train or test)
 def compute_accuracy(loader):
     mean_accuracy_L1 = 0.0
     mean_accuracy_L2 = 0.0
-    total_samples = 0
+    # total_samples = 0
     for data, label_L1, label_L2 in loader:
         # Get predictions from the MLP model
         predictions = mlp(data).detach().cpu().numpy()  # Ensure predictions are on CPU for numpy operations
@@ -80,15 +112,16 @@ def compute_accuracy(loader):
         # Accumulate mean accuracy over all batches
         mean_accuracy_L1 += accuracy_L1
         mean_accuracy_L2 += accuracy_L2
-        total_samples += 1
+        # total_samples += 1
     # Return mean accuracies for Label_L1 and Label_L2
-    mean_accuracy_L1 /= total_samples
-    mean_accuracy_L2 /= total_samples
+    mean_accuracy_L1 /= len(loader)
+    mean_accuracy_L2 /= len(loader)
 
     return mean_accuracy_L1, mean_accuracy_L2
 
 #####################Preprocess#################################
 # 加载数据集
+# processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_tiny_train.csv'
 processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_data.csv'
 processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_data.csv'
 
@@ -143,7 +176,7 @@ Not = ltn.Connective(ltn.fuzzy_ops.NotStandard())
 # And = ltn.Connective(custom_fuzzy_ops.AndProd())
 And = ltn.Connective(ltn.fuzzy_ops.AndProd())
 Or = ltn.Connective(ltn.fuzzy_ops.OrProbSum())
-Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
+Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=4), quantifier="f")
 SatAgg = ltn.fuzzy_ops.SatAgg()
 
 print("LTN setting done.")
@@ -160,7 +193,7 @@ print("Create train and test loader done.")
 print("Start training...")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
 
-for epoch in range(1):
+for epoch in range(50):
     train_loss = 0.0
 
     for batch_idx, (data, label_L1, label_L2) in enumerate(train_loader):
@@ -190,8 +223,11 @@ for epoch in range(1):
         ]
         for variable, label in variables_labels:
             if variable.value.size(0) != 0:
-                valid_forall_expressions.append(Forall(variable, P(variable, label, training=True)))
-        
+                valid_forall_expressions.append(Forall(variable, P(variable, label)))
+
+        # rules - L1 class exclusive for each other
+        valid_forall_expressions.append(Forall(x, Not(And(P(x, l_MQTT), P(x, l_Benign)))))
+
         sat_agg = SatAgg(*valid_forall_expressions) # the satisfaction level over the current batch
         loss = 1. - sat_agg
         loss.backward()
@@ -205,29 +241,31 @@ for epoch in range(1):
         test_sat = compute_sat_level(test_loader)
         train_acc = compute_accuracy(train_loader)
         test_acc = compute_accuracy(test_loader)
-        print(" epoch %d | loss %.4f | Train Sat %.3f | Test Sat %.3f | Train Acc %.3f | Test Acc %.3f"
-              % (epoch, train_loss, train_sat, test_sat, train_acc, test_acc))
-        
+        print(f"epoch {epoch} | loss {train_loss:.4f} | Train Sat {train_sat:.3f} | Test Sat {test_sat:.3f} | "
+          f"Train Acc L1 {train_acc[0]:.3f} | Train Acc L2 {train_acc[1]:.3f} | "
+          f"Test Acc L1 {test_acc[0]:.3f} | Test Acc L2 {test_acc[1]:.3f}")
+    
         logging.info(f"epoch {epoch} | loss {train_loss:.4f} | Train Sat {train_sat:.3f} | "
-                     f"Test Sat {test_sat:.3f} | Train Acc {train_acc:.3f} | Test Acc {test_acc:.3f}")
+                 f"Test Sat {test_sat:.3f} | Train Acc L1 {train_acc[0]:.3f} | Train Acc L2 {train_acc[1]:.3f} | "
+                 f"Test Acc L1 {test_acc[0]:.3f} | Test Acc L2 {test_acc[1]:.3f}")
 
 
 #####################Evaluation#################################
-# class_names = [
-#     "MQTT-DDoS-Connect_Flood", 
-#     "MQTT-DDoS-Publish_Flood", 
-#     "MQTT-DoS-Connect_Flood", 
-#     "MQTT-DoS-Publish_Flood", 
-#     "MQTT-Malformed_Data",
-#     "benign"
-# ]
-# precision, recall, f1 = compute_metrics(test_loader, mlp)
-# print(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
-# print("Scores by Class:")
+class_names = [
+    "MQTT-DDoS-Connect_Flood", 
+    "MQTT-DDoS-Publish_Flood", 
+    "MQTT-DoS-Connect_Flood", 
+    "MQTT-DoS-Publish_Flood", 
+    "MQTT-Malformed_Data",
+    "benign"
+]
+precision, recall, f1 = compute_metrics(test_loader, mlp)
+print(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
+print("Scores by Class:")
 
-# logging.info(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
-# logging.info("Scores by Class:")
+logging.info(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
+logging.info("Scores by Class:")
 
-# for i, class_name in enumerate(class_names):
-#     print(f"Class {class_name}: Recall: {recall[i]:.6f}, Precision: {precision[i]:.6f}, F1: {f1[i]:.6f}")
-#     logging.info(f"Class {class_name}: Recall: {recall[i]:.6f}, Precision: {precision[i]:.6f}, F1: {f1[i]:.6f}")
+for i, class_name in enumerate(class_names):
+    print(f"Class {class_name}: Recall: {recall[i]:.6f}, Precision: {precision[i]:.6f}, F1: {f1[i]:.6f}")
+    logging.info(f"Class {class_name}: Recall: {recall[i]:.6f}, Precision: {precision[i]:.6f}, F1: {f1[i]:.6f}")
