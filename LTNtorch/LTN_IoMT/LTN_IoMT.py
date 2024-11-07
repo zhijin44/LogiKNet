@@ -54,6 +54,7 @@ def compute_sat_level(loader):
 
         # rules - L1 class exclusive for each other
         valid_forall_expressions.append(Forall(x, Not(And(P(x, l_MQTT), P(x, l_Benign)))))
+        valid_forall_expressions.append(Forall(x, And(P(x, l_benign), P(x, l_Benign))))
         
         mean_sat += SatAgg(*valid_forall_expressions)
     # In the loop: mean_sat accumulates the satisfaction levels for all the logical rules across the batches.
@@ -176,7 +177,7 @@ Not = ltn.Connective(ltn.fuzzy_ops.NotStandard())
 # And = ltn.Connective(custom_fuzzy_ops.AndProd())
 And = ltn.Connective(ltn.fuzzy_ops.AndProd())
 Or = ltn.Connective(ltn.fuzzy_ops.OrProbSum())
-Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=4), quantifier="f")
+Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
 SatAgg = ltn.fuzzy_ops.SatAgg()
 
 print("LTN setting done.")
@@ -190,10 +191,39 @@ test_loader = DataLoaderMulti(test_data, (test_label_L1, test_label_L2), batch_s
 
 print("Create train and test loader done.")
 
+#####################querying setting#####################################
+Implies = ltn.Connective(ltn.fuzzy_ops.ImpliesReichenbach())
+def phi1(features):   # True, for all x, P(x, l_Benign) -> not P(x, l_MQTT), because the label_L1 exclusive
+    x = ltn.Variable("x", features)
+    return Forall(x, Implies(P(x, l_Benign), Not(P(x, l_MQTT))), p=5)
+
+def phi2(features):  # False
+    x = ltn.Variable("x", features)
+    return Forall(x, Implies(P(x, l_Benign), (P(x, l_MQTT))), p=5)
+
+def phi3(features):  # True
+    x = ltn.Variable("x", features)
+    return Forall(x, Implies(P(x, l_benign), (P(x, l_Benign))), p=5)
+
+def phi4(features):  # False
+    x = ltn.Variable("x", features)
+    return Forall(x, Implies(P(x, l_benign), (P(x, l_MQTT))), p=5)
+
+
+# it computes the satisfaction level of a formula phi using the given data loader (train or test)
+def compute_sat_level_phi(loader, phi):
+    mean_sat = 0
+    for features, _, _ in loader:
+        mean_sat += phi(features).value
+    mean_sat /= len(loader)
+    return mean_sat
+
+print("Querying setting.")
+
 print("Start training...")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
 
-for epoch in range(50):
+for epoch in range(41):
     train_loss = 0.0
 
     for batch_idx, (data, label_L1, label_L2) in enumerate(train_loader):
@@ -227,6 +257,7 @@ for epoch in range(50):
 
         # rules - L1 class exclusive for each other
         valid_forall_expressions.append(Forall(x, Not(And(P(x, l_MQTT), P(x, l_Benign)))))
+        valid_forall_expressions.append(Forall(x, And(P(x, l_benign), P(x, l_Benign))))
 
         sat_agg = SatAgg(*valid_forall_expressions) # the satisfaction level over the current batch
         loss = 1. - sat_agg
@@ -248,7 +279,11 @@ for epoch in range(50):
         logging.info(f"epoch {epoch} | loss {train_loss:.4f} | Train Sat {train_sat:.3f} | "
                  f"Test Sat {test_sat:.3f} | Train Acc L1 {train_acc[0]:.3f} | Train Acc L2 {train_acc[1]:.3f} | "
                  f"Test Acc L1 {test_acc[0]:.3f} | Test Acc L2 {test_acc[1]:.3f}")
-
+    if epoch % 5 == 0:
+        print(f"Test Sat Phi 1 {compute_sat_level_phi(test_loader, phi1):.3f} | Test Sat Phi 2 {compute_sat_level_phi(test_loader, phi2):.3f} | "
+              f"Test Sat Phi 3 {compute_sat_level_phi(test_loader, phi3):.3f} | Test Sat Phi 4 {compute_sat_level_phi(test_loader, phi4):.3f}")
+        logging.info(f"Test Sat Phi 1 {compute_sat_level_phi(test_loader, phi1):.3f} | Test Sat Phi 2 {compute_sat_level_phi(test_loader, phi2):.3f} | "
+                     f"Test Sat Phi 3 {compute_sat_level_phi(test_loader, phi3):.3f} | Test Sat Phi 4 {compute_sat_level_phi(test_loader, phi4):.3f}")
 
 #####################Evaluation#################################
 class_names = [

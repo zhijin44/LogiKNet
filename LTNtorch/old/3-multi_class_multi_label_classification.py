@@ -213,7 +213,7 @@ def compute_sat_level_phi(loader, phi):
 # axioms in the knowledge base are maximally satisfied.
 optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
 
-for epoch in range(20):
+for epoch in range(300):
     train_loss = 0.0
     for batch_idx, (data, labels_sex, labels_color) in enumerate(train_loader):
         optimizer.zero_grad()
