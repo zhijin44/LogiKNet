@@ -6,10 +6,10 @@ label_L1_mapping = [
 ]
 
 # 读取训练集和测试集文件
-processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_data.csv'
-processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_data.csv'
-# processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/processed_train_data.csv'
-# processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/processed_test_data.csv'
+# processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_data.csv'
+# processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_data.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_train_data.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/reduced_test_data.csv'
 
 
 # processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/processed_train_data_6classes.csv'
@@ -159,34 +159,41 @@ def reduce_to_n_samples(data, n_samples=64):
 
 
 # Create reduced datasets
-reduced_train_data = reduce_to_n_samples(train_data, 100)
+# reduced_train_data = reduce_to_n_samples(train_data, 2000)
 # reduced_test_data = reduce_to_n_samples(test_data, 1744)
 
-print("Training data shape:", reduced_train_data.shape)
+# print("Training data shape:", reduced_train_data.shape)
 # print("Test data shape:", reduced_test_data.shape)
 
-reduced_train_data.to_csv("/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_tiny_train.csv", index=False)
+# reduced_train_data.to_csv("/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_small_train.csv", index=False)
 # reduced_test_data.to_csv("/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_10k_test.csv", index=False)
 
 #####################################################################################
 ############# Part of the data from IoMT (benign & MQTT)#####################
 
-# 要提取的六类标签
+# 要提取的8类标签
 selected_labels = [
-    "Benign",
-    "MQTT-DDoS-Connect_Flood",
-    "MQTT-DoS-Publish_Flood",
-    "MQTT-DDoS-Publish_Flood",
-    "MQTT-DoS-Connect_Flood",
-    "MQTT-Malformed_Data"
+    'Benign',
+    'MQTT-DDoS-Connect_Flood',
+    'MQTT-DoS-Publish_Flood',
+    'MQTT-DDoS-Publish_Flood',
+    'MQTT-DoS-Connect_Flood',
+    'MQTT-Malformed_Data'
+    'Recon-Port_Scan',
+    'Recon-OS_Scan',
+    'arp_spoofing'
 ]
 
-# # 提取对应标签的数据
+# Combine the datasets by concatenating rows
+# combined_data = pd.concat([train_data, test_data], axis=0, ignore_index=True)
+# print_extended_label_counts(combined_data)
+# 提取对应标签的数据
 # filtered_train_data = train_data[train_data['label_L2'].isin(selected_labels)]
-# filtered_test_data = test_data[test_data['label_L2'].isin(selected_labels)]
+# filtered_train_data = train_data[train_data['label_L2'].isin(selected_labels)]
+
 
 # print_extended_label_counts(filtered_train_data)
-# print_extended_label_counts(filtered_test_data)
+print_extended_label_counts(test_data)
 # # 导出新的数据集
 # filtered_train_data.to_csv('/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_data.csv', index=False)
 # filtered_test_data.to_csv('/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_data.csv', index=False)
@@ -267,24 +274,24 @@ def extend_labels(train_data, label_L1_mapping):
 
 
 # 使用示例
-selected_labels = [
-    "TCP_IP-DDoS-UDP",
-    "TCP_IP-DDoS-ICMP",
-    "TCP_IP-DDoS-TCP",
-    "TCP_IP-DDoS-SYN",
-    "TCP_IP-DoS-UDP",
-    "TCP_IP-DoS-SYN",
-    "TCP_IP-DoS-ICMP",
-    "TCP_IP-DoS-TCP",
-    "Recon-Port_Scan",
-    "Recon-OS_Scan",
-    "ARP_Spoofing",
-    "Benign",
-    "MQTT-DDoS-Connect_Flood",
-    "MQTT-DoS-Publish_Flood",
-    "MQTT-DDoS-Publish_Flood",
-    "MQTT-DoS-Connect_Flood",
-  ]
+# selected_labels = [
+#     "TCP_IP-DDoS-UDP",
+#     "TCP_IP-DDoS-ICMP",
+#     "TCP_IP-DDoS-TCP",
+#     "TCP_IP-DDoS-SYN",
+#     "TCP_IP-DoS-UDP",
+#     "TCP_IP-DoS-SYN",
+#     "TCP_IP-DoS-ICMP",
+#     "TCP_IP-DoS-TCP",
+#     "Recon-Port_Scan",
+#     "Recon-OS_Scan",
+#     "ARP_Spoofing",
+#     "Benign",
+#     "MQTT-DDoS-Connect_Flood",
+#     "MQTT-DoS-Publish_Flood",
+#     "MQTT-DDoS-Publish_Flood",
+#     "MQTT-DoS-Connect_Flood",
+#   ]
 
 # extended_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/19classes_train.csv'
 # extended_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/19classes_test.csv'
@@ -301,9 +308,9 @@ selected_labels = [
 
 #####################################################################################
 ########## for 19 classes, combining train and test together and divide later#####
-# # Combine the datasets by concatenating rows
+# Combine the datasets by concatenating rows
 # combined_data = pd.concat([train_data, test_data], axis=0, ignore_index=True)
-# # print_label_counts(combined_data)
+# print_label_counts(combined_data)
 
 # # Step 1: Calculate total entries per class
 # label_counts = combined_data['label'].value_counts()

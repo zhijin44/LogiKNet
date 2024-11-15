@@ -2,9 +2,9 @@ import torch
 import pandas as pd
 import ltn
 import numpy as np
-from sklearn.preprocessing import StandardScaler, label_binarize
+from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import precision_score, recall_score, f1_score
-from sklearn.metrics import precision_recall_fscore_support, accuracy_score, auc, precision_recall_curve
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 from utils import MLP, LogitsToPredicate, DataLoaderMulti
 import custom_fuzzy_ops as custom_fuzzy_ops
@@ -28,34 +28,47 @@ def compute_sat_level(loader):
         x = ltn.Variable("x", data)
         x_MQTT = ltn.Variable("x_MQTT", data[label_L1 == 0])
         x_Benign = ltn.Variable("x_Benign", data[label_L1 == 1])
-        x_MQTT_DDoS_Connect_Flood = ltn.Variable("x_MQTT_DDoS_Connect_Flood", data[label_L2 == 2])
-        x_MQTT_DDoS_Publish_Flood = ltn.Variable("x_MQTT_DDoS_Publish_Flood", data[label_L2 == 3])
-        x_MQTT_DoS_Connect_Flood = ltn.Variable("x_MQTT_DoS_Connect_Flood", data[label_L2 == 4])
-        x_MQTT_DoS_Publish_Flood = ltn.Variable("x_MQTT_DoS_Publish_Flood", data[label_L2 == 5])
-        x_MQTT_Malformed_Data = ltn.Variable("x_MQTT_Malformed_Data", data[label_L2 == 6])
-        x_benign = ltn.Variable("x_benign", data[label_L2 == 7])
+        x_Recon = ltn.Variable("x_Recon", data[label_L1 == 2])
+        x_ARP_Spoofing = ltn.Variable("x_ARP_Spoofing", data[label_L1 == 3])
+        x_MQTT_DDoS_Connect_Flood = ltn.Variable("x_MQTT_DDoS_Connect_Flood", data[label_L2 == 4])
+        x_MQTT_DDoS_Publish_Flood = ltn.Variable("x_MQTT_DDoS_Publish_Flood", data[label_L2 == 5])
+        x_MQTT_DoS_Connect_Flood = ltn.Variable("x_MQTT_DoS_Connect_Flood", data[label_L2 == 6])
+        x_MQTT_DoS_Publish_Flood = ltn.Variable("x_MQTT_DoS_Publish_Flood", data[label_L2 == 7])
+        x_MQTT_Malformed_Data = ltn.Variable("x_MQTT_Malformed_Data", data[label_L2 == 8])
+        x_benign = ltn.Variable("x_benign", data[label_L2 == 9])
+        x_Recon_OS_Scan = ltn.Variable("x_Recon_OS_Scan", data[label_L2 == 10])
+        x_Recon_Port_Scan = ltn.Variable("x_Recon_Port_Scan", data[label_L2 == 11])
+        x_arp_spoofing = ltn.Variable("x_arp_spoofing", data[label_L2 == 12])
 
         # rules - single class exclusive
         valid_forall_expressions = []
         variables_labels = [
             (x_MQTT, l_MQTT),
             (x_Benign, l_Benign),
+            (x_Recon, l_Recon),
+            (x_ARP_Spoofing, l_arp_spoofing),
             (x_MQTT_DDoS_Connect_Flood, l_MQTT_DDoS_Connect_Flood),
             (x_MQTT_DDoS_Publish_Flood, l_MQTT_DDoS_Publish_Flood),
             (x_MQTT_DoS_Connect_Flood, l_MQTT_DoS_Connect_Flood),
             (x_MQTT_DoS_Publish_Flood, l_MQTT_DoS_Publish_Flood),
             (x_MQTT_Malformed_Data, l_MQTT_Malformed_Data),
-            (x_benign, l_benign)
+            (x_benign, l_benign),
+            (x_Recon_OS_Scan, l_Recon_OS_Scan),
+            (x_Recon_Port_Scan, l_Recon_Port_Scan),
+            (x_arp_spoofing, l_arp_spoofing)
         ]
         for variable, label in variables_labels:
             if variable.value.size(0) != 0:
-                # valid_forall_expressions.append(Forall(variable, P(variable, label, training=True)))
                 valid_forall_expressions.append(Forall(variable, P(variable, label)))
 
         # rules - L1 class exclusive for each other
+        # valid_forall_expressions.append(Forall(x, Not(And(P(x, l_MQTT), P(x, l_Benign), P(x, l_Recon), P(x, l_ARP_Spoofing)))))
         valid_forall_expressions.append(Forall(x, Not(And(P(x, l_MQTT), P(x, l_Benign)))))
-        valid_forall_expressions.append(Forall(x, And(P(x, l_benign), P(x, l_Benign))))
-        
+        valid_forall_expressions.append(Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_Benign)))))
+        valid_forall_expressions.append(Forall(x, Not(And(P(x, l_Recon), P(x, l_Benign)))))
+        # valid_forall_expressions.append(Forall(x, And(P(x, l_benign), P(x, l_Benign))))
+        # valid_forall_expressions.append(Forall(x, And(P(x, l_arp_spoofing), P(x, l_ARP_Spoofing))))
+
         mean_sat += SatAgg(*valid_forall_expressions)
     # In the loop: mean_sat accumulates the satisfaction levels for all the logical rules across the batches.
     # After the loop: mean_sat becomes the average satisfaction level of the logical rules over the entire dataset.
@@ -72,7 +85,7 @@ def compute_metrics(loader, model):
         predictions = model(data).detach().cpu().numpy()  # Ensure predictions are on CPU for numpy operations
         
         # Predicted class for Label_L2 (multiclass classification)
-        pred_L2 = np.argmax(predictions[:, 2:], axis=-1) + 2  # Shift range from [0, 5] to [2, 7]
+        pred_L2 = np.argmax(predictions[:, 4:], axis=-1) + 4  # Shift range from [0, 8] to [4, 12]
         true_L2 = label_L2.cpu().numpy()  # Convert tensor to numpy
 
         # Accumulate predictions and true labels
@@ -80,9 +93,9 @@ def compute_metrics(loader, model):
         all_labels.extend(true_L2)
     
     # Compute metrics for each class
-    precision = precision_score(all_labels, all_preds, labels=np.arange(2, 8), average=None)
-    recall = recall_score(all_labels, all_preds, labels=np.arange(2, 8), average=None)
-    f1 = f1_score(all_labels, all_preds, labels=np.arange(2, 8), average=None)
+    precision = precision_score(all_labels, all_preds, labels=np.arange(4, 13), average=None)
+    recall = recall_score(all_labels, all_preds, labels=np.arange(4, 13), average=None)
+    f1 = f1_score(all_labels, all_preds, labels=np.arange(4, 13), average=None)
 
     return precision, recall, f1
 
@@ -98,11 +111,11 @@ def compute_accuracy(loader):
         predictions = mlp(data).detach().cpu().numpy()  # Ensure predictions are on CPU for numpy operations
         
         # Predicted class for Label_L1 (binary classification)
-        pred_L1 = np.argmax(predictions[:, 0:2], axis=-1)
+        pred_L1 = np.argmax(predictions[:, 0:4], axis=-1)
         true_L1 = label_L1.cpu().numpy()  # Convert tensor to numpy for comparison
 
         # Predicted class for Label_L2 (multiclass classification)
-        pred_L2 = np.argmax(predictions[:, 2:], axis=-1) + 2  # Shift range from [0, 5] to [2, 7]
+        pred_L2 = np.argmax(predictions[:, 4:], axis=-1) + 4  # Shift range from [0, 8] to [4, 12]
         true_L2 = label_L2.cpu().numpy()  # Convert tensor to numpy
 
         # Compute binary accuracy for Label_L1
@@ -122,18 +135,19 @@ def compute_accuracy(loader):
 
 #####################Preprocess#################################
 # 加载数据集
-# processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_tiny_train.csv'
-processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_data.csv'
-processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_data.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_4_9.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_4_9.csv'
 
 train_data = pd.read_csv(processed_train_file)
 test_data = pd.read_csv(processed_test_file)
 
 # 将标签映射到整数
-label_L1_mapping = {"MQTT": 0, "Benign": 1}
-label_L2_mapping = {"MQTT-DDoS-Connect_Flood": 2, "MQTT-DDoS-Publish_Flood": 3, 
-                    "MQTT-DoS-Connect_Flood": 4, "MQTT-DoS-Publish_Flood": 5,
-                    "MQTT-Malformed_Data": 6, "Benign": 7}
+label_L1_mapping = {"MQTT": 0, "Benign": 1, "Recon": 2, "ARP_Spoofing": 3}
+label_L2_mapping = {"MQTT-DDoS-Connect_Flood": 4, "MQTT-DDoS-Publish_Flood": 5, 
+                    "MQTT-DoS-Connect_Flood": 6, "MQTT-DoS-Publish_Flood": 7,
+                    "MQTT-Malformed_Data": 8, "Benign": 9, 
+                    "Recon-OS_Scan": 10, "Recon-Port_Scan": 11,
+                    "arp_spoofing": 12}
 train_label_L1 = train_data.pop("label_L1").map(label_L1_mapping)
 train_label_L2 = train_data.pop("label_L2").map(label_L2_mapping)
 test_label_L1 = test_data.pop("label_L1").map(label_L1_mapping)
@@ -159,23 +173,29 @@ print("Data processing and scaling done.")
 
 #####################Setting#################################
 # we define the constants
-l_MQTT = ltn.Constant(torch.tensor([1, 0, 0, 0, 0, 0, 0, 0]))
-l_Benign = ltn.Constant(torch.tensor([0, 1, 0, 0, 0, 0, 0, 0]))
-l_MQTT_DDoS_Connect_Flood = ltn.Constant(torch.tensor([0, 0, 1, 0, 0, 0, 0, 0]))
-l_MQTT_DDoS_Publish_Flood = ltn.Constant(torch.tensor([0, 0, 0, 1, 0, 0, 0, 0]))
-l_MQTT_DoS_Connect_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 1, 0, 0, 0]))
-l_MQTT_DoS_Publish_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 1, 0, 0]))
-l_MQTT_Malformed_Data = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 1, 0]))
-l_benign = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 1]))
+# Define the new constants with 13 classes (updated one-hot encoding for each label)
+l_MQTT = ltn.Constant(torch.tensor([1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_Benign = ltn.Constant(torch.tensor([0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_Recon = ltn.Constant(torch.tensor([0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_ARP_Spoofing = ltn.Constant(torch.tensor([0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_MQTT_DDoS_Connect_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]))
+l_MQTT_DDoS_Publish_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0]))
+l_MQTT_DoS_Connect_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]))
+l_MQTT_DoS_Publish_Flood = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]))
+l_MQTT_Malformed_Data = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0]))
+l_benign = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]))
+l_Recon_OS_Scan = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0]))
+l_Recon_Port_Scan = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]))
+l_arp_spoofing = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]))
 
 # 创建模型实例并移动到设备 
-mlp = MLP(layer_sizes=(45, 64, 32, 8)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
+mlp = MLP(layer_sizes=(45, 64, 32, 13)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
 P = ltn.Predicate(LogitsToPredicate(mlp))
 
 # define the connectives, quantifiers, and the SatAgg
 Not = ltn.Connective(ltn.fuzzy_ops.NotStandard())
-# And = ltn.Connective(custom_fuzzy_ops.AndProd())
-And = ltn.Connective(ltn.fuzzy_ops.AndProd())
+And = ltn.Connective(custom_fuzzy_ops.AndProd())
+# And = ltn.Connective(ltn.fuzzy_ops.AndProd())
 Or = ltn.Connective(ltn.fuzzy_ops.OrProbSum())
 Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
 SatAgg = ltn.fuzzy_ops.SatAgg()
@@ -201,13 +221,13 @@ def phi2(features):  # False
     x = ltn.Variable("x", features)
     return Forall(x, Implies(P(x, l_Benign), (P(x, l_MQTT))), p=5)
 
-def phi3(features):  # True
+def phi3(features):  # False
     x = ltn.Variable("x", features)
-    return Forall(x, Implies(P(x, l_benign), (P(x, l_Benign))), p=5)
+    return Forall(x, Implies(P(x, l_Benign), (P(x, l_Recon))), p=5)
 
 def phi4(features):  # False
     x = ltn.Variable("x", features)
-    return Forall(x, Implies(P(x, l_benign), (P(x, l_MQTT))), p=5)
+    return Forall(x, Implies(P(x, l_Benign), (P(x, l_ARP_Spoofing))), p=5)
 
 
 # it computes the satisfaction level of a formula phi using the given data loader (train or test)
@@ -232,32 +252,47 @@ for epoch in range(41):
         x = ltn.Variable("x", data)
         x_MQTT = ltn.Variable("x_MQTT", data[label_L1 == 0])
         x_Benign = ltn.Variable("x_Benign", data[label_L1 == 1])
-        x_MQTT_DDoS_Connect_Flood = ltn.Variable("x_MQTT_DDoS_Connect_Flood", data[label_L2 == 2])
-        x_MQTT_DDoS_Publish_Flood = ltn.Variable("x_MQTT_DDoS_Publish_Flood", data[label_L2 == 3])
-        x_MQTT_DoS_Connect_Flood = ltn.Variable("x_MQTT_DoS_Connect_Flood", data[label_L2 == 4])
-        x_MQTT_DoS_Publish_Flood = ltn.Variable("x_MQTT_DoS_Publish_Flood", data[label_L2 == 5])
-        x_MQTT_Malformed_Data = ltn.Variable("x_MQTT_Malformed_Data", data[label_L2 == 6])
-        x_benign = ltn.Variable("x_benign", data[label_L2 == 7])
+        x_Recon = ltn.Variable("x_Recon", data[label_L1 == 2])
+        x_ARP_Spoofing = ltn.Variable("x_ARP_Spoofing", data[label_L1 == 3])
+        x_MQTT_DDoS_Connect_Flood = ltn.Variable("x_MQTT_DDoS_Connect_Flood", data[label_L2 == 4])
+        x_MQTT_DDoS_Publish_Flood = ltn.Variable("x_MQTT_DDoS_Publish_Flood", data[label_L2 == 5])
+        x_MQTT_DoS_Connect_Flood = ltn.Variable("x_MQTT_DoS_Connect_Flood", data[label_L2 == 6])
+        x_MQTT_DoS_Publish_Flood = ltn.Variable("x_MQTT_DoS_Publish_Flood", data[label_L2 == 7])
+        x_MQTT_Malformed_Data = ltn.Variable("x_MQTT_Malformed_Data", data[label_L2 == 8])
+        x_benign = ltn.Variable("x_benign", data[label_L2 == 9])
+        x_Recon_OS_Scan = ltn.Variable("x_Recon_OS_Scan", data[label_L2 == 10])
+        x_Recon_Port_Scan = ltn.Variable("x_Recon_Port_Scan", data[label_L2 == 11])
+        x_arp_spoofing = ltn.Variable("x_arp_spoofing", data[label_L2 == 12])
+
 
         # rules - single class exclusive
         valid_forall_expressions = []
         variables_labels = [
             (x_MQTT, l_MQTT),
             (x_Benign, l_Benign),
+            (x_Recon, l_Recon),
+            (x_ARP_Spoofing, l_arp_spoofing),
             (x_MQTT_DDoS_Connect_Flood, l_MQTT_DDoS_Connect_Flood),
             (x_MQTT_DDoS_Publish_Flood, l_MQTT_DDoS_Publish_Flood),
             (x_MQTT_DoS_Connect_Flood, l_MQTT_DoS_Connect_Flood),
             (x_MQTT_DoS_Publish_Flood, l_MQTT_DoS_Publish_Flood),
             (x_MQTT_Malformed_Data, l_MQTT_Malformed_Data),
-            (x_benign, l_benign)
+            (x_benign, l_benign),
+            (x_Recon_OS_Scan, l_Recon_OS_Scan),
+            (x_Recon_Port_Scan, l_Recon_Port_Scan),
+            (x_arp_spoofing, l_arp_spoofing)
         ]
         for variable, label in variables_labels:
             if variable.value.size(0) != 0:
                 valid_forall_expressions.append(Forall(variable, P(variable, label)))
 
         # rules - L1 class exclusive for each other
+        # valid_forall_expressions.append(Forall(x, Not(And(P(x, l_MQTT), P(x, l_Benign), P(x, l_Recon), P(x, l_ARP_Spoofing)))))
         valid_forall_expressions.append(Forall(x, Not(And(P(x, l_MQTT), P(x, l_Benign)))))
-        valid_forall_expressions.append(Forall(x, And(P(x, l_benign), P(x, l_Benign))))
+        valid_forall_expressions.append(Forall(x, Not(And(P(x, l_ARP_Spoofing), P(x, l_Benign)))))
+        valid_forall_expressions.append(Forall(x, Not(And(P(x, l_Recon), P(x, l_Benign)))))
+        # valid_forall_expressions.append(Forall(x, And(P(x, l_benign), P(x, l_Benign))))
+        # valid_forall_expressions.append(Forall(x, And(P(x, l_arp_spoofing), P(x, l_ARP_Spoofing))))
 
         sat_agg = SatAgg(*valid_forall_expressions) # the satisfaction level over the current batch
         loss = 1. - sat_agg
@@ -292,7 +327,10 @@ class_names = [
     "MQTT-DoS-Connect_Flood", 
     "MQTT-DoS-Publish_Flood", 
     "MQTT-Malformed_Data",
-    "benign"
+    "benign",
+    'Recon-Port_Scan',
+    'Recon-OS_Scan',
+    'arp_spoofing'
 ]
 precision, recall, f1 = compute_metrics(test_loader, mlp)
 print(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
@@ -304,3 +342,33 @@ logging.info("Scores by Class:")
 for i, class_name in enumerate(class_names):
     print(f"Class {class_name}: Recall: {recall[i]:.6f}, Precision: {precision[i]:.6f}, F1: {f1[i]:.6f}")
     logging.info(f"Class {class_name}: Recall: {recall[i]:.6f}, Precision: {precision[i]:.6f}, F1: {f1[i]:.6f}")
+
+# Compute the confusion matrix
+def plot_confusion_matrix(loader, model, class_names):
+    all_preds = []
+    all_labels = []
+    
+    for data, _, label_L2 in loader:
+        # Get predictions from the model
+        predictions = model(data).detach().cpu().numpy()  # Ensure predictions are on CPU for numpy operations
+        
+        # Predicted class for Label_L2 (multiclass classification)
+        pred_L2 = np.argmax(predictions[:, 4:], axis=-1) + 4  # Shift range from [0, 8] to [4, 12]
+        true_L2 = label_L2.cpu().numpy()  # Convert tensor to numpy
+
+        # Accumulate predictions and true labels
+        all_preds.extend(pred_L2)
+        all_labels.extend(true_L2)
+    
+    # Compute confusion matrix
+    cm = confusion_matrix(all_labels, all_preds, labels=np.arange(4, 13))
+    
+    # Plot confusion matrix
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=class_names)
+    fig, ax = plt.subplots(figsize=(10, 10))
+    disp.plot(ax=ax, cmap='viridis', xticks_rotation=45)
+    plt.title("Confusion Matrix")
+    plt.show()
+
+# Add confusion matrix plotting
+plot_confusion_matrix(test_loader, mlp, class_names)
