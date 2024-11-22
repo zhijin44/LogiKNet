@@ -29,7 +29,8 @@ X_columns = [
     'syn_count', 'fin_count', 'rst_count', 'HTTP', 'HTTPS', 'DNS', 'Telnet',
     'SMTP', 'SSH', 'IRC', 'TCP', 'UDP', 'DHCP', 'ARP', 'ICMP', 'IGMP', 'IPv',
     'LLC', 'Tot sum', 'Min', 'Max', 'AVG', 'Std', 'Tot size', 'IAT', 'Number',
-    'Magnitue', 'Radius', 'Covariance', 'Variance', 'Weight'
+    'Magnitue', 'Radius'
+    # 'Covariance', 'Variance', 'Weight'
 ]
 
 print("Starting data loading and preprocessing...")
