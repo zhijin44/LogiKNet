@@ -1,3 +1,4 @@
+import ltn.fuzzy_ops
 import torch
 import pandas as pd
 import ltn
@@ -98,7 +99,9 @@ def compute_sat_level(loader):
                                                           P(x, l_MQTT_Malformed_Data), P(x, l_benign),
                                                           P(x, l_Recon_OS_Scan), P(x, l_Recon_Port_Scan),
                                                           P(x, l_arp_spoofing)))))
-
+        # rules - hierarchy
+        valid_forall_expressions.append(Exists(x, And(P(x, l_Benign), P(x, l_benign))))
+        valid_forall_expressions.append(Exists(x, And(P(x, l_ARP_Spoofing), P(x, l_arp_spoofing))))
 
         mean_sat += SatAgg(*valid_forall_expressions)
     # In the loop: mean_sat accumulates the satisfaction levels for all the logical rules across the batches.
@@ -166,7 +169,7 @@ def compute_accuracy(loader):
 
 #####################Preprocess#################################
 # 加载数据集
-processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_s_4_9.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_tiny_4_9.csv'
 processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_4_9.csv'
 
 train_data = pd.read_csv(processed_train_file)
@@ -229,6 +232,7 @@ And = ltn.Connective(custom_fuzzy_ops.AndProd())
 # And = ltn.Connective(ltn.fuzzy_ops.AndProd())
 Or = ltn.Connective(ltn.fuzzy_ops.OrProbSum())
 Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
+Exists = ltn.Quantifier(ltn.fuzzy_ops.AggregPMean(p=2), quantifier="e")
 SatAgg = ltn.fuzzy_ops.SatAgg()
 
 print("LTN setting done.")
@@ -244,13 +248,13 @@ print("Create train and test loader done.")
 
 #####################querying setting#####################################
 Implies = ltn.Connective(ltn.fuzzy_ops.ImpliesReichenbach())
-def phi1(features):   # True, for all x, P(x, l_Benign) -> not P(x, l_MQTT), because the label_L1 exclusive
+def phi1(features):   # True 
     x = ltn.Variable("x", features)
-    return Forall(x, Implies(P(x, l_Benign), Not(P(x, l_MQTT))), p=5)
+    return Forall(x, Implies(P(x, l_Benign), (P(x, l_ARP_Spoofing))), p=5)
 
-def phi2(features):  # False
+def phi2(features):  # True
     x = ltn.Variable("x", features)
-    return Forall(x, Implies(P(x, l_Benign), (P(x, l_MQTT))), p=5)
+    return Forall(x, Implies(P(x, l_Benign), (P(x, l_benign))), p=5)
 
 def phi3(features):  # False
     x = ltn.Variable("x", features)
@@ -272,9 +276,9 @@ def compute_sat_level_phi(loader, phi):
 print("Querying setting.")
 
 print("Start training...")
-optimizer = torch.optim.Adam(P.parameters(), lr=0.002)
+optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
 
-for epoch in range(70):
+for epoch in range(40):
     train_loss = 0.0
 
     for batch_idx, (data, label_L1, label_L2) in enumerate(train_loader):
@@ -319,12 +323,16 @@ for epoch in range(70):
 
         # rules - L1 class exclusive for each other
         valid_forall_expressions.append(Forall(x, Not(And(P(x, l_MQTT), P(x, l_Benign), P(x, l_Recon), P(x, l_ARP_Spoofing)))))
-        # rules - L2 MQTT exclusive
+        # rules - L2 exclusive
         valid_forall_expressions.append(Forall(x, Not(And(P(x, l_MQTT_DDoS_Connect_Flood), P(x, l_MQTT_DDoS_Publish_Flood), 
                                                           P(x, l_MQTT_DoS_Connect_Flood), P(x, l_MQTT_DoS_Publish_Flood),
                                                           P(x, l_MQTT_Malformed_Data), P(x, l_benign),
                                                           P(x, l_Recon_OS_Scan), P(x, l_Recon_Port_Scan),
                                                           P(x, l_arp_spoofing)))))
+        # rules - hierarchy
+        valid_forall_expressions.append(Exists(x, And(P(x, l_Benign), P(x, l_benign))))
+        valid_forall_expressions.append(Exists(x, And(P(x, l_ARP_Spoofing), P(x, l_arp_spoofing))))
+        
 
         sat_agg = SatAgg(*valid_forall_expressions) # the satisfaction level over the current batch
         loss = 1. - sat_agg
@@ -348,9 +356,11 @@ for epoch in range(70):
                  f"Test Acc L1 {test_acc[0]:.3f} | Test Acc L2 {test_acc[1]:.3f}")
     if epoch % 10 == 0:
         print(f"Test Sat Phi 1 {compute_sat_level_phi(test_loader, phi1):.3f} | Test Sat Phi 2 {compute_sat_level_phi(test_loader, phi2):.3f} | "
-              f"Test Sat Phi 3 {compute_sat_level_phi(test_loader, phi3):.3f} | Test Sat Phi 4 {compute_sat_level_phi(test_loader, phi4):.3f}")
+            #   f"Test Sat Phi 3 {compute_sat_level_phi(test_loader, phi3):.3f} | Test Sat Phi 4 {compute_sat_level_phi(test_loader, phi4):.3f}"
+              )
         logging.info(f"Test Sat Phi 1 {compute_sat_level_phi(test_loader, phi1):.3f} | Test Sat Phi 2 {compute_sat_level_phi(test_loader, phi2):.3f} | "
-                     f"Test Sat Phi 3 {compute_sat_level_phi(test_loader, phi3):.3f} | Test Sat Phi 4 {compute_sat_level_phi(test_loader, phi4):.3f}")
+                    #  f"Test Sat Phi 3 {compute_sat_level_phi(test_loader, phi3):.3f} | Test Sat Phi 4 {compute_sat_level_phi(test_loader, phi4):.3f}"
+                     )
 
 #####################Evaluation#################################
 class_names = [
@@ -408,4 +418,4 @@ def plot_confusion_matrix(loader, model, class_names, filename="confusion_matrix
     print(f"Confusion matrix saved to {filepath}")
 
 # Example usage
-plot_confusion_matrix(test_loader, mlp, class_names, filename="confusion_matrix_3.png")
+plot_confusion_matrix(test_loader, mlp, class_names, filename="confusion_matrix_2.png")
