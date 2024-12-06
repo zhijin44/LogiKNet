@@ -7,6 +7,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
+from matplotlib.colors import ListedColormap
 from utils import MLP, LogitsToPredicate, DataLoaderMulti
 import custom_fuzzy_ops as custom_fuzzy_ops
 import logging
@@ -15,26 +16,26 @@ import os
 
 # 特征列名称
 X_columns = [
-    # 'Header_Length', # 3 
+    'Header_Length', # 3 
     'Protocol Type', 'Duration', 
-    # 'Rate', 
-    # 'Srate', 'Drate',
-    # 'fin_flag_number', 
-    # 'syn_flag_number', 'rst_flag_number', 'psh_flag_number',
-    # 'ack_flag_number', 'ece_flag_number', 'cwr_flag_number', 'syn_count',
-    # 'ack_count', # 5
-    # 'fin_count', # 2
-    # 'rst_count', 
-    # 'HTTP', 'HTTPS', 'DNS', 'Telnet',
-    # 'SMTP', 'SSH', 'IRC', 
-    # 'TCP', 
-    # 'UDP', 'DHCP', 
-    # 'ARP', 
-    # 'ICMP', 'IGMP', 'IPv',
+    'Rate', 
+    'Srate', 'Drate',
+    'fin_flag_number', 
+    'syn_flag_number', 'rst_flag_number', 'psh_flag_number',
+    'ack_flag_number', 'ece_flag_number', 'cwr_flag_number', 'syn_count',
+    'ack_count', # 5
+    'fin_count', # 2
+    'rst_count', 
+    'HTTP', 'HTTPS', 'DNS', 'Telnet',
+    'SMTP', 'SSH', 'IRC', 
+    'TCP', 
+    'UDP', 'DHCP', 
+    'ARP', 
+    'ICMP', 'IGMP', 'IPv',
     'LLC', 'Tot sum', 'Min', 'Max', 
-    # 'AVG', 
-    # 'Std', 'Tot size', 
-    # 'IAT', # 1
+    'AVG', 
+    'Std', 'Tot size', 
+    'IAT', # 1
     'Number', 'Magnitue', 'Radius', 'Covariance', 
     # 'Variance', 
     # 'Weight' # 4
@@ -144,7 +145,7 @@ def compute_accuracy(loader):
         # Get predictions from the MLP model
         predictions = mlp(data).detach().cpu().numpy()  # Ensure predictions are on CPU for numpy operations
         
-        # Predicted class for Label_L1 (binary classification)
+        # Predicted class for Label_L1 
         pred_L1 = np.argmax(predictions[:, 0:4], axis=-1)
         true_L1 = label_L1.cpu().numpy()  # Convert tensor to numpy for comparison
 
@@ -223,7 +224,7 @@ l_Recon_Port_Scan = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 l_arp_spoofing = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]))
 
 # 创建模型实例并移动到设备 
-mlp = MLP(layer_sizes=(10, 32, 32, 13)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
+mlp = MLP(layer_sizes=(43, 64, 32, 13)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
 P = ltn.Predicate(LogitsToPredicate(mlp))
 
 # define the connectives, quantifiers, and the SatAgg
@@ -278,7 +279,7 @@ print("Querying setting.")
 print("Start training...")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
 
-for epoch in range(40):
+for epoch in range(30):
     train_loss = 0.0
 
     for batch_idx, (data, label_L1, label_L2) in enumerate(train_loader):
@@ -354,13 +355,13 @@ for epoch in range(40):
         logging.info(f"epoch {epoch} | loss {train_loss:.4f} | Train Sat {train_sat:.3f} | "
                  f"Test Sat {test_sat:.3f} | Train Acc L1 {train_acc[0]:.3f} | Train Acc L2 {train_acc[1]:.3f} | "
                  f"Test Acc L1 {test_acc[0]:.3f} | Test Acc L2 {test_acc[1]:.3f}")
-    if epoch % 10 == 0:
-        print(f"Test Sat Phi 1 {compute_sat_level_phi(test_loader, phi1):.3f} | Test Sat Phi 2 {compute_sat_level_phi(test_loader, phi2):.3f} | "
-            #   f"Test Sat Phi 3 {compute_sat_level_phi(test_loader, phi3):.3f} | Test Sat Phi 4 {compute_sat_level_phi(test_loader, phi4):.3f}"
-              )
-        logging.info(f"Test Sat Phi 1 {compute_sat_level_phi(test_loader, phi1):.3f} | Test Sat Phi 2 {compute_sat_level_phi(test_loader, phi2):.3f} | "
-                    #  f"Test Sat Phi 3 {compute_sat_level_phi(test_loader, phi3):.3f} | Test Sat Phi 4 {compute_sat_level_phi(test_loader, phi4):.3f}"
-                     )
+    # if epoch % 10 == 0:
+    #     print(f"Test Sat Phi 1 {compute_sat_level_phi(test_loader, phi1):.3f} | Test Sat Phi 2 {compute_sat_level_phi(test_loader, phi2):.3f} | "
+    #         #   f"Test Sat Phi 3 {compute_sat_level_phi(test_loader, phi3):.3f} | Test Sat Phi 4 {compute_sat_level_phi(test_loader, phi4):.3f}"
+    #           )
+    #     logging.info(f"Test Sat Phi 1 {compute_sat_level_phi(test_loader, phi1):.3f} | Test Sat Phi 2 {compute_sat_level_phi(test_loader, phi2):.3f} | "
+    #                 #  f"Test Sat Phi 3 {compute_sat_level_phi(test_loader, phi3):.3f} | Test Sat Phi 4 {compute_sat_level_phi(test_loader, phi4):.3f}"
+    #                  )
 
 #####################Evaluation#################################
 class_names = [
@@ -375,18 +376,69 @@ class_names = [
     'arp_spoofing'
 ]
 precision, recall, f1 = compute_metrics(test_loader, mlp)
-print(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
+print(f"Macro Precision: {precision.mean():.4f}, Macro Recall: {recall.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
 print("Scores by Class:")
-
-logging.info(f"Macro Recall: {recall.mean():.4f}, Macro Precision: {precision.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
+logging.info(f"Macro Precision: {precision.mean():.4f}, Macro Recall: {recall.mean():.4f}, Macro F1-Score: {f1.mean():.4f}")
 logging.info("Scores by Class:")
 
 for i, class_name in enumerate(class_names):
-    print(f"Class {class_name}: Recall: {recall[i]:.6f}, Precision: {precision[i]:.6f}, F1: {f1[i]:.6f}")
-    logging.info(f"Class {class_name}: Recall: {recall[i]:.6f}, Precision: {precision[i]:.6f}, F1: {f1[i]:.6f}")
+    print(f"Class {class_name}:  {precision[i]:.4f},    {recall[i]:.4f},    {f1[i]:.4f}")
+    logging.info(f"Class {class_name}:  {precision[i]:.4f},    {recall[i]:.4f},    {f1[i]:.4f}")
+
+def plot_combined_confusion_matrices(loader, model, class_names_L1, class_names_L2, filename="Combined_Confusion_Matrix.png"):
+    all_preds_L1 = []
+    all_labels_L1 = []
+    all_preds_L2 = []
+    all_labels_L2 = []
+    
+    for data, label_L1, label_L2 in loader:
+        # Get predictions from the model
+        predictions = model(data).detach().cpu().numpy()  # Ensure predictions are on CPU for numpy operations
+        
+        # Predicted class for Label_L1
+        pred_L1 = np.argmax(predictions[:, 0:4], axis=-1)
+        true_L1 = label_L1.cpu().numpy()  # Convert tensor to numpy
+
+        # Predicted class for Label_L2 (multiclass classification)
+        pred_L2 = np.argmax(predictions[:, 4:], axis=-1) + 4  # Shift range from [0, 8] to [4, 12]
+        true_L2 = label_L2.cpu().numpy()  # Convert tensor to numpy
+
+        # Accumulate predictions and true labels for both labels
+        all_preds_L1.extend(pred_L1)
+        all_labels_L1.extend(true_L1)
+        all_preds_L2.extend(pred_L2)
+        all_labels_L2.extend(true_L2)
+    
+    # Compute confusion matrices
+    cm_L1 = confusion_matrix(all_labels_L1, all_preds_L1, labels=np.arange(0, 4))
+    cm_L2 = confusion_matrix(all_labels_L2, all_preds_L2, labels=np.arange(4, 13))
+    
+    # Plot combined confusion matrices
+    fig, axs = plt.subplots(1, 2, figsize=(18, 8))  # Two subplots side by side
+
+    # Plot confusion matrix for Label_L1
+    disp_L1 = ConfusionMatrixDisplay(confusion_matrix=cm_L1, display_labels=class_names_L1)
+    disp_L1.plot(ax=axs[0], cmap='viridis', xticks_rotation=45)
+    axs[0].set_title("Confusion Matrix for Label_L1")
+
+    # Plot confusion matrix for Label_L2
+    disp_L2 = ConfusionMatrixDisplay(confusion_matrix=cm_L2, display_labels=class_names_L2)
+    disp_L2.plot(ax=axs[1], cmap='viridis', xticks_rotation=45)
+    axs[1].set_title("Confusion Matrix for Label_L2")
+
+    # Save the combined figure
+    filepath = os.path.join(os.getcwd(), filename)
+    plt.savefig(filepath, bbox_inches="tight")
+    plt.close(fig)  # Close the figure to free memory
+    print(f"Combined confusion matrix saved to {filepath}")
+
+class_names_L1 = ["MQTT", "Benign", "Recon", "ARP_Spoofing"]
+plot_combined_confusion_matrices(test_loader, mlp, class_names_L1, class_names)
+
+
 
 # Compute the confusion matrix and save the plot
-def plot_confusion_matrix(loader, model, class_names, filename="confusion_matrix.png"):
+def plot_confusion_matrix(loader, model, class_names, filename="LTN_4-9.png"):
     all_preds = []
     all_labels = []
     
@@ -418,4 +470,6 @@ def plot_confusion_matrix(loader, model, class_names, filename="confusion_matrix
     print(f"Confusion matrix saved to {filepath}")
 
 # Example usage
-plot_confusion_matrix(test_loader, mlp, class_names, filename="confusion_matrix_2.png")
+# plot_confusion_matrix(test_loader, mlp, class_names)
+
+

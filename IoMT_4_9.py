@@ -115,31 +115,31 @@ def compute_accuracy(loader):
 
 
 # 定义处理后的数据文件路径
-processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_s_4_9.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_tiny_4_9.csv'
 processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_4_9.csv'
 
 # 特征列名称
 X_columns = [
-    # 'Header_Length', # 3 
+    'Header_Length', # 3 
     'Protocol Type', 'Duration', 
-    # 'Rate', 
-    # 'Srate', 'Drate',
-    # 'fin_flag_number', 
-    # 'syn_flag_number', 'rst_flag_number', 'psh_flag_number',
-    # 'ack_flag_number', 'ece_flag_number', 'cwr_flag_number', 'syn_count',
-    # 'ack_count', # 5
-    # 'fin_count', # 2
-    # 'rst_count', 
-    # 'HTTP', 'HTTPS', 'DNS', 'Telnet',
-    # 'SMTP', 'SSH', 'IRC', 
-    # 'TCP', 
-    # 'UDP', 'DHCP', 
-    # 'ARP', 
-    # 'ICMP', 'IGMP', 'IPv',
+    'Rate', 
+    'Srate', 'Drate',
+    'fin_flag_number', 
+    'syn_flag_number', 'rst_flag_number', 'psh_flag_number',
+    'ack_flag_number', 'ece_flag_number', 'cwr_flag_number', 'syn_count',
+    'ack_count', # 5
+    'fin_count', # 2
+    'rst_count', 
+    'HTTP', 'HTTPS', 'DNS', 'Telnet',
+    'SMTP', 'SSH', 'IRC', 
+    'TCP', 
+    'UDP', 'DHCP', 
+    'ARP', 
+    'ICMP', 'IGMP', 'IPv',
     'LLC', 'Tot sum', 'Min', 'Max', 
-    # 'AVG', 
-    # 'Std', 'Tot size', 
-    # 'IAT', # 1
+    'AVG', 
+    'Std', 'Tot size', 
+    'IAT', # 1
     'Number', 'Magnitue', 'Radius', 'Covariance', 
     # 'Variance', 
     # 'Weight' # 4
@@ -175,7 +175,7 @@ train_label_L2 = torch.tensor(train_label_L2.to_numpy()).long().to(device)
 test_label_L2 = torch.tensor(test_label_L2.to_numpy()).long().to(device)
 
 # 创建模型实例并移动到设备 
-mlp = MLP(layer_sizes=(10, 32, 32, 9)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
+mlp = MLP(layer_sizes=(43, 32, 32, 9)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
 # P = ltn.Predicate(LogitsToPredicate(mlp))
 # Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
 # SatAgg = ltn.fuzzy_ops.SatAgg()
@@ -189,7 +189,7 @@ test_loader = DataLoader(test_data, test_label_L2, batch_size, shuffle=False)
 print("Training model...")
 criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(mlp.parameters(), lr=0.001)
-for epoch in range(45):
+for epoch in range(20):
     running_loss = 0.0
     mlp.train()  # Set model to training mode
     for data, labels in train_loader:
