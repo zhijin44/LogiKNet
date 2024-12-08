@@ -124,23 +124,23 @@ X_columns = [
     'Protocol Type', 'Duration', 
     'Rate', 
     'Srate', 'Drate',
-    'fin_flag_number', 
-    'syn_flag_number', 'rst_flag_number', 'psh_flag_number',
-    'ack_flag_number', 'ece_flag_number', 'cwr_flag_number', 'syn_count',
+    # 'fin_flag_number', 
+    # 'syn_flag_number', 'rst_flag_number', 'psh_flag_number',
+    # 'ack_flag_number', 'ece_flag_number', 'cwr_flag_number', 'syn_count',
     'ack_count', # 5
     'fin_count', # 2
-    'rst_count', 
-    'HTTP', 'HTTPS', 'DNS', 'Telnet',
-    'SMTP', 'SSH', 'IRC', 
-    'TCP', 
-    'UDP', 'DHCP', 
-    'ARP', 
-    'ICMP', 'IGMP', 'IPv',
-    'LLC', 'Tot sum', 'Min', 'Max', 
-    'AVG', 
-    'Std', 'Tot size', 
+    # 'rst_count', 
+    # 'HTTP', 'HTTPS', 'DNS', 'Telnet',
+    # 'SMTP', 'SSH', 'IRC', 
+    # 'TCP', 
+    # 'UDP', 'DHCP', 
+    # 'ARP', 
+    # 'ICMP', 'IGMP', 'IPv',
+    # 'LLC', 'Tot sum', 'Min', 'Max', 
+    # 'AVG', 
+    # 'Std', 'Tot size', 
     'IAT', # 1
-    'Number', 'Magnitue', 'Radius', 'Covariance', 
+    # 'Number', 'Magnitue', 'Radius', 'Covariance', 
     # 'Variance', 
     # 'Weight' # 4
 ]
@@ -175,7 +175,7 @@ train_label_L2 = torch.tensor(train_label_L2.to_numpy()).long().to(device)
 test_label_L2 = torch.tensor(test_label_L2.to_numpy()).long().to(device)
 
 # 创建模型实例并移动到设备 
-mlp = MLP(layer_sizes=(43, 32, 32, 9)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
+mlp = MLP(layer_sizes=(9, 32, 32, 9)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
 # P = ltn.Predicate(LogitsToPredicate(mlp))
 # Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
 # SatAgg = ltn.fuzzy_ops.SatAgg()
@@ -282,3 +282,54 @@ print_metrics(test_loader, mlp, class_names)
 # Save confusion matrix
 save_confusion_matrix(test_loader, mlp, class_names, filename="4-9.png")
 
+
+# L2 to L1 mapping
+def get_l1_label(l2_label):
+    l2_to_l1 = {
+        "MQTT-DDoS-Connect_Flood": "MQTT",
+        "MQTT-DDoS-Publish_Flood": "MQTT",
+        "MQTT-DoS-Connect_Flood": "MQTT",
+        "MQTT-DoS-Publish_Flood": "MQTT",
+        "MQTT-Malformed_Data": "MQTT",
+        "benign": "Benign",
+        "Recon-Port_Scan": "Recon",
+        "Recon-OS_Scan": "Recon",
+        "arp_spoofing": "ARP_Spoofing",
+    }
+    return l2_to_l1[l2_label]
+
+def compute_l1_metrics(loader, model, class_names):
+    all_preds_l2 = []
+    all_labels_l2 = []
+    
+    # Collect predictions and true labels (L2 level)
+    for data, labels in loader:
+        outputs = model(data).detach().cpu().numpy()
+        preds = np.argmax(outputs, axis=-1)
+        all_preds_l2.extend(preds)
+        all_labels_l2.extend(labels.cpu().numpy())
+
+    # Map L2 indices to names
+    l2_preds_names = [class_names[p] for p in all_preds_l2]
+    l2_labels_names = [class_names[l] for l in all_labels_l2]
+
+    # Map L2 names to L1 labels
+    l1_preds = [get_l1_label(name) for name in l2_preds_names]
+    l1_labels = [get_l1_label(name) for name in l2_labels_names]
+
+    # Get unique L1 class names
+    l1_class_names = sorted(list(set(l1_labels)))
+
+    # Compute classification report for L1
+    report = classification_report(
+        l1_labels,
+        l1_preds,
+        target_names=l1_class_names,
+        zero_division=0,  # Handle any undefined metrics
+    )
+
+    print("L1 Classification Report:\n")
+    print(report)
+
+# Example usage
+compute_l1_metrics(test_loader, mlp, class_names)
