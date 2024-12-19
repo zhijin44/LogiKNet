@@ -189,7 +189,7 @@ test_loader = DataLoader(test_data, test_label_L2, batch_size, shuffle=False)
 print("Training model...")
 criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(mlp.parameters(), lr=0.001)
-for epoch in range(20):
+for epoch in range(30):
     running_loss = 0.0
     mlp.train()  # Set model to training mode
     for data, labels in train_loader:

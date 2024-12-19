@@ -268,7 +268,7 @@ def plot_combined_confusion_matrices(loader, model, class_names_L1, class_names_
 
 #####################Preprocess#################################
 # 加载数据集
-processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_tiny_4_9.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_m_4_9.csv'
 processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_4_9.csv'
 
 train_data = pd.read_csv(processed_train_file)
@@ -374,7 +374,7 @@ print("Create train and test loader done.")
 print("Start training...")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
 
-for epoch in range(55):
+for epoch in range(1):
     train_loss = 0.0
 
     for batch_idx, (data, label_L1, label_L2) in enumerate(train_loader):
@@ -427,6 +427,8 @@ for epoch in range(55):
         # rules - hierarchy
         valid_forall_expressions.append(Exists(x, And(P(x, l_Benign), P(x, l_benign))))
         valid_forall_expressions.append(Exists(x, And(P(x, l_ARP_Spoofing), P(x, l_arp_spoofing))))
+
+        
         
         sat_agg = SatAgg(*valid_forall_expressions) # the satisfaction level over the current batch
         loss = 1. - sat_agg
@@ -457,6 +459,43 @@ for epoch in range(55):
     #                  )
 
 #####################Evaluation#################################
+def compute_weighted_accuracy(loader):
+    total_weighted_score = 0.0
+    total_instances = 0
+
+    for data, label_L1, label_L2 in loader:
+        # Get predictions from the MLP model
+        predictions = mlp(data).detach().cpu().numpy()
+
+        # Predicted and true classes for Label_L1
+        pred_L1 = np.argmax(predictions[:, 0:4], axis=-1)
+        true_L1 = label_L1.cpu().numpy()
+
+        # Predicted and true classes for Label_L2
+        pred_L2 = np.argmax(predictions[:, 4:], axis=-1) + 4  # Shift range to match [4, 12]
+        true_L2 = label_L2.cpu().numpy()
+
+        # Compute instance-wise weights
+        for p_L1, t_L1, p_L2, t_L2 in zip(pred_L1, true_L1, pred_L2, true_L2):
+            if p_L1 == t_L1 and p_L2 == t_L2:  # Case 1: Both correct
+                weight = 1
+            elif p_L1 == t_L1 and p_L2 != t_L2:  # Case 2: L1 correct, L2 incorrect
+                weight = 0.5
+            elif p_L1 != t_L1 and p_L2 == t_L2:  # Case 3: L2 correct, L1 incorrect
+                weight = 0.5
+            else:  # Case 4: Both incorrect
+                weight = 0
+
+            # Add weight to total score
+            total_weighted_score += weight
+
+        # Count total instances
+        total_instances += len(pred_L1)
+
+    # Compute weighted accuracy
+    weighted_accuracy = total_weighted_score / total_instances
+
+    return weighted_accuracy
 
 class_names_L1 = ["MQTT", "Benign", "Recon", "ARP_Spoofing"]
 class_names_L2 = [
@@ -473,9 +512,49 @@ class_names_L2 = [
 
 report_L1, report_L2 = compute_metrics(test_loader, mlp, class_names_L1, class_names_L2)
 logging.info(f"\n {report_L1}")
-logging.info(f"\n {report_L2} \n\n")
+logging.info(f"\n {report_L2} \n")
+plot_combined_confusion_matrices(test_loader, mlp, class_names_L1, class_names_L2, filename='4-9_LTN_2_s')
 
-plot_combined_confusion_matrices(test_loader, mlp, class_names_L1, class_names_L2, filename='4-9_LTN_0')
+
+weighted_accuracy = compute_weighted_accuracy(test_loader)
+print(f"Weighted Accuracy: {weighted_accuracy:.3f}")
+logging.info(f"Weighted Accuracy: {weighted_accuracy:.3f} \n\n")
+
+#####################LIME#################################
+from lime.lime_tabular import LimeTabularExplainer
+
+# Prepare training data and feature names
+X_train = train_data.cpu().numpy()
+class_names_all = class_names_L1 + class_names_L2  # Replace with actual feature names
+
+# Create LimeTabularExplainer
+explainer = LimeTabularExplainer(
+    training_data=X_train,
+    feature_names=class_names_all,
+    class_names=class_names_L2,  # Class names for L2 predictions
+    mode="classification"
+)
+
+# Select a single instance for explanation
+test_instance = test_data[0].cpu().numpy()  # Example instance
+true_label_L2 = test_label_L2[0].item()  # True label for L2
+
+# Define prediction function
+def predict_fn(data):
+    data_tensor = torch.tensor(data).float().to(device)  # Convert to tensor and move to device
+    logits = mlp(data_tensor).detach().cpu().numpy()  # Get logits from MLP
+    probabilities = np.exp(logits) / np.sum(np.exp(logits), axis=1, keepdims=True)  # Softmax
+    return probabilities
+
+# Generate explanation for the instance
+explanation = explainer.explain_instance(
+    data_row=test_instance,
+    predict_fn=predict_fn
+)
+
+# Visualize the explanation
+explanation.save_to_file("lime_explanation.html")  # Save as HTML for external viewing
+
 
 
 

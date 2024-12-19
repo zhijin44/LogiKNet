@@ -215,25 +215,25 @@ def reduce_data_custom(df, label_column, n, m, specific_label='benign'):
 
 
 #####################################only decrease train (4_9)##########################################
-# train_file = "/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_l_4_9.csv"
+train_file = "/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_l_4_9.csv"
 
-# # 加载数据
-# train_data = pd.read_csv(train_file)
+# 加载数据
+train_data = pd.read_csv(train_file)
 
-# # big - train(27K/9k) test(3k/1k)
-# # med - train(18k/6k) test(same)
-# # sml - train(9k/3k)  test(same)
-# n = 500  # Maximum rows for all labels except 'benign'
-# m = 1000  # Maximum rows for 'benign'
-# reduced_data_custom = reduce_data_custom(train_data, label_column='label_L2', n=n, m=m, specific_label='benign')
-# # Print the shape and label counts for verification
-# print("Custom Reduced Data Shape:", reduced_data_custom.shape)
-# print_extended_label_counts(reduced_data_custom)
+# big - train(27K/9k) test(3k/1k)
+# med - train(18k/6k) test(same)
+# sml - train(9k/3k)  test(same)
+n = 300  # Maximum rows for all labels except 'benign'
+m = 600  # Maximum rows for 'benign'
+reduced_data_custom = reduce_data_custom(train_data, label_column='label_L2', n=n, m=m, specific_label='benign')
+# Print the shape and label counts for verification
+print("Custom Reduced Data Shape:", reduced_data_custom.shape)
+print_extended_label_counts(reduced_data_custom)
 
-# train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_tiny_4_9.csv'
-# # Save to CSV files
-# reduced_data_custom.to_csv(train_file, index=False)
-# print(f"Training data saved to {train_file} with shape {reduced_data_custom.shape}")
+train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_tiny_4_9.csv'
+# Save to CSV files
+reduced_data_custom.to_csv(train_file, index=False)
+print(f"Training data saved to {train_file} with shape {reduced_data_custom.shape}")
 
 #####################################only decrease train (4_11)##########################################
 # train_file = "/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_l_4_11.csv"
@@ -257,17 +257,17 @@ def reduce_data_custom(df, label_column, n, m, specific_label='benign'):
 # print(f"Training data saved to {train_file} with shape {reduced_data_custom.shape}")
 
 #####################################only decrease test (4_11)##########################################
-test_file = "/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_4_11.csv"
-test_data = pd.read_csv(test_file)
+# test_file = "/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_4_11.csv"
+# test_data = pd.read_csv(test_file)
 
-n = 10
-m = 20
-reduced_data_custom = reduce_data_custom(test_data, label_column='label_L2', n=n, m=m, specific_label='benign')
-# Print the shape and label counts for verification
-print("Custom Reduced Data Shape:", reduced_data_custom.shape)
-print_extended_label_counts(reduced_data_custom)
+# n = 10
+# m = 20
+# reduced_data_custom = reduce_data_custom(test_data, label_column='label_L2', n=n, m=m, specific_label='benign')
+# # Print the shape and label counts for verification
+# print("Custom Reduced Data Shape:", reduced_data_custom.shape)
+# print_extended_label_counts(reduced_data_custom)
 
-test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_tiny_4_11.csv'
-# Save to CSV files
-reduced_data_custom.to_csv(test_file, index=False)
-print(f"Training data saved to {test_file} with shape {reduced_data_custom.shape}")
+# test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_tiny_4_11.csv'
+# # Save to CSV files
+# reduced_data_custom.to_csv(test_file, index=False)
+# print(f"Training data saved to {test_file} with shape {reduced_data_custom.shape}")
