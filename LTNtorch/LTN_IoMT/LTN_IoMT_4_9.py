@@ -92,17 +92,19 @@ def compute_sat_level(loader):
             if variable.value.size(0) != 0:
                 valid_forall_expressions.append(Forall(variable, P(variable, label)))
 
-        # rules - L1 exclusive
-        valid_forall_expressions.append(Exists(x, Not(And(P(x, l_MQTT), P(x, l_Benign), P(x, l_Recon), P(x, l_ARP_Spoofing)))))
-        # rules - L2 exclusive
-        valid_forall_expressions.append(Exists(x, Not(And(P(x, l_MQTT_DDoS_Connect_Flood), P(x, l_MQTT_DDoS_Publish_Flood), 
-                                                          P(x, l_MQTT_DoS_Connect_Flood), P(x, l_MQTT_DoS_Publish_Flood),
-                                                          P(x, l_MQTT_Malformed_Data), P(x, l_benign),
-                                                          P(x, l_Recon_OS_Scan), P(x, l_Recon_Port_Scan),
-                                                          P(x, l_arp_spoofing)))))
+        # # rules - L1 exclusive
+        # valid_forall_expressions.append(Exists(x, Not(And(P(x, l_MQTT), P(x, l_Benign), P(x, l_Recon), P(x, l_ARP_Spoofing)))))
+        # # rules - L2 exclusive
+        # valid_forall_expressions.append(Exists(x, Not(And(P(x, l_MQTT_DDoS_Connect_Flood), P(x, l_MQTT_DDoS_Publish_Flood), 
+        #                                                   P(x, l_MQTT_DoS_Connect_Flood), P(x, l_MQTT_DoS_Publish_Flood),
+        #                                                   P(x, l_MQTT_Malformed_Data), P(x, l_benign),
+        #                                                   P(x, l_Recon_OS_Scan), P(x, l_Recon_Port_Scan),
+        #                                                   P(x, l_arp_spoofing)))))
         # rules - hierarchy
+        valid_forall_expressions.append(Exists(x, Or(And(P(x, l_Recon), P(x, l_Recon_OS_Scan)), And(P(x, l_Recon), P(x, l_Recon_Port_Scan)))))
         valid_forall_expressions.append(Exists(x, And(P(x, l_Benign), P(x, l_benign))))
         valid_forall_expressions.append(Exists(x, And(P(x, l_ARP_Spoofing), P(x, l_arp_spoofing))))
+        valid_forall_expressions.append(Exists(x, And(P(x, l_MQTT), P(x, l_MQTT_Malformed_Data))))
 
         mean_sat += SatAgg(*valid_forall_expressions)
     # In the loop: mean_sat accumulates the satisfaction levels for all the logical rules across the batches.
@@ -268,7 +270,7 @@ def plot_combined_confusion_matrices(loader, model, class_names_L1, class_names_
 
 #####################Preprocess#################################
 # 加载数据集
-processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_m_4_9.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_s_4_9.csv'
 processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_4_9.csv'
 
 train_data = pd.read_csv(processed_train_file)
@@ -323,8 +325,8 @@ l_arp_spoofing = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 
 # define the connectives, quantifiers, and the SatAgg
 Not = ltn.Connective(ltn.fuzzy_ops.NotStandard())
-And = ltn.Connective(custom_fuzzy_ops.AndProd())
-# And = ltn.Connective(ltn.fuzzy_ops.AndProd())
+# And = ltn.Connective(custom_fuzzy_ops.AndProd())
+And = ltn.Connective(ltn.fuzzy_ops.AndProd())
 Or = ltn.Connective(ltn.fuzzy_ops.OrProbSum())
 Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
 Exists = ltn.Quantifier(ltn.fuzzy_ops.AggregPMean(p=2), quantifier="e")
@@ -372,9 +374,9 @@ test_loader = DataLoaderMulti(test_data, (test_label_L1, test_label_L2), batch_s
 
 print("Create train and test loader done.")
 print("Start training...")
-optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
+optimizer = torch.optim.Adam(P.parameters(), lr=0.0015)
 
-for epoch in range(1):
+for epoch in range(51):
     train_loss = 0.0
 
     for batch_idx, (data, label_L1, label_L2) in enumerate(train_loader):
@@ -416,18 +418,19 @@ for epoch in range(1):
             if variable.value.size(0) != 0:
                 valid_forall_expressions.append(Forall(variable, P(variable, label)))
 
-        # rules - L1 class exclusive for each other
-        valid_forall_expressions.append(Exists(x, Not(And(P(x, l_MQTT), P(x, l_Benign), P(x, l_Recon), P(x, l_ARP_Spoofing)))))
-        # rules - L2 exclusive
-        valid_forall_expressions.append(Exists(x, Not(And(P(x, l_MQTT_DDoS_Connect_Flood), P(x, l_MQTT_DDoS_Publish_Flood), 
-                                                          P(x, l_MQTT_DoS_Connect_Flood), P(x, l_MQTT_DoS_Publish_Flood),
-                                                          P(x, l_MQTT_Malformed_Data), P(x, l_benign),
-                                                          P(x, l_Recon_OS_Scan), P(x, l_Recon_Port_Scan),
-                                                          P(x, l_arp_spoofing)))))
+        # # rules - L1 class exclusive for each other
+        # valid_forall_expressions.append(Exists(x, Not(And(P(x, l_MQTT), P(x, l_Benign), P(x, l_Recon), P(x, l_ARP_Spoofing)))))
+        # # rules - L2 exclusive
+        # valid_forall_expressions.append(Exists(x, Not(And(P(x, l_MQTT_DDoS_Connect_Flood), P(x, l_MQTT_DDoS_Publish_Flood), 
+        #                                                   P(x, l_MQTT_DoS_Connect_Flood), P(x, l_MQTT_DoS_Publish_Flood),
+        #                                                   P(x, l_MQTT_Malformed_Data), P(x, l_benign),
+        #                                                   P(x, l_Recon_OS_Scan), P(x, l_Recon_Port_Scan),
+        #                                                   P(x, l_arp_spoofing)))))
         # rules - hierarchy
+        valid_forall_expressions.append(Exists(x, Or(And(P(x, l_Recon), P(x, l_Recon_OS_Scan)), And(P(x, l_Recon), P(x, l_Recon_Port_Scan)))))
         valid_forall_expressions.append(Exists(x, And(P(x, l_Benign), P(x, l_benign))))
         valid_forall_expressions.append(Exists(x, And(P(x, l_ARP_Spoofing), P(x, l_arp_spoofing))))
-
+        valid_forall_expressions.append(Exists(x, And(P(x, l_MQTT), P(x, l_MQTT_Malformed_Data))))
         
         
         sat_agg = SatAgg(*valid_forall_expressions) # the satisfaction level over the current batch
@@ -457,6 +460,8 @@ for epoch in range(1):
     #     logging.info(f"Test Sat Phi 1 {compute_sat_level_phi(test_loader, phi1):.3f} | Test Sat Phi 2 {compute_sat_level_phi(test_loader, phi2):.3f} | "
     #                 #  f"Test Sat Phi 3 {compute_sat_level_phi(test_loader, phi3):.3f} | Test Sat Phi 4 {compute_sat_level_phi(test_loader, phi4):.3f}"
     #                  )
+
+torch.save(mlp, '/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/model/LTN_4_9_s')
 
 #####################Evaluation#################################
 def compute_weighted_accuracy(loader):
@@ -512,48 +517,15 @@ class_names_L2 = [
 
 report_L1, report_L2 = compute_metrics(test_loader, mlp, class_names_L1, class_names_L2)
 logging.info(f"\n {report_L1}")
-logging.info(f"\n {report_L2} \n")
-plot_combined_confusion_matrices(test_loader, mlp, class_names_L1, class_names_L2, filename='4-9_LTN_2_s')
+logging.info(f"\n {report_L2}")
+plot_combined_confusion_matrices(test_loader, mlp, class_names_L1, class_names_L2, filename='4-9_LTN_s')
 
 
 weighted_accuracy = compute_weighted_accuracy(test_loader)
 print(f"Weighted Accuracy: {weighted_accuracy:.3f}")
 logging.info(f"Weighted Accuracy: {weighted_accuracy:.3f} \n\n")
 
-#####################LIME#################################
-from lime.lime_tabular import LimeTabularExplainer
 
-# Prepare training data and feature names
-X_train = train_data.cpu().numpy()
-class_names_all = class_names_L1 + class_names_L2  # Replace with actual feature names
-
-# Create LimeTabularExplainer
-explainer = LimeTabularExplainer(
-    training_data=X_train,
-    feature_names=class_names_all,
-    class_names=class_names_L2,  # Class names for L2 predictions
-    mode="classification"
-)
-
-# Select a single instance for explanation
-test_instance = test_data[0].cpu().numpy()  # Example instance
-true_label_L2 = test_label_L2[0].item()  # True label for L2
-
-# Define prediction function
-def predict_fn(data):
-    data_tensor = torch.tensor(data).float().to(device)  # Convert to tensor and move to device
-    logits = mlp(data_tensor).detach().cpu().numpy()  # Get logits from MLP
-    probabilities = np.exp(logits) / np.sum(np.exp(logits), axis=1, keepdims=True)  # Softmax
-    return probabilities
-
-# Generate explanation for the instance
-explanation = explainer.explain_instance(
-    data_row=test_instance,
-    predict_fn=predict_fn
-)
-
-# Visualize the explanation
-explanation.save_to_file("lime_explanation.html")  # Save as HTML for external viewing
 
 
 

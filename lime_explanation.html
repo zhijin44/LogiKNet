@@ -37089,25 +37089,25 @@
 /***/ })
 /******/ ]);
 //# sourceMappingURL=bundle.js.map </script></head><body>
-        <div class="lime top_div" id="top_div40ZOPSZYFZ4U34I"></div>
+        <div class="lime top_div" id="top_divUQNNBPEVTAYRRTC"></div>
         
         <script>
-        var top_div = d3.select('#top_div40ZOPSZYFZ4U34I').classed('lime top_div', true);
+        var top_div = d3.select('#top_divUQNNBPEVTAYRRTC').classed('lime top_div', true);
         
             var pp_div = top_div.append('div')
                                 .classed('lime predict_proba', true);
             var pp_svg = pp_div.append('svg').style('width', '100%');
-            var pp = new lime.PredictProba(pp_svg, ["MQTT-DDoS-Connect_Flood", "MQTT-DDoS-Publish_Flood", "MQTT-DoS-Connect_Flood", "MQTT-DoS-Publish_Flood", "MQTT-Malformed_Data", "benign", "Recon-Port_Scan", "Recon-OS_Scan", "arp_spoofing"], [1.157850056188181e-05, 1.7394436113704614e-08, 3.748238264905668e-12, 2.8456893232942093e-06, 0.99200040102005, 6.643603001066367e-07, 0.007983746938407421, 3.512666637561779e-07, 1.3140088128693606e-07, 4.590202351550943e-08, 2.4501339845883763e-10, 3.0648617324602334e-12, 2.200623470116625e-07]);
+            var pp = new lime.PredictProba(pp_svg, ["MQTT", "Benign", "Recon", "ARP_Spoofing", "MQTT-DDoS-Connect_Flood", "MQTT-DDoS-Publish_Flood", "MQTT-DoS-Connect_Flood", "MQTT-DoS-Publish_Flood", "MQTT-Malformed_Data", "benign", "Recon-Port_Scan", "Recon-OS_Scan", "arp_spoofing"], [0.0392962209880352, 6.715708544824395e-11, 3.703980525071593e-11, 5.275912826618878e-07, 0.9455174803733826, 1.2173463801445905e-05, 0.015171688050031662, 4.4236713847567444e-08, 1.3976896298117936e-06, 1.4057598834993357e-11, 1.2669788551633587e-09, 3.9515737904061154e-11, 4.4174757363180106e-07]);
             
         
         var exp_div;
-            var exp = new lime.Explanation(["MQTT-DDoS-Connect_Flood", "MQTT-DDoS-Publish_Flood", "MQTT-DoS-Connect_Flood", "MQTT-DoS-Publish_Flood", "MQTT-Malformed_Data", "benign", "Recon-Port_Scan", "Recon-OS_Scan", "arp_spoofing"]);
+            var exp = new lime.Explanation(["MQTT", "Benign", "Recon", "ARP_Spoofing", "MQTT-DDoS-Connect_Flood", "MQTT-DDoS-Publish_Flood", "MQTT-DoS-Connect_Flood", "MQTT-DoS-Publish_Flood", "MQTT-Malformed_Data", "benign", "Recon-Port_Scan", "Recon-OS_Scan", "arp_spoofing"]);
         
                 exp_div = top_div.append('div').classed('lime explanation', true);
-                exp.show([["-0.35 < MQTT-DoS-Publish_Flood <= 0.06", 0.0010121562469875846], ["0.01 < MQTT-Malformed_Data <= 1.26", -0.00040541934670098115], ["MQTT-DoS-Connect_Flood > -0.06", -0.0002726074872072712], ["Benign <= -0.29", -0.00026986058174224365], ["Recon <= -0.21", -0.00023087705030636285], ["-0.08 < MQTT-DDoS-Connect_Flood <= -0.07", -0.00015705110906398396], ["-0.08 < ARP_Spoofing <= -0.07", 0.000119325189578201], ["MQTT <= -0.37", -8.609701914991247e-06], ["MQTT-DDoS-Publish_Flood <= 0.00", 0.0]], 1, exp_div);
+                exp.show([["Duration <= -0.21", -0.0010612193360654565], ["-0.35 < fin_count <= 0.06", 0.0005545141264259293], ["ack_count > -0.06", -0.00027966780330051377], ["Header_Length <= -0.37", 0.00023755650795444921], ["Protocol Type <= -0.29", 0.00022656197453091922], ["0.01 < IAT <= 1.26", -0.00020530392386887674], ["-0.08 < Srate <= -0.07", -0.00019267083141051678], ["-0.08 < Rate <= -0.07", 0.00010305975779258994], ["Drate <= 0.00", 0.0]], 1, exp_div);
                 
         var raw_div = top_div.append('div');
-            exp.show_raw_tabular([["MQTT-DoS-Publish_Flood", "-0.28", 0.0010121562469875846], ["MQTT-Malformed_Data", "0.01", -0.00040541934670098115], ["MQTT-DoS-Connect_Flood", "1.66", -0.0002726074872072712], ["Benign", "-0.29", -0.00026986058174224365], ["Recon", "-0.21", -0.00023087705030636285], ["MQTT-DDoS-Connect_Flood", "-0.07", -0.00015705110906398396], ["ARP_Spoofing", "-0.07", 0.000119325189578201], ["MQTT", "-0.37", -8.609701914991247e-06], ["MQTT-DDoS-Publish_Flood", "0.00", 0.0]], 1, raw_div);
+            exp.show_raw_tabular([["Duration", "-0.21", -0.0010612193360654565], ["fin_count", "-0.28", 0.0005545141264259293], ["ack_count", "1.66", -0.00027966780330051377], ["Header_Length", "-0.37", 0.00023755650795444921], ["Protocol Type", "-0.29", 0.00022656197453091922], ["IAT", "0.01", -0.00020530392386887674], ["Srate", "-0.07", -0.00019267083141051678], ["Rate", "-0.07", 0.00010305975779258994], ["Drate", "0.00", 0.0]], 1, raw_div);
         
         </script>
         </body></html>

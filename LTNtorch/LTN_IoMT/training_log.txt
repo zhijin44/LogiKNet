@@ -6507,3 +6507,465 @@ MQTT-DDoS-Publish_Flood       0.98      0.75      0.85      1000
 2024-12-19 08:29:15 - Weighted Accuracy: 0.688 
 
 
+2024-12-19 08:45:49 - epoch 0 | loss 0.7111 | Train Sat 0.350 | Test Sat 0.349
+2024-12-19 08:45:49 -           Train Acc L1 0.640 | Train Acc L2 0.720 | Test Acc L1 0.648 | Test Acc L2 0.725
+2024-12-19 08:45:49 - 
+               precision    recall  f1-score   support
+
+        MQTT       0.96      0.45      0.61      4688
+      Benign       0.55      0.84      0.67      3000
+       Recon       0.66      0.80      0.72      2000
+ARP_Spoofing       0.46      0.68      0.55      1000
+
+    accuracy                           0.65     10688
+   macro avg       0.66      0.69      0.64     10688
+weighted avg       0.74      0.65      0.64     10688
+
+2024-12-19 08:45:49 - 
+                          precision    recall  f1-score   support
+
+MQTT-DDoS-Connect_Flood       0.80      0.98      0.88      1000
+MQTT-DDoS-Publish_Flood       0.99      0.75      0.85      1000
+ MQTT-DoS-Connect_Flood       0.81      0.85      0.83      1000
+ MQTT-DoS-Publish_Flood       0.78      0.99      0.87      1000
+    MQTT-Malformed_Data       0.44      0.51      0.47       688
+                 benign       0.77      0.82      0.79      3000
+        Recon-Port_Scan       0.45      0.18      0.25      1000
+          Recon-OS_Scan       0.55      0.68      0.61      1000
+           arp_spoofing       0.67      0.50      0.57      1000
+
+               accuracy                           0.72     10688
+              macro avg       0.70      0.70      0.68     10688
+           weighted avg       0.72      0.72      0.71     10688
+ 
+
+2024-12-19 08:45:50 - Weighted Accuracy: 0.686 
+
+
+2024-12-19 20:27:47 - epoch 0 | loss 0.8012 | Train Sat 0.252 | Test Sat 0.251
+2024-12-19 20:27:47 -           Train Acc L1 0.464 | Train Acc L2 0.392 | Test Acc L1 0.434 | Test Acc L2 0.357
+2024-12-19 20:28:29 - epoch 0 | loss 0.8069 | Train Sat 0.247 | Test Sat 0.246
+2024-12-19 20:28:29 -           Train Acc L1 0.415 | Train Acc L2 0.356 | Test Acc L1 0.380 | Test Acc L2 0.326
+2024-12-19 20:28:29 - 
+               precision    recall  f1-score   support
+
+        MQTT       0.97      0.32      0.48      4688
+      Benign       0.73      0.00      0.01      3000
+       Recon       0.25      0.91      0.40      2000
+ARP_Spoofing       0.37      0.73      0.49      1000
+
+    accuracy                           0.38     10688
+   macro avg       0.58      0.49      0.34     10688
+weighted avg       0.72      0.38      0.33     10688
+
+2024-12-19 20:28:29 - 
+                          precision    recall  f1-score   support
+
+MQTT-DDoS-Connect_Flood       0.53      0.99      0.69      1000
+MQTT-DDoS-Publish_Flood       0.95      0.74      0.83      1000
+ MQTT-DoS-Connect_Flood       0.00      0.00      0.00      1000
+ MQTT-DoS-Publish_Flood       0.01      0.01      0.01      1000
+    MQTT-Malformed_Data       0.34      0.37      0.36       688
+                 benign       0.00      0.00      0.00      3000
+        Recon-Port_Scan       0.00      0.00      0.00      1000
+          Recon-OS_Scan       0.16      0.90      0.28      1000
+           arp_spoofing       0.53      0.58      0.56      1000
+
+               accuracy                           0.33     10688
+              macro avg       0.28      0.40      0.30     10688
+           weighted avg       0.23      0.33      0.24     10688
+ 
+
+2024-12-19 20:28:30 - Weighted Accuracy: 0.353 
+
+
+2024-12-19 20:30:02 - epoch 0 | loss 0.8067 | Train Sat 0.249 | Test Sat 0.248
+2024-12-19 20:30:02 -           Train Acc L1 0.450 | Train Acc L2 0.420 | Test Acc L1 0.428 | Test Acc L2 0.382
+2024-12-19 20:30:08 - epoch 1 | loss 0.7214 | Train Sat 0.310 | Test Sat 0.309
+2024-12-19 20:30:08 -           Train Acc L1 0.514 | Train Acc L2 0.547 | Test Acc L1 0.535 | Test Acc L2 0.525
+2024-12-19 20:30:14 - epoch 2 | loss 0.6691 | Train Sat 0.351 | Test Sat 0.349
+2024-12-19 20:30:14 -           Train Acc L1 0.578 | Train Acc L2 0.608 | Test Acc L1 0.621 | Test Acc L2 0.591
+2024-12-19 20:30:20 - epoch 3 | loss 0.6395 | Train Sat 0.369 | Test Sat 0.369
+2024-12-19 20:30:20 -           Train Acc L1 0.603 | Train Acc L2 0.628 | Test Acc L1 0.643 | Test Acc L2 0.621
+2024-12-19 20:30:25 - epoch 4 | loss 0.6260 | Train Sat 0.386 | Test Sat 0.384
+2024-12-19 20:30:25 -           Train Acc L1 0.614 | Train Acc L2 0.711 | Test Acc L1 0.651 | Test Acc L2 0.723
+2024-12-19 20:30:31 - epoch 5 | loss 0.6099 | Train Sat 0.397 | Test Sat 0.396
+2024-12-19 20:30:31 -           Train Acc L1 0.629 | Train Acc L2 0.722 | Test Acc L1 0.660 | Test Acc L2 0.735
+2024-12-19 20:30:37 - epoch 6 | loss 0.6010 | Train Sat 0.403 | Test Sat 0.401
+2024-12-19 20:30:37 -           Train Acc L1 0.628 | Train Acc L2 0.729 | Test Acc L1 0.662 | Test Acc L2 0.742
+2024-12-19 20:30:43 - epoch 7 | loss 0.5995 | Train Sat 0.404 | Test Sat 0.404
+2024-12-19 20:30:43 -           Train Acc L1 0.627 | Train Acc L2 0.727 | Test Acc L1 0.664 | Test Acc L2 0.744
+2024-12-19 20:30:48 - epoch 8 | loss 0.5952 | Train Sat 0.408 | Test Sat 0.406
+2024-12-19 20:30:48 -           Train Acc L1 0.634 | Train Acc L2 0.732 | Test Acc L1 0.664 | Test Acc L2 0.744
+2024-12-19 20:30:54 - epoch 9 | loss 0.5924 | Train Sat 0.407 | Test Sat 0.406
+2024-12-19 20:30:54 -           Train Acc L1 0.632 | Train Acc L2 0.725 | Test Acc L1 0.666 | Test Acc L2 0.741
+2024-12-19 20:31:00 - epoch 10 | loss 0.5907 | Train Sat 0.407 | Test Sat 0.407
+2024-12-19 20:31:00 -           Train Acc L1 0.638 | Train Acc L2 0.737 | Test Acc L1 0.668 | Test Acc L2 0.751
+2024-12-19 20:31:06 - epoch 11 | loss 0.5892 | Train Sat 0.413 | Test Sat 0.410
+2024-12-19 20:31:06 -           Train Acc L1 0.635 | Train Acc L2 0.735 | Test Acc L1 0.669 | Test Acc L2 0.751
+2024-12-19 20:31:12 - epoch 12 | loss 0.5878 | Train Sat 0.412 | Test Sat 0.410
+2024-12-19 20:31:12 -           Train Acc L1 0.639 | Train Acc L2 0.741 | Test Acc L1 0.670 | Test Acc L2 0.755
+2024-12-19 20:31:18 - epoch 13 | loss 0.5880 | Train Sat 0.417 | Test Sat 0.411
+2024-12-19 20:31:18 -           Train Acc L1 0.643 | Train Acc L2 0.742 | Test Acc L1 0.673 | Test Acc L2 0.755
+2024-12-19 20:31:23 - epoch 14 | loss 0.5874 | Train Sat 0.414 | Test Sat 0.411
+2024-12-19 20:31:23 -           Train Acc L1 0.638 | Train Acc L2 0.737 | Test Acc L1 0.673 | Test Acc L2 0.751
+2024-12-19 20:31:29 - epoch 15 | loss 0.5881 | Train Sat 0.411 | Test Sat 0.411
+2024-12-19 20:31:29 -           Train Acc L1 0.646 | Train Acc L2 0.738 | Test Acc L1 0.676 | Test Acc L2 0.752
+2024-12-19 20:31:35 - epoch 16 | loss 0.5873 | Train Sat 0.416 | Test Sat 0.412
+2024-12-19 20:31:35 -           Train Acc L1 0.645 | Train Acc L2 0.743 | Test Acc L1 0.676 | Test Acc L2 0.752
+2024-12-19 20:31:41 - epoch 17 | loss 0.5839 | Train Sat 0.417 | Test Sat 0.412
+2024-12-19 20:31:41 -           Train Acc L1 0.648 | Train Acc L2 0.742 | Test Acc L1 0.676 | Test Acc L2 0.757
+2024-12-19 20:31:47 - epoch 18 | loss 0.5864 | Train Sat 0.417 | Test Sat 0.413
+2024-12-19 20:31:47 -           Train Acc L1 0.651 | Train Acc L2 0.741 | Test Acc L1 0.678 | Test Acc L2 0.753
+2024-12-19 20:31:53 - epoch 19 | loss 0.5829 | Train Sat 0.416 | Test Sat 0.413
+2024-12-19 20:31:53 -           Train Acc L1 0.647 | Train Acc L2 0.741 | Test Acc L1 0.679 | Test Acc L2 0.755
+2024-12-19 20:31:59 - epoch 20 | loss 0.5852 | Train Sat 0.417 | Test Sat 0.414
+2024-12-19 20:31:59 -           Train Acc L1 0.650 | Train Acc L2 0.746 | Test Acc L1 0.675 | Test Acc L2 0.755
+2024-12-19 20:32:05 - epoch 21 | loss 0.5807 | Train Sat 0.421 | Test Sat 0.416
+2024-12-19 20:32:05 -           Train Acc L1 0.648 | Train Acc L2 0.743 | Test Acc L1 0.674 | Test Acc L2 0.751
+2024-12-19 20:32:10 - epoch 22 | loss 0.5813 | Train Sat 0.422 | Test Sat 0.417
+2024-12-19 20:32:10 -           Train Acc L1 0.644 | Train Acc L2 0.757 | Test Acc L1 0.673 | Test Acc L2 0.763
+2024-12-19 20:32:16 - epoch 23 | loss 0.5797 | Train Sat 0.422 | Test Sat 0.417
+2024-12-19 20:32:16 -           Train Acc L1 0.646 | Train Acc L2 0.756 | Test Acc L1 0.676 | Test Acc L2 0.762
+2024-12-19 20:32:22 - epoch 24 | loss 0.5782 | Train Sat 0.422 | Test Sat 0.417
+2024-12-19 20:32:22 -           Train Acc L1 0.650 | Train Acc L2 0.746 | Test Acc L1 0.676 | Test Acc L2 0.753
+2024-12-19 20:32:28 - epoch 25 | loss 0.5771 | Train Sat 0.422 | Test Sat 0.420
+2024-12-19 20:32:28 -           Train Acc L1 0.720 | Train Acc L2 0.756 | Test Acc L1 0.745 | Test Acc L2 0.760
+2024-12-19 20:32:34 - epoch 26 | loss 0.5757 | Train Sat 0.425 | Test Sat 0.420
+2024-12-19 20:32:34 -           Train Acc L1 0.766 | Train Acc L2 0.760 | Test Acc L1 0.785 | Test Acc L2 0.761
+2024-12-19 20:32:40 - epoch 27 | loss 0.5766 | Train Sat 0.420 | Test Sat 0.418
+2024-12-19 20:32:40 -           Train Acc L1 0.762 | Train Acc L2 0.747 | Test Acc L1 0.787 | Test Acc L2 0.758
+2024-12-19 20:32:46 - epoch 28 | loss 0.5743 | Train Sat 0.423 | Test Sat 0.420
+2024-12-19 20:32:46 -           Train Acc L1 0.762 | Train Acc L2 0.752 | Test Acc L1 0.786 | Test Acc L2 0.759
+2024-12-19 20:32:52 - epoch 29 | loss 0.5767 | Train Sat 0.421 | Test Sat 0.417
+2024-12-19 20:32:52 -           Train Acc L1 0.759 | Train Acc L2 0.748 | Test Acc L1 0.784 | Test Acc L2 0.760
+2024-12-19 20:32:58 - epoch 30 | loss 0.5794 | Train Sat 0.425 | Test Sat 0.420
+2024-12-19 20:32:58 -           Train Acc L1 0.765 | Train Acc L2 0.756 | Test Acc L1 0.785 | Test Acc L2 0.761
+2024-12-19 20:33:04 - epoch 31 | loss 0.5740 | Train Sat 0.429 | Test Sat 0.421
+2024-12-19 20:33:04 -           Train Acc L1 0.761 | Train Acc L2 0.754 | Test Acc L1 0.785 | Test Acc L2 0.761
+2024-12-19 20:33:09 - epoch 32 | loss 0.5759 | Train Sat 0.425 | Test Sat 0.420
+2024-12-19 20:33:09 -           Train Acc L1 0.759 | Train Acc L2 0.758 | Test Acc L1 0.784 | Test Acc L2 0.762
+2024-12-19 20:33:15 - epoch 33 | loss 0.5744 | Train Sat 0.426 | Test Sat 0.421
+2024-12-19 20:33:15 -           Train Acc L1 0.765 | Train Acc L2 0.761 | Test Acc L1 0.786 | Test Acc L2 0.767
+2024-12-19 20:33:21 - epoch 34 | loss 0.5736 | Train Sat 0.427 | Test Sat 0.420
+2024-12-19 20:33:21 -           Train Acc L1 0.765 | Train Acc L2 0.757 | Test Acc L1 0.785 | Test Acc L2 0.760
+2024-12-19 20:33:27 - epoch 35 | loss 0.5791 | Train Sat 0.426 | Test Sat 0.422
+2024-12-19 20:33:27 -           Train Acc L1 0.762 | Train Acc L2 0.759 | Test Acc L1 0.785 | Test Acc L2 0.766
+2024-12-19 20:33:33 - epoch 36 | loss 0.5765 | Train Sat 0.427 | Test Sat 0.420
+2024-12-19 20:33:33 -           Train Acc L1 0.765 | Train Acc L2 0.759 | Test Acc L1 0.784 | Test Acc L2 0.764
+2024-12-19 20:33:39 - epoch 37 | loss 0.5730 | Train Sat 0.426 | Test Sat 0.421
+2024-12-19 20:33:39 -           Train Acc L1 0.761 | Train Acc L2 0.762 | Test Acc L1 0.784 | Test Acc L2 0.766
+2024-12-19 20:33:45 - epoch 38 | loss 0.5746 | Train Sat 0.428 | Test Sat 0.423
+2024-12-19 20:33:45 -           Train Acc L1 0.761 | Train Acc L2 0.755 | Test Acc L1 0.785 | Test Acc L2 0.762
+2024-12-19 20:33:51 - epoch 39 | loss 0.5748 | Train Sat 0.425 | Test Sat 0.422
+2024-12-19 20:33:51 -           Train Acc L1 0.761 | Train Acc L2 0.761 | Test Acc L1 0.783 | Test Acc L2 0.767
+2024-12-19 20:33:57 - epoch 40 | loss 0.5744 | Train Sat 0.428 | Test Sat 0.423
+2024-12-19 20:33:57 -           Train Acc L1 0.761 | Train Acc L2 0.767 | Test Acc L1 0.784 | Test Acc L2 0.769
+2024-12-19 20:34:03 - epoch 41 | loss 0.5743 | Train Sat 0.427 | Test Sat 0.422
+2024-12-19 20:34:03 -           Train Acc L1 0.762 | Train Acc L2 0.755 | Test Acc L1 0.783 | Test Acc L2 0.759
+2024-12-19 20:34:09 - epoch 42 | loss 0.5712 | Train Sat 0.429 | Test Sat 0.423
+2024-12-19 20:34:09 -           Train Acc L1 0.761 | Train Acc L2 0.761 | Test Acc L1 0.783 | Test Acc L2 0.765
+2024-12-19 20:34:15 - epoch 43 | loss 0.5689 | Train Sat 0.425 | Test Sat 0.422
+2024-12-19 20:34:15 -           Train Acc L1 0.761 | Train Acc L2 0.763 | Test Acc L1 0.784 | Test Acc L2 0.767
+2024-12-19 20:34:21 - epoch 44 | loss 0.5737 | Train Sat 0.426 | Test Sat 0.423
+2024-12-19 20:34:21 -           Train Acc L1 0.764 | Train Acc L2 0.760 | Test Acc L1 0.783 | Test Acc L2 0.762
+2024-12-19 20:34:21 - 
+               precision    recall  f1-score   support
+
+        MQTT       0.99      0.71      0.83      4688
+      Benign       0.80      0.84      0.82      3000
+       Recon       0.70      0.89      0.79      2000
+ARP_Spoofing       0.44      0.73      0.55      1000
+
+    accuracy                           0.78     10688
+   macro avg       0.73      0.79      0.75     10688
+weighted avg       0.83      0.78      0.79     10688
+
+2024-12-19 20:34:21 - 
+                          precision    recall  f1-score   support
+
+MQTT-DDoS-Connect_Flood       0.91      0.96      0.94      1000
+MQTT-DDoS-Publish_Flood       0.99      0.77      0.86      1000
+ MQTT-DoS-Connect_Flood       0.94      0.93      0.93      1000
+ MQTT-DoS-Publish_Flood       0.83      1.00      0.91      1000
+    MQTT-Malformed_Data       0.51      0.68      0.58       688
+                 benign       0.81      0.83      0.82      3000
+        Recon-Port_Scan       0.53      0.53      0.53      1000
+          Recon-OS_Scan       0.59      0.47      0.52      1000
+           arp_spoofing       0.61      0.52      0.56      1000
+
+               accuracy                           0.76     10688
+              macro avg       0.75      0.74      0.74     10688
+           weighted avg       0.76      0.76      0.76     10688
+
+2024-12-19 20:34:22 - Weighted Accuracy: 0.772 
+
+
+2024-12-19 21:24:03 - epoch 0 | loss 0.8701 | Train Sat 0.184 | Test Sat 0.181
+2024-12-19 21:24:03 -           Train Acc L1 0.633 | Train Acc L2 0.510 | Test Acc L1 0.668 | Test Acc L2 0.492
+2024-12-19 21:24:08 - epoch 1 | loss 0.7791 | Train Sat 0.247 | Test Sat 0.248
+2024-12-19 21:24:08 -           Train Acc L1 0.573 | Train Acc L2 0.611 | Test Acc L1 0.615 | Test Acc L2 0.599
+2024-12-19 21:24:13 - epoch 2 | loss 0.7398 | Train Sat 0.273 | Test Sat 0.274
+2024-12-19 21:24:13 -           Train Acc L1 0.608 | Train Acc L2 0.687 | Test Acc L1 0.644 | Test Acc L2 0.694
+2024-12-19 21:24:18 - epoch 3 | loss 0.7199 | Train Sat 0.290 | Test Sat 0.290
+2024-12-19 21:24:18 -           Train Acc L1 0.622 | Train Acc L2 0.715 | Test Acc L1 0.660 | Test Acc L2 0.726
+2024-12-19 21:24:23 - epoch 4 | loss 0.7059 | Train Sat 0.297 | Test Sat 0.297
+2024-12-19 21:24:23 -           Train Acc L1 0.631 | Train Acc L2 0.718 | Test Acc L1 0.666 | Test Acc L2 0.737
+2024-12-19 21:24:28 - epoch 5 | loss 0.7013 | Train Sat 0.300 | Test Sat 0.301
+2024-12-19 21:24:28 -           Train Acc L1 0.630 | Train Acc L2 0.729 | Test Acc L1 0.668 | Test Acc L2 0.743
+2024-12-19 21:24:32 - epoch 6 | loss 0.6986 | Train Sat 0.306 | Test Sat 0.302
+2024-12-19 21:24:32 -           Train Acc L1 0.628 | Train Acc L2 0.730 | Test Acc L1 0.669 | Test Acc L2 0.747
+2024-12-19 21:24:37 - epoch 7 | loss 0.6954 | Train Sat 0.306 | Test Sat 0.305
+2024-12-19 21:24:37 -           Train Acc L1 0.637 | Train Acc L2 0.735 | Test Acc L1 0.672 | Test Acc L2 0.752
+2024-12-19 21:24:42 - epoch 8 | loss 0.6937 | Train Sat 0.308 | Test Sat 0.305
+2024-12-19 21:24:42 -           Train Acc L1 0.639 | Train Acc L2 0.738 | Test Acc L1 0.672 | Test Acc L2 0.754
+2024-12-19 21:24:47 - epoch 9 | loss 0.6920 | Train Sat 0.307 | Test Sat 0.307
+2024-12-19 21:24:47 -           Train Acc L1 0.646 | Train Acc L2 0.736 | Test Acc L1 0.676 | Test Acc L2 0.747
+2024-12-19 21:24:52 - epoch 10 | loss 0.6931 | Train Sat 0.310 | Test Sat 0.308
+2024-12-19 21:24:52 -           Train Acc L1 0.641 | Train Acc L2 0.740 | Test Acc L1 0.675 | Test Acc L2 0.756
+2024-12-19 21:24:57 - epoch 11 | loss 0.6933 | Train Sat 0.309 | Test Sat 0.308
+2024-12-19 21:24:57 -           Train Acc L1 0.646 | Train Acc L2 0.746 | Test Acc L1 0.678 | Test Acc L2 0.758
+2024-12-19 21:25:02 - epoch 12 | loss 0.6904 | Train Sat 0.309 | Test Sat 0.308
+2024-12-19 21:25:02 -           Train Acc L1 0.644 | Train Acc L2 0.736 | Test Acc L1 0.676 | Test Acc L2 0.754
+2024-12-19 21:25:07 - epoch 13 | loss 0.6927 | Train Sat 0.309 | Test Sat 0.309
+2024-12-19 21:25:07 -           Train Acc L1 0.644 | Train Acc L2 0.742 | Test Acc L1 0.675 | Test Acc L2 0.753
+2024-12-19 21:25:12 - epoch 14 | loss 0.6904 | Train Sat 0.312 | Test Sat 0.310
+2024-12-19 21:25:12 -           Train Acc L1 0.648 | Train Acc L2 0.741 | Test Acc L1 0.679 | Test Acc L2 0.755
+2024-12-19 21:25:17 - epoch 15 | loss 0.6913 | Train Sat 0.311 | Test Sat 0.310
+2024-12-19 21:25:17 -           Train Acc L1 0.648 | Train Acc L2 0.741 | Test Acc L1 0.676 | Test Acc L2 0.753
+2024-12-19 21:25:22 - epoch 16 | loss 0.6896 | Train Sat 0.310 | Test Sat 0.310
+2024-12-19 21:25:22 -           Train Acc L1 0.658 | Train Acc L2 0.741 | Test Acc L1 0.691 | Test Acc L2 0.759
+2024-12-19 21:25:26 - epoch 17 | loss 0.6904 | Train Sat 0.310 | Test Sat 0.310
+2024-12-19 21:25:26 -           Train Acc L1 0.667 | Train Acc L2 0.740 | Test Acc L1 0.701 | Test Acc L2 0.752
+2024-12-19 21:25:31 - epoch 18 | loss 0.6908 | Train Sat 0.309 | Test Sat 0.308
+2024-12-19 21:25:31 -           Train Acc L1 0.672 | Train Acc L2 0.732 | Test Acc L1 0.707 | Test Acc L2 0.750
+2024-12-19 21:25:36 - epoch 19 | loss 0.6903 | Train Sat 0.311 | Test Sat 0.311
+2024-12-19 21:25:36 -           Train Acc L1 0.664 | Train Acc L2 0.743 | Test Acc L1 0.700 | Test Acc L2 0.759
+2024-12-19 21:25:41 - epoch 20 | loss 0.6890 | Train Sat 0.313 | Test Sat 0.311
+2024-12-19 21:25:41 -           Train Acc L1 0.661 | Train Acc L2 0.745 | Test Acc L1 0.693 | Test Acc L2 0.759
+2024-12-19 21:25:46 - epoch 21 | loss 0.6866 | Train Sat 0.314 | Test Sat 0.311
+2024-12-19 21:25:46 -           Train Acc L1 0.730 | Train Acc L2 0.744 | Test Acc L1 0.761 | Test Acc L2 0.757
+2024-12-19 21:25:51 - epoch 22 | loss 0.6887 | Train Sat 0.314 | Test Sat 0.311
+2024-12-19 21:25:51 -           Train Acc L1 0.668 | Train Acc L2 0.750 | Test Acc L1 0.700 | Test Acc L2 0.761
+2024-12-19 21:25:56 - epoch 23 | loss 0.6856 | Train Sat 0.314 | Test Sat 0.312
+2024-12-19 21:25:56 -           Train Acc L1 0.755 | Train Acc L2 0.748 | Test Acc L1 0.781 | Test Acc L2 0.765
+2024-12-19 21:26:01 - epoch 24 | loss 0.6868 | Train Sat 0.314 | Test Sat 0.311
+2024-12-19 21:26:01 -           Train Acc L1 0.788 | Train Acc L2 0.750 | Test Acc L1 0.816 | Test Acc L2 0.765
+2024-12-19 21:26:06 - epoch 25 | loss 0.6881 | Train Sat 0.315 | Test Sat 0.313
+2024-12-19 21:26:06 -           Train Acc L1 0.824 | Train Acc L2 0.745 | Test Acc L1 0.851 | Test Acc L2 0.761
+2024-12-19 21:26:11 - epoch 26 | loss 0.6866 | Train Sat 0.316 | Test Sat 0.314
+2024-12-19 21:26:11 -           Train Acc L1 0.823 | Train Acc L2 0.749 | Test Acc L1 0.848 | Test Acc L2 0.768
+2024-12-19 21:26:16 - epoch 27 | loss 0.6882 | Train Sat 0.315 | Test Sat 0.313
+2024-12-19 21:26:16 -           Train Acc L1 0.814 | Train Acc L2 0.750 | Test Acc L1 0.837 | Test Acc L2 0.765
+2024-12-19 21:26:21 - epoch 28 | loss 0.6869 | Train Sat 0.315 | Test Sat 0.314
+2024-12-19 21:26:21 -           Train Acc L1 0.806 | Train Acc L2 0.752 | Test Acc L1 0.832 | Test Acc L2 0.766
+2024-12-19 21:26:26 - epoch 29 | loss 0.6860 | Train Sat 0.316 | Test Sat 0.315
+2024-12-19 21:26:26 -           Train Acc L1 0.828 | Train Acc L2 0.751 | Test Acc L1 0.850 | Test Acc L2 0.765
+2024-12-19 21:26:31 - epoch 30 | loss 0.6861 | Train Sat 0.317 | Test Sat 0.315
+2024-12-19 21:26:31 -           Train Acc L1 0.815 | Train Acc L2 0.749 | Test Acc L1 0.839 | Test Acc L2 0.769
+2024-12-19 21:26:36 - epoch 31 | loss 0.6855 | Train Sat 0.317 | Test Sat 0.315
+2024-12-19 21:26:36 -           Train Acc L1 0.816 | Train Acc L2 0.750 | Test Acc L1 0.840 | Test Acc L2 0.767
+2024-12-19 21:26:40 - epoch 32 | loss 0.6852 | Train Sat 0.316 | Test Sat 0.313
+2024-12-19 21:26:40 -           Train Acc L1 0.815 | Train Acc L2 0.753 | Test Acc L1 0.838 | Test Acc L2 0.768
+2024-12-19 21:26:45 - epoch 33 | loss 0.6829 | Train Sat 0.317 | Test Sat 0.315
+2024-12-19 21:26:45 -           Train Acc L1 0.830 | Train Acc L2 0.753 | Test Acc L1 0.856 | Test Acc L2 0.768
+2024-12-19 21:26:50 - epoch 34 | loss 0.6836 | Train Sat 0.316 | Test Sat 0.315
+2024-12-19 21:26:50 -           Train Acc L1 0.830 | Train Acc L2 0.749 | Test Acc L1 0.855 | Test Acc L2 0.764
+2024-12-19 21:26:55 - epoch 35 | loss 0.6834 | Train Sat 0.317 | Test Sat 0.315
+2024-12-19 21:26:55 -           Train Acc L1 0.811 | Train Acc L2 0.745 | Test Acc L1 0.834 | Test Acc L2 0.763
+2024-12-19 21:27:00 - epoch 36 | loss 0.6857 | Train Sat 0.318 | Test Sat 0.315
+2024-12-19 21:27:00 -           Train Acc L1 0.828 | Train Acc L2 0.755 | Test Acc L1 0.851 | Test Acc L2 0.768
+2024-12-19 21:27:05 - epoch 37 | loss 0.6839 | Train Sat 0.317 | Test Sat 0.315
+2024-12-19 21:27:05 -           Train Acc L1 0.829 | Train Acc L2 0.751 | Test Acc L1 0.854 | Test Acc L2 0.766
+2024-12-19 21:27:10 - epoch 38 | loss 0.6834 | Train Sat 0.318 | Test Sat 0.315
+2024-12-19 21:27:10 -           Train Acc L1 0.824 | Train Acc L2 0.746 | Test Acc L1 0.848 | Test Acc L2 0.761
+2024-12-19 21:27:15 - epoch 39 | loss 0.6830 | Train Sat 0.317 | Test Sat 0.316
+2024-12-19 21:27:15 -           Train Acc L1 0.779 | Train Acc L2 0.751 | Test Acc L1 0.804 | Test Acc L2 0.769
+2024-12-19 21:27:20 - epoch 40 | loss 0.6834 | Train Sat 0.316 | Test Sat 0.316
+2024-12-19 21:27:20 -           Train Acc L1 0.793 | Train Acc L2 0.756 | Test Acc L1 0.817 | Test Acc L2 0.767
+2024-12-19 21:27:25 - epoch 41 | loss 0.6830 | Train Sat 0.317 | Test Sat 0.316
+2024-12-19 21:27:25 -           Train Acc L1 0.794 | Train Acc L2 0.747 | Test Acc L1 0.818 | Test Acc L2 0.764
+2024-12-19 21:27:30 - epoch 42 | loss 0.6840 | Train Sat 0.317 | Test Sat 0.314
+2024-12-19 21:27:30 -           Train Acc L1 0.790 | Train Acc L2 0.738 | Test Acc L1 0.814 | Test Acc L2 0.756
+2024-12-19 21:27:35 - epoch 43 | loss 0.6827 | Train Sat 0.320 | Test Sat 0.316
+2024-12-19 21:27:35 -           Train Acc L1 0.785 | Train Acc L2 0.751 | Test Acc L1 0.810 | Test Acc L2 0.766
+2024-12-19 21:27:40 - epoch 44 | loss 0.6832 | Train Sat 0.319 | Test Sat 0.316
+2024-12-19 21:27:40 -           Train Acc L1 0.791 | Train Acc L2 0.750 | Test Acc L1 0.820 | Test Acc L2 0.767
+2024-12-19 21:27:45 - epoch 45 | loss 0.6834 | Train Sat 0.317 | Test Sat 0.315
+2024-12-19 21:27:45 -           Train Acc L1 0.807 | Train Acc L2 0.741 | Test Acc L1 0.828 | Test Acc L2 0.753
+2024-12-19 21:27:50 - epoch 46 | loss 0.6822 | Train Sat 0.319 | Test Sat 0.316
+2024-12-19 21:27:50 -           Train Acc L1 0.815 | Train Acc L2 0.755 | Test Acc L1 0.834 | Test Acc L2 0.765
+2024-12-19 21:27:55 - epoch 47 | loss 0.6833 | Train Sat 0.319 | Test Sat 0.316
+2024-12-19 21:27:55 -           Train Acc L1 0.807 | Train Acc L2 0.751 | Test Acc L1 0.829 | Test Acc L2 0.766
+2024-12-19 21:28:00 - epoch 48 | loss 0.6825 | Train Sat 0.318 | Test Sat 0.316
+2024-12-19 21:28:00 -           Train Acc L1 0.824 | Train Acc L2 0.754 | Test Acc L1 0.843 | Test Acc L2 0.767
+2024-12-19 21:28:05 - epoch 49 | loss 0.6813 | Train Sat 0.318 | Test Sat 0.317
+2024-12-19 21:28:05 -           Train Acc L1 0.841 | Train Acc L2 0.754 | Test Acc L1 0.858 | Test Acc L2 0.766
+2024-12-19 21:28:10 - epoch 50 | loss 0.6825 | Train Sat 0.319 | Test Sat 0.317
+2024-12-19 21:28:10 -           Train Acc L1 0.841 | Train Acc L2 0.757 | Test Acc L1 0.859 | Test Acc L2 0.765
+2024-12-19 21:28:10 - 
+               precision    recall  f1-score   support
+
+        MQTT       1.00      0.87      0.93      4688
+      Benign       0.80      0.87      0.83      3000
+       Recon       0.99      0.89      0.94      2000
+ARP_Spoofing       0.46      0.71      0.56      1000
+
+    accuracy                           0.86     10688
+   macro avg       0.81      0.83      0.82     10688
+weighted avg       0.89      0.86      0.87     10688
+
+2024-12-19 21:28:10 - 
+                          precision    recall  f1-score   support
+
+MQTT-DDoS-Connect_Flood       0.90      0.97      0.93      1000
+MQTT-DDoS-Publish_Flood       0.99      0.76      0.86      1000
+ MQTT-DoS-Connect_Flood       0.89      0.92      0.91      1000
+ MQTT-DoS-Publish_Flood       0.83      0.99      0.91      1000
+    MQTT-Malformed_Data       0.51      0.54      0.52       688
+                 benign       0.80      0.87      0.83      3000
+        Recon-Port_Scan       0.71      0.17      0.28      1000
+          Recon-OS_Scan       0.56      0.88      0.68      1000
+           arp_spoofing       0.62      0.51      0.56      1000
+
+               accuracy                           0.77     10688
+              macro avg       0.76      0.73      0.72     10688
+           weighted avg       0.77      0.77      0.75     10688
+
+2024-12-19 21:28:11 - Weighted Accuracy: 0.812 
+
+
+2024-12-19 22:08:41 - epoch 0 | loss 0.8792 | Train Sat 0.171 | Test Sat 0.170
+2024-12-19 22:08:41 -           Train Acc L1 0.435 | Train Acc L2 0.474 | Test Acc L1 0.421 | Test Acc L2 0.433
+2024-12-19 22:08:46 - epoch 1 | loss 0.7961 | Train Sat 0.228 | Test Sat 0.228
+2024-12-19 22:08:46 -           Train Acc L1 0.553 | Train Acc L2 0.616 | Test Acc L1 0.598 | Test Acc L2 0.613
+2024-12-19 22:08:51 - epoch 2 | loss 0.7632 | Train Sat 0.245 | Test Sat 0.245
+2024-12-19 22:08:51 -           Train Acc L1 0.567 | Train Acc L2 0.655 | Test Acc L1 0.607 | Test Acc L2 0.652
+2024-12-19 22:08:57 - epoch 3 | loss 0.7490 | Train Sat 0.257 | Test Sat 0.258
+2024-12-19 22:08:57 -           Train Acc L1 0.574 | Train Acc L2 0.689 | Test Acc L1 0.615 | Test Acc L2 0.701
+2024-12-19 22:09:02 - epoch 4 | loss 0.7374 | Train Sat 0.269 | Test Sat 0.268
+2024-12-19 22:09:02 -           Train Acc L1 0.583 | Train Acc L2 0.712 | Test Acc L1 0.621 | Test Acc L2 0.727
+2024-12-19 22:09:07 - epoch 5 | loss 0.7310 | Train Sat 0.271 | Test Sat 0.272
+2024-12-19 22:09:08 -           Train Acc L1 0.582 | Train Acc L2 0.714 | Test Acc L1 0.622 | Test Acc L2 0.731
+2024-12-19 22:09:13 - epoch 6 | loss 0.7286 | Train Sat 0.276 | Test Sat 0.273
+2024-12-19 22:09:13 -           Train Acc L1 0.587 | Train Acc L2 0.711 | Test Acc L1 0.623 | Test Acc L2 0.733
+2024-12-19 22:09:18 - epoch 7 | loss 0.7266 | Train Sat 0.275 | Test Sat 0.274
+2024-12-19 22:09:18 -           Train Acc L1 0.583 | Train Acc L2 0.717 | Test Acc L1 0.621 | Test Acc L2 0.735
+2024-12-19 22:09:23 - epoch 8 | loss 0.7264 | Train Sat 0.275 | Test Sat 0.274
+2024-12-19 22:09:23 -           Train Acc L1 0.587 | Train Acc L2 0.718 | Test Acc L1 0.620 | Test Acc L2 0.733
+2024-12-19 22:09:29 - epoch 9 | loss 0.7251 | Train Sat 0.277 | Test Sat 0.275
+2024-12-19 22:09:29 -           Train Acc L1 0.583 | Train Acc L2 0.721 | Test Acc L1 0.619 | Test Acc L2 0.735
+2024-12-19 22:09:34 - epoch 10 | loss 0.7247 | Train Sat 0.279 | Test Sat 0.276
+2024-12-19 22:09:34 -           Train Acc L1 0.587 | Train Acc L2 0.722 | Test Acc L1 0.624 | Test Acc L2 0.738
+2024-12-19 22:09:40 - epoch 11 | loss 0.7218 | Train Sat 0.275 | Test Sat 0.275
+2024-12-19 22:09:40 -           Train Acc L1 0.593 | Train Acc L2 0.708 | Test Acc L1 0.626 | Test Acc L2 0.730
+2024-12-19 22:09:45 - epoch 12 | loss 0.7230 | Train Sat 0.281 | Test Sat 0.278
+2024-12-19 22:09:45 -           Train Acc L1 0.599 | Train Acc L2 0.726 | Test Acc L1 0.629 | Test Acc L2 0.738
+2024-12-19 22:09:50 - epoch 13 | loss 0.7203 | Train Sat 0.283 | Test Sat 0.280
+2024-12-19 22:09:50 -           Train Acc L1 0.610 | Train Acc L2 0.730 | Test Acc L1 0.644 | Test Acc L2 0.741
+2024-12-19 22:09:56 - epoch 14 | loss 0.7170 | Train Sat 0.285 | Test Sat 0.283
+2024-12-19 22:09:56 -           Train Acc L1 0.637 | Train Acc L2 0.730 | Test Acc L1 0.663 | Test Acc L2 0.744
+2024-12-19 22:10:01 - epoch 15 | loss 0.7158 | Train Sat 0.287 | Test Sat 0.285
+2024-12-19 22:10:01 -           Train Acc L1 0.640 | Train Acc L2 0.734 | Test Acc L1 0.669 | Test Acc L2 0.749
+2024-12-19 22:10:06 - epoch 16 | loss 0.7126 | Train Sat 0.287 | Test Sat 0.285
+2024-12-19 22:10:06 -           Train Acc L1 0.641 | Train Acc L2 0.735 | Test Acc L1 0.669 | Test Acc L2 0.753
+2024-12-19 22:10:12 - epoch 17 | loss 0.7158 | Train Sat 0.288 | Test Sat 0.287
+2024-12-19 22:10:12 -           Train Acc L1 0.641 | Train Acc L2 0.744 | Test Acc L1 0.673 | Test Acc L2 0.752
+2024-12-19 22:10:17 - epoch 18 | loss 0.7130 | Train Sat 0.291 | Test Sat 0.287
+2024-12-19 22:10:17 -           Train Acc L1 0.640 | Train Acc L2 0.742 | Test Acc L1 0.672 | Test Acc L2 0.757
+2024-12-19 22:10:22 - epoch 19 | loss 0.7104 | Train Sat 0.289 | Test Sat 0.286
+2024-12-19 22:10:22 -           Train Acc L1 0.645 | Train Acc L2 0.739 | Test Acc L1 0.673 | Test Acc L2 0.752
+2024-12-19 22:10:28 - epoch 20 | loss 0.7112 | Train Sat 0.291 | Test Sat 0.287
+2024-12-19 22:10:28 -           Train Acc L1 0.707 | Train Acc L2 0.748 | Test Acc L1 0.731 | Test Acc L2 0.756
+2024-12-19 22:10:33 - epoch 21 | loss 0.7086 | Train Sat 0.290 | Test Sat 0.287
+2024-12-19 22:10:33 -           Train Acc L1 0.643 | Train Acc L2 0.744 | Test Acc L1 0.674 | Test Acc L2 0.757
+2024-12-19 22:10:38 - epoch 22 | loss 0.7088 | Train Sat 0.291 | Test Sat 0.288
+2024-12-19 22:10:38 -           Train Acc L1 0.754 | Train Acc L2 0.746 | Test Acc L1 0.776 | Test Acc L2 0.753
+2024-12-19 22:10:44 - epoch 23 | loss 0.7106 | Train Sat 0.291 | Test Sat 0.288
+2024-12-19 22:10:44 -           Train Acc L1 0.764 | Train Acc L2 0.748 | Test Acc L1 0.783 | Test Acc L2 0.758
+2024-12-19 22:10:49 - epoch 24 | loss 0.7081 | Train Sat 0.291 | Test Sat 0.288
+2024-12-19 22:10:49 -           Train Acc L1 0.764 | Train Acc L2 0.741 | Test Acc L1 0.783 | Test Acc L2 0.752
+2024-12-19 22:10:54 - epoch 25 | loss 0.7077 | Train Sat 0.291 | Test Sat 0.289
+2024-12-19 22:10:54 -           Train Acc L1 0.765 | Train Acc L2 0.745 | Test Acc L1 0.785 | Test Acc L2 0.760
+2024-12-19 22:11:00 - epoch 26 | loss 0.7090 | Train Sat 0.292 | Test Sat 0.289
+2024-12-19 22:11:00 -           Train Acc L1 0.765 | Train Acc L2 0.746 | Test Acc L1 0.785 | Test Acc L2 0.758
+2024-12-19 22:11:05 - epoch 27 | loss 0.7094 | Train Sat 0.293 | Test Sat 0.290
+2024-12-19 22:11:05 -           Train Acc L1 0.762 | Train Acc L2 0.745 | Test Acc L1 0.785 | Test Acc L2 0.758
+2024-12-19 22:11:11 - epoch 28 | loss 0.7066 | Train Sat 0.292 | Test Sat 0.289
+2024-12-19 22:11:11 -           Train Acc L1 0.766 | Train Acc L2 0.747 | Test Acc L1 0.784 | Test Acc L2 0.754
+2024-12-19 22:11:16 - epoch 29 | loss 0.7073 | Train Sat 0.293 | Test Sat 0.290
+2024-12-19 22:11:16 -           Train Acc L1 0.765 | Train Acc L2 0.749 | Test Acc L1 0.785 | Test Acc L2 0.759
+2024-12-19 22:11:21 - epoch 30 | loss 0.7060 | Train Sat 0.293 | Test Sat 0.290
+2024-12-19 22:11:21 -           Train Acc L1 0.768 | Train Acc L2 0.749 | Test Acc L1 0.787 | Test Acc L2 0.759
+2024-12-19 22:11:27 - epoch 31 | loss 0.7067 | Train Sat 0.293 | Test Sat 0.290
+2024-12-19 22:11:27 -           Train Acc L1 0.768 | Train Acc L2 0.752 | Test Acc L1 0.787 | Test Acc L2 0.756
+2024-12-19 22:11:32 - epoch 32 | loss 0.7066 | Train Sat 0.292 | Test Sat 0.291
+2024-12-19 22:11:32 -           Train Acc L1 0.766 | Train Acc L2 0.747 | Test Acc L1 0.789 | Test Acc L2 0.758
+2024-12-19 22:11:37 - epoch 33 | loss 0.7082 | Train Sat 0.293 | Test Sat 0.290
+2024-12-19 22:11:37 -           Train Acc L1 0.774 | Train Acc L2 0.749 | Test Acc L1 0.791 | Test Acc L2 0.760
+2024-12-19 22:11:43 - epoch 34 | loss 0.7052 | Train Sat 0.293 | Test Sat 0.290
+2024-12-19 22:11:43 -           Train Acc L1 0.777 | Train Acc L2 0.746 | Test Acc L1 0.795 | Test Acc L2 0.754
+2024-12-19 22:11:48 - epoch 35 | loss 0.7045 | Train Sat 0.293 | Test Sat 0.292
+2024-12-19 22:11:48 -           Train Acc L1 0.777 | Train Acc L2 0.750 | Test Acc L1 0.797 | Test Acc L2 0.759
+2024-12-19 22:11:53 - epoch 36 | loss 0.7048 | Train Sat 0.296 | Test Sat 0.292
+2024-12-19 22:11:53 -           Train Acc L1 0.780 | Train Acc L2 0.739 | Test Acc L1 0.803 | Test Acc L2 0.751
+2024-12-19 22:11:59 - epoch 37 | loss 0.7084 | Train Sat 0.295 | Test Sat 0.291
+2024-12-19 22:11:59 -           Train Acc L1 0.784 | Train Acc L2 0.749 | Test Acc L1 0.805 | Test Acc L2 0.760
+2024-12-19 22:12:04 - epoch 38 | loss 0.7059 | Train Sat 0.296 | Test Sat 0.292
+2024-12-19 22:12:04 -           Train Acc L1 0.786 | Train Acc L2 0.750 | Test Acc L1 0.808 | Test Acc L2 0.761
+2024-12-19 22:12:09 - epoch 39 | loss 0.7063 | Train Sat 0.296 | Test Sat 0.291
+2024-12-19 22:12:09 -           Train Acc L1 0.781 | Train Acc L2 0.749 | Test Acc L1 0.801 | Test Acc L2 0.759
+2024-12-19 22:12:15 - epoch 40 | loss 0.7067 | Train Sat 0.296 | Test Sat 0.291
+2024-12-19 22:12:15 -           Train Acc L1 0.785 | Train Acc L2 0.748 | Test Acc L1 0.805 | Test Acc L2 0.758
+2024-12-19 22:12:20 - epoch 41 | loss 0.7052 | Train Sat 0.294 | Test Sat 0.292
+2024-12-19 22:12:20 -           Train Acc L1 0.788 | Train Acc L2 0.746 | Test Acc L1 0.808 | Test Acc L2 0.756
+2024-12-19 22:12:26 - epoch 42 | loss 0.7062 | Train Sat 0.296 | Test Sat 0.292
+2024-12-19 22:12:26 -           Train Acc L1 0.785 | Train Acc L2 0.749 | Test Acc L1 0.807 | Test Acc L2 0.761
+2024-12-19 22:12:31 - epoch 43 | loss 0.7052 | Train Sat 0.294 | Test Sat 0.292
+2024-12-19 22:12:31 -           Train Acc L1 0.782 | Train Acc L2 0.744 | Test Acc L1 0.805 | Test Acc L2 0.751
+2024-12-19 22:12:36 - epoch 44 | loss 0.7080 | Train Sat 0.297 | Test Sat 0.292
+2024-12-19 22:12:36 -           Train Acc L1 0.798 | Train Acc L2 0.749 | Test Acc L1 0.819 | Test Acc L2 0.760
+2024-12-19 22:12:42 - epoch 45 | loss 0.7036 | Train Sat 0.294 | Test Sat 0.292
+2024-12-19 22:12:42 -           Train Acc L1 0.788 | Train Acc L2 0.751 | Test Acc L1 0.809 | Test Acc L2 0.760
+2024-12-19 22:12:47 - epoch 46 | loss 0.7034 | Train Sat 0.296 | Test Sat 0.292
+2024-12-19 22:12:47 -           Train Acc L1 0.789 | Train Acc L2 0.747 | Test Acc L1 0.813 | Test Acc L2 0.760
+2024-12-19 22:12:52 - epoch 47 | loss 0.7041 | Train Sat 0.295 | Test Sat 0.293
+2024-12-19 22:12:52 -           Train Acc L1 0.789 | Train Acc L2 0.749 | Test Acc L1 0.812 | Test Acc L2 0.761
+2024-12-19 22:12:58 - epoch 48 | loss 0.7064 | Train Sat 0.295 | Test Sat 0.292
+2024-12-19 22:12:58 -           Train Acc L1 0.788 | Train Acc L2 0.744 | Test Acc L1 0.811 | Test Acc L2 0.758
+2024-12-19 22:13:03 - epoch 49 | loss 0.7054 | Train Sat 0.296 | Test Sat 0.292
+2024-12-19 22:13:03 -           Train Acc L1 0.799 | Train Acc L2 0.744 | Test Acc L1 0.818 | Test Acc L2 0.754
+2024-12-19 22:13:08 - epoch 50 | loss 0.7050 | Train Sat 0.296 | Test Sat 0.292
+2024-12-19 22:13:08 -           Train Acc L1 0.835 | Train Acc L2 0.752 | Test Acc L1 0.854 | Test Acc L2 0.761
+2024-12-19 22:13:09 - 
+               precision    recall  f1-score   support
+
+        MQTT       1.00      0.87      0.93      4688
+      Benign       0.80      0.85      0.82      3000
+       Recon       0.99      0.89      0.94      2000
+ARP_Spoofing       0.45      0.72      0.55      1000
+
+    accuracy                           0.85     10688
+   macro avg       0.81      0.83      0.81     10688
+weighted avg       0.89      0.85      0.87     10688
+
+2024-12-19 22:13:09 - 
+                          precision    recall  f1-score   support
+
+MQTT-DDoS-Connect_Flood       0.88      0.98      0.93      1000
+MQTT-DDoS-Publish_Flood       0.98      0.77      0.86      1000
+ MQTT-DoS-Connect_Flood       0.90      0.90      0.90      1000
+ MQTT-DoS-Publish_Flood       0.83      0.99      0.91      1000
+    MQTT-Malformed_Data       0.54      0.47      0.50       688
+                 benign       0.80      0.85      0.83      3000
+        Recon-Port_Scan       0.75      0.18      0.29      1000
+          Recon-OS_Scan       0.56      0.88      0.69      1000
+           arp_spoofing       0.56      0.57      0.56      1000
+
+               accuracy                           0.76     10688
+              macro avg       0.76      0.73      0.72     10688
+           weighted avg       0.77      0.76      0.74     10688
+
+2024-12-19 22:13:09 - Weighted Accuracy: 0.808 
+
+
