@@ -103,46 +103,72 @@ import numpy as np
 
 
 ##########################################################################################
-import matplotlib.pyplot as plt
-import numpy as np
+# import matplotlib.pyplot as plt
+# import numpy as np
 
-# Data for the plot
-dataset_sizes = ['5k', '10k', '30k']
-metrics = ['Accuracy', 'Precision', 'Recall', 'F1-Score']
+# # Data for the plot
+# dataset_sizes = ['5k', '10k', '30k']
+# metrics = ['Accuracy', 'Precision', 'Recall', 'F1-Score']
 
-# Performance metrics for each dataset size
-baseline_5k = [63, 61, 61, 60]
-lnn_5k = [68, 64, 65, 64]
+# # Performance metrics for each dataset size
+# baseline_5k = [63, 61, 61, 60]
+# lnn_5k = [68, 64, 65, 64]
 
-baseline_10k = [81, 79, 75, 75]
-lnn_10k = [85, 83, 84, 82]
+# baseline_10k = [81, 79, 75, 75]
+# lnn_10k = [85, 83, 84, 82]
 
-baseline_30k = [84, 83, 81, 81.5]
-lnn_30k = [84, 84, 83, 81]
+# baseline_30k = [84, 83, 81, 81.5]
+# lnn_30k = [84, 84, 83, 81]
 
-# Plot settings
-fig, axes = plt.subplots(3, 1, figsize=(6, 10), gridspec_kw={'hspace': 0.3})
-data_sizes = [baseline_5k, lnn_5k, baseline_10k, lnn_10k, baseline_30k, lnn_30k]
-titles = ['Dataset Size: 5k', 'Dataset Size: 10k', 'Dataset Size: 30k']
+# # Plot settings
+# fig, axes = plt.subplots(3, 1, figsize=(6, 10), gridspec_kw={'hspace': 0.3})
+# data_sizes = [baseline_5k, lnn_5k, baseline_10k, lnn_10k, baseline_30k, lnn_30k]
+# titles = ['Dataset Size: 5k', 'Dataset Size: 10k', 'Dataset Size: 30k']
 
-# Create plots for each dataset size
-for i, ax in enumerate(axes):
-    x = np.arange(len(metrics))
-    baseline = data_sizes[i * 2]
-    lnn = data_sizes[i * 2 + 1]
+# # Create plots for each dataset size
+# for i, ax in enumerate(axes):
+#     x = np.arange(len(metrics))
+#     baseline = data_sizes[i * 2]
+#     lnn = data_sizes[i * 2 + 1]
     
-    ax.bar(x - 0.1, baseline, width=0.2, label='Baseline')
-    ax.bar(x + 0.1, lnn, width=0.2, label='LNN')
-    ax.set_ylim(50, 95)
-    ax.set_ylabel('Scores (%)', fontsize=10)
-    ax.set_title(titles[i], fontsize=12)
-    ax.set_xticks(x)
-    ax.set_xticklabels(metrics, fontsize=10)
-    ax.legend(fontsize=10)
+#     ax.bar(x - 0.1, baseline, width=0.2, label='Baseline')
+#     ax.bar(x + 0.1, lnn, width=0.2, label='LNN')
+#     ax.set_ylim(50, 95)
+#     ax.set_ylabel('Scores (%)', fontsize=10)
+#     ax.set_title(titles[i], fontsize=12)
+#     ax.set_xticks(x)
+#     ax.set_xticklabels(metrics, fontsize=10)
+#     ax.legend(fontsize=10)
 
 
-# Adjust layout to minimize margins
-plt.subplots_adjust(left=0.1, right=0.95, top=0.95, bottom=0.05)
-fig.savefig("performance_margin_adjusted.png", format="png", dpi=300, bbox_inches='tight')
-plt.close(fig)  # Close the figure to free memory
+# # Adjust layout to minimize margins
+# plt.subplots_adjust(left=0.1, right=0.95, top=0.95, bottom=0.05)
+# fig.savefig("performance_margin_adjusted.png", format="png", dpi=300, bbox_inches='tight')
+# plt.close(fig)  # Close the figure to free memory
+##########################################################################################
+import pandas as pd
+
+# Load the dataset
+file_path = '/home/zyang44/Github/baseline_cicIOT/CICEVSE/Power Consumption/EVSE-B-PowerCombined.csv'  # Replace with your actual file path
+data = pd.read_csv(file_path)
+
+# Use only columns 1-6
+selected_columns = ['shunt_voltage', 'bus_voltage_V', 'current_mA', 'power_mW', 'State', 'Attack']
+subset_data = data[selected_columns]
+
+# Check unique classes in 'Attack' column
+print("Unique classes in 'Attack':", subset_data['Attack'].unique())
+
+# Sample 500 rows per class
+balanced_data = subset_data.groupby('Attack').apply(lambda x: x.sample(n=5000, random_state=42)).reset_index(drop=True)
+
+# Verify class distribution
+class_distribution = balanced_data['Attack'].value_counts()
+print("\nBalanced class distribution:")
+print(class_distribution)
+
+# Save the balanced dataset if needed
+balanced_data.to_csv('balanced_dataset_l.csv', index=False)
+print("\nBalanced dataset saved as 'balanced_dataset_l.csv'.")
+
 
