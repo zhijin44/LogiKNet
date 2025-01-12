@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 ###############################################################################
 # # Data for plotting
@@ -146,7 +147,6 @@ import numpy as np
 # fig.savefig("performance_margin_adjusted.png", format="png", dpi=300, bbox_inches='tight')
 # plt.close(fig)  # Close the figure to free memory
 ##########################################################################################
-import pandas as pd
 
 # Load the dataset
 file_path = '/home/zyang44/Github/baseline_cicIOT/CICEVSE/Power Consumption/EVSE-B-PowerCombined.csv'  # Replace with your actual file path
@@ -158,9 +158,13 @@ subset_data = data[selected_columns]
 
 # Check unique classes in 'Attack' column
 print("Unique classes in 'Attack':", subset_data['Attack'].unique())
+# Check the number of rows for each unique class in 'Attack'
+# class_counts = subset_data['Attack'].value_counts()
+# print("\nNumber of rows for each unique class in 'Attack':")
+# print(class_counts)
 
 # Sample 500 rows per class
-balanced_data = subset_data.groupby('Attack').apply(lambda x: x.sample(n=5000, random_state=42)).reset_index(drop=True)
+balanced_data = subset_data.groupby('Attack').apply(lambda x: x.sample(n=7000, random_state=42)).reset_index(drop=True)
 
 # Verify class distribution
 class_distribution = balanced_data['Attack'].value_counts()
