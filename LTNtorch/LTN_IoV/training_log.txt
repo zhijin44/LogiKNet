@@ -1,0 +1,3 @@
+2025-01-12 21:08:53 - Epoch 0: Train loss: 0.6334, Train SAT: 0.3795, Test SAT: 0.3789, Train Acc: 0.5044, Test Acc: 0.4968
+2025-01-12 21:09:00 - Epoch 1: Train loss: 0.6182, Train SAT: 0.3857, Test SAT: 0.3857, Train Acc: 0.5119, Test Acc: 0.5155
+2025-01-12 21:09:07 - Epoch 2: Train loss: 0.6140, Train SAT: 0.3831, Test SAT: 0.3837, Train Acc: 0.5088, Test Acc: 0.5050
