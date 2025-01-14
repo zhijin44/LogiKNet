@@ -31,3 +31,58 @@
 2025-01-12 21:17:11 - Epoch 27: Train loss: 0.5719, Train SAT: 0.4279, Test SAT: 0.4265, Train Acc: 0.5686, Test Acc: 0.5646
 2025-01-12 21:17:18 - Epoch 28: Train loss: 0.5720, Train SAT: 0.4293, Test SAT: 0.4267, Train Acc: 0.5725, Test Acc: 0.5698
 2025-01-12 21:17:26 - Epoch 29: Train loss: 0.5713, Train SAT: 0.4302, Test SAT: 0.4262, Train Acc: 0.5718, Test Acc: 0.5688
+
+
+2025-01-13 21:31:07 - Epoch 0: Train loss: 0.6378, Train SAT: 0.3771, Test SAT: 0.3762, Train Acc: 0.5050, Test Acc: 0.4976
+2025-01-13 21:31:14 - Epoch 1: Train loss: 0.6207, Train SAT: 0.3808, Test SAT: 0.3804, Train Acc: 0.5079, Test Acc: 0.5052
+2025-01-13 21:31:22 - Epoch 2: Train loss: 0.6159, Train SAT: 0.3845, Test SAT: 0.3850, Train Acc: 0.5075, Test Acc: 0.5044
+2025-01-13 21:46:55 - Epoch 0: Train loss: 0.6403, Train SAT: 0.3780, Test SAT: 0.3766, Train Acc: 0.4985, Test Acc: 0.4930
+2025-01-13 21:47:02 - Epoch 1: Train loss: 0.6178, Train SAT: 0.3846, Test SAT: 0.3856, Train Acc: 0.5123, Test Acc: 0.5138
+2025-01-13 21:47:10 - Epoch 2: Train loss: 0.6143, Train SAT: 0.3852, Test SAT: 0.3863, Train Acc: 0.5029, Test Acc: 0.5084
+2025-01-13 21:47:17 - Epoch 3: Train loss: 0.6139, Train SAT: 0.3826, Test SAT: 0.3837, Train Acc: 0.5064, Test Acc: 0.5104
+2025-01-13 21:47:25 - Epoch 4: Train loss: 0.6133, Train SAT: 0.3878, Test SAT: 0.3884, Train Acc: 0.5196, Test Acc: 0.5203
+2025-01-13 21:47:32 - Epoch 5: Train loss: 0.6122, Train SAT: 0.3890, Test SAT: 0.3890, Train Acc: 0.5214, Test Acc: 0.5212
+2025-01-13 21:47:39 - Epoch 6: Train loss: 0.6116, Train SAT: 0.3864, Test SAT: 0.3875, Train Acc: 0.5172, Test Acc: 0.5207
+2025-01-13 21:47:46 - Epoch 7: Train loss: 0.6114, Train SAT: 0.3909, Test SAT: 0.3911, Train Acc: 0.5222, Test Acc: 0.5237
+2025-01-13 21:47:54 - Epoch 8: Train loss: 0.6095, Train SAT: 0.3923, Test SAT: 0.3927, Train Acc: 0.5337, Test Acc: 0.5285
+2025-01-13 21:48:01 - Epoch 9: Train loss: 0.6057, Train SAT: 0.3950, Test SAT: 0.3954, Train Acc: 0.5329, Test Acc: 0.5290
+2025-01-13 21:48:08 - Epoch 10: Train loss: 0.5981, Train SAT: 0.4093, Test SAT: 0.4086, Train Acc: 0.5626, Test Acc: 0.5631
+2025-01-13 21:48:16 - Epoch 11: Train loss: 0.5852, Train SAT: 0.4174, Test SAT: 0.4147, Train Acc: 0.5616, Test Acc: 0.5565
+2025-01-13 21:48:23 - Epoch 12: Train loss: 0.5804, Train SAT: 0.4222, Test SAT: 0.4206, Train Acc: 0.5615, Test Acc: 0.5601
+2025-01-13 21:48:30 - Epoch 13: Train loss: 0.5787, Train SAT: 0.4241, Test SAT: 0.4219, Train Acc: 0.5628, Test Acc: 0.5597
+2025-01-13 21:48:38 - Epoch 14: Train loss: 0.5771, Train SAT: 0.4258, Test SAT: 0.4233, Train Acc: 0.5676, Test Acc: 0.5645
+2025-01-13 21:48:45 - Epoch 15: Train loss: 0.5758, Train SAT: 0.4239, Test SAT: 0.4213, Train Acc: 0.5633, Test Acc: 0.5588
+2025-01-13 21:48:52 - Epoch 16: Train loss: 0.5761, Train SAT: 0.4263, Test SAT: 0.4235, Train Acc: 0.5659, Test Acc: 0.5612
+2025-01-13 21:48:59 - Epoch 17: Train loss: 0.5755, Train SAT: 0.4261, Test SAT: 0.4235, Train Acc: 0.5691, Test Acc: 0.5666
+2025-01-13 21:49:07 - Epoch 18: Train loss: 0.5759, Train SAT: 0.4260, Test SAT: 0.4249, Train Acc: 0.5672, Test Acc: 0.5672
+2025-01-13 21:49:14 - Epoch 19: Train loss: 0.5746, Train SAT: 0.4266, Test SAT: 0.4245, Train Acc: 0.5668, Test Acc: 0.5651
+2025-01-13 21:49:21 - Epoch 20: Train loss: 0.5744, Train SAT: 0.4260, Test SAT: 0.4228, Train Acc: 0.5628, Test Acc: 0.5598
+2025-01-13 21:49:29 - Epoch 21: Train loss: 0.5743, Train SAT: 0.4247, Test SAT: 0.4226, Train Acc: 0.5636, Test Acc: 0.5615
+2025-01-13 21:49:36 - Epoch 22: Train loss: 0.5745, Train SAT: 0.4267, Test SAT: 0.4246, Train Acc: 0.5676, Test Acc: 0.5658
+2025-01-13 21:49:43 - Epoch 23: Train loss: 0.5739, Train SAT: 0.4269, Test SAT: 0.4248, Train Acc: 0.5655, Test Acc: 0.5626
+2025-01-13 21:49:50 - Epoch 24: Train loss: 0.5738, Train SAT: 0.4245, Test SAT: 0.4221, Train Acc: 0.5601, Test Acc: 0.5602
+2025-01-13 21:49:58 - Epoch 25: Train loss: 0.5744, Train SAT: 0.4261, Test SAT: 0.4251, Train Acc: 0.5665, Test Acc: 0.5644
+2025-01-13 21:50:05 - Epoch 26: Train loss: 0.5726, Train SAT: 0.4283, Test SAT: 0.4255, Train Acc: 0.5648, Test Acc: 0.5618
+2025-01-13 21:50:13 - Epoch 27: Train loss: 0.5737, Train SAT: 0.4260, Test SAT: 0.4239, Train Acc: 0.5663, Test Acc: 0.5627
+2025-01-13 21:50:20 - Epoch 28: Train loss: 0.5732, Train SAT: 0.4259, Test SAT: 0.4239, Train Acc: 0.5635, Test Acc: 0.5623
+2025-01-13 21:50:27 - Epoch 29: Train loss: 0.5735, Train SAT: 0.4281, Test SAT: 0.4262, Train Acc: 0.5712, Test Acc: 0.5683
+2025-01-13 21:50:35 - Epoch 30: Train loss: 0.5719, Train SAT: 0.4233, Test SAT: 0.4204, Train Acc: 0.5656, Test Acc: 0.5603
+2025-01-13 21:50:42 - Epoch 31: Train loss: 0.5736, Train SAT: 0.4249, Test SAT: 0.4230, Train Acc: 0.5578, Test Acc: 0.5535
+2025-01-13 21:50:49 - Epoch 32: Train loss: 0.5727, Train SAT: 0.4278, Test SAT: 0.4254, Train Acc: 0.5717, Test Acc: 0.5693
+2025-01-13 21:50:57 - Epoch 33: Train loss: 0.5725, Train SAT: 0.4267, Test SAT: 0.4239, Train Acc: 0.5654, Test Acc: 0.5597
+2025-01-13 21:51:04 - Epoch 34: Train loss: 0.5720, Train SAT: 0.4283, Test SAT: 0.4262, Train Acc: 0.5691, Test Acc: 0.5653
+2025-01-13 21:51:04 - 
+                precision    recall  f1-score   support
+
+    syn-flood       0.83      0.86      0.85      2100
+    tcp-flood       0.34      0.42      0.38      2100
+         none       0.75      0.62      0.68      2100
+cryptojacking       0.90      0.85      0.87      2100
+  syn-stealth       0.31      0.20      0.24      2100
+    vuln-scan       0.33      0.48      0.39      2100
+     Backdoor       0.62      0.52      0.57      2100
+
+     accuracy                           0.57     14700
+    macro avg       0.58      0.57      0.57     14700
+ weighted avg       0.58      0.57      0.57     14700
+

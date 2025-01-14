@@ -145,7 +145,7 @@ train_label = torch.tensor(train_label.to_numpy()).long().to(device)
 test_label = torch.tensor(test_label.to_numpy()).long().to(device)
 
 # 创建模型实例并移动到设备 
-mlp = MLP(layer_sizes=(5, 32, 64, 7)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
+mlp = MLP(layer_sizes=(5, 32, 32, 7)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
 # create train and test loader (train_sex_labels, train_color_labels)
 batch_size = 64
 train_loader = DataLoader(train_data, train_label, batch_size, shuffle=True)
@@ -154,7 +154,7 @@ test_loader = DataLoader(test_data, test_label, batch_size, shuffle=False)
 print("Training model...")
 criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(mlp.parameters(), lr=0.001)
-for epoch in range(30):
+for epoch in range(35):
     running_loss = 0.0
     mlp.train()  # Set model to training mode
     for data, labels in train_loader:
@@ -180,3 +180,27 @@ for epoch in range(30):
           f"Train Acc {train_acc:.4f} | Test Acc {test_acc:.4f}")
 
 ################################################################################
+# 1. Function to print precision, recall, and F1 scores
+def print_metrics(loader, model, class_names):
+    all_preds = []
+    all_labels = []
+    
+    # Collect predictions and true labels
+    for data, labels in loader:
+        outputs = model(data).detach().cpu().numpy()
+        preds = np.argmax(outputs, axis=-1)
+        all_preds.extend(preds)
+        all_labels.extend(labels.cpu().numpy())
+    
+    # Compute metrics
+    report = classification_report(
+        all_labels,
+        all_preds,
+        target_names=class_names,
+        zero_division=0,  # Handle any undefined metrics
+    )
+    print("Classification Report:\n")
+    print(report)
+
+class_names = list(attack_mapping.keys())
+print_metrics(test_loader, mlp, class_names)

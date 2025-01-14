@@ -59,7 +59,7 @@ def compute_sat_level(loader):
     mean_sat /= len(loader)
     return mean_sat
 
-def compute_metrics(loader, model, class_names_L1, class_names_L2):
+def compute_metrics_hierarchy(loader, model, class_names_L1, class_names_L2):
     all_preds_L1 = []
     all_labels_L1 = []
     all_preds_L2 = []
@@ -192,15 +192,21 @@ print("LTN setting done.")
 #####################Training#################################
 mlp = MLP(layer_sizes=(5, 32, 64, 7)).to(device)
 P = ltn.Predicate(LogitsToPredicate(mlp))
+P_1 = ltn.Predicate(LogitsToPredicate(mlp))
 
 batch_size = 64
 train_loader = DataLoader(train_data, train_label, batch_size, shuffle=True)
 test_loader = DataLoader(test_data, test_label, batch_size, shuffle=False)
 
 print("Start training...")
-optimizer = torch.optim.Adam(P.parameters(), lr=0.0015)
+# optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
+# Single optimizer for all parameters
+optimizer = torch.optim.Adam([
+    {'params': P.parameters()},
+    {'params': P_1.parameters()}
+], lr=0.001)
 
-for epoch in range(30):
+for epoch in range(35):
     train_loss = 0.0
 
     for batch_idx, (data, labels) in enumerate(train_loader):
@@ -230,6 +236,15 @@ for epoch in range(30):
             if variable.value.size(0) != 0:
                 valid_forall_expressions.append(Forall(variable, P(variable, label)))
         
+        # variables_labels_1 = [
+        #     (x_syn_stealth, l_syn_stealth),
+        #     (x_vuln_scan, l_vuln_scan)
+        # ]
+        # for variable, label in variables_labels_1:
+        #     if variable.value.size(0) != 0:
+        #         valid_forall_expressions.append(Forall(variable, P_1(variable, label)))
+        
+
         sat_agg = SatAgg(*valid_forall_expressions)
         loss = 1. - sat_agg     # loss = -torch.mean(sat_agg)
         loss.backward()
@@ -241,3 +256,30 @@ for epoch in range(30):
     train_acc, test_acc = compute_accuracy(train_loader), compute_accuracy(test_loader)
     print(f"Epoch {epoch}: Train loss: {train_loss:.4f}, Train SAT: {train_sat:.4f}, Test SAT: {test_sat:.4f}, Train Acc: {train_acc:.4f}, Test Acc: {test_acc:.4f}")
     logging.info(f"Epoch {epoch}: Train loss: {train_loss:.4f}, Train SAT: {train_sat:.4f}, Test SAT: {test_sat:.4f}, Train Acc: {train_acc:.4f}, Test Acc: {test_acc:.4f}")
+
+#####################Evaluation#################################
+def print_metrics(loader, model, class_names):
+    all_preds = []
+    all_labels = []
+    
+    # Collect predictions and true labels
+    for data, labels in loader:
+        outputs = model(data).detach().cpu().numpy()
+        preds = np.argmax(outputs, axis=-1)
+        all_preds.extend(preds)
+        all_labels.extend(labels.cpu().numpy())
+    
+    # Compute metrics
+    report = classification_report(
+        all_labels,
+        all_preds,
+        target_names=class_names,
+        zero_division=0,  # Handle any undefined metrics
+    )
+    print("Classification Report:\n")
+    print(report)
+    return report
+
+class_names = list(attack_mapping.keys())
+report = print_metrics(test_loader, mlp, class_names)
+logging.info(f"\n {report}")
