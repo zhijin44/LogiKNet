@@ -38,6 +38,8 @@ def compute_sat_level(loader):
         x_vuln_scan = ltn.Variable("x_vuln_scan", data[labels == 5]) 
         x_Backdoor = ltn.Variable("x_Backdoor", data[labels == 6])
 
+        x_cryptojacking_current = ltn.Variable("x_cryptojacking_current", data[labels == 3])
+
         # rules - single class exclusive
         valid_forall_expressions = []
         variables_labels = [
@@ -179,6 +181,8 @@ Not = ltn.Connective(ltn.fuzzy_ops.NotStandard())
 # And = ltn.Connective(custom_fuzzy_ops.AndProd())
 And = ltn.Connective(ltn.fuzzy_ops.AndProd())
 Or = ltn.Connective(ltn.fuzzy_ops.OrProbSum())
+# higher is p and easier is the existential quantification to be satisfied, 
+# while harder is the universal quantification to be satisfied.
 Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
 Exists = ltn.Quantifier(ltn.fuzzy_ops.AggregPMean(p=2), quantifier="e")
 SatAgg = ltn.fuzzy_ops.SatAgg()
@@ -192,21 +196,21 @@ print("LTN setting done.")
 #####################Training#################################
 mlp = MLP(layer_sizes=(5, 32, 64, 7)).to(device)
 P = ltn.Predicate(LogitsToPredicate(mlp))
-P_1 = ltn.Predicate(LogitsToPredicate(mlp))
+# P_1 = ltn.Predicate(LogitsToPredicate(mlp))
 
 batch_size = 64
 train_loader = DataLoader(train_data, train_label, batch_size, shuffle=True)
 test_loader = DataLoader(test_data, test_label, batch_size, shuffle=False)
 
 print("Start training...")
-# optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
-# Single optimizer for all parameters
-optimizer = torch.optim.Adam([
-    {'params': P.parameters()},
-    {'params': P_1.parameters()}
-], lr=0.001)
+optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
+# # Single optimizer for all parameters
+# optimizer = torch.optim.Adam([
+#     {'params': P.parameters()},
+#     {'params': P_1.parameters()}
+# ], lr=0.001)
 
-for epoch in range(35):
+for epoch in range(1):
     train_loss = 0.0
 
     for batch_idx, (data, labels) in enumerate(train_loader):
@@ -236,13 +240,7 @@ for epoch in range(35):
             if variable.value.size(0) != 0:
                 valid_forall_expressions.append(Forall(variable, P(variable, label)))
         
-        # variables_labels_1 = [
-        #     (x_syn_stealth, l_syn_stealth),
-        #     (x_vuln_scan, l_vuln_scan)
-        # ]
-        # for variable, label in variables_labels_1:
-        #     if variable.value.size(0) != 0:
-        #         valid_forall_expressions.append(Forall(variable, P_1(variable, label)))
+        
         
 
         sat_agg = SatAgg(*valid_forall_expressions)

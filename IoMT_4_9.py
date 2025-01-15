@@ -115,7 +115,7 @@ def compute_accuracy(loader):
 
 
 # 定义处理后的数据文件路径
-processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_tiny_4_9.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_train_s_4_9.csv'
 processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/19classes/filtered_test_4_9.csv'
 
 # 特征列名称
@@ -152,6 +152,7 @@ training_data = pd.read_csv(processed_train_file)
 test_data = pd.read_csv(processed_test_file)
 
 
+label_L1_mapping = {"MQTT": 0, "Benign": 1, "Recon": 2, "ARP_Spoofing": 3}
 label_L2_mapping = {"MQTT-DDoS-Connect_Flood": 0, "MQTT-DDoS-Publish_Flood": 1, 
                     "MQTT-DoS-Connect_Flood": 2, "MQTT-DoS-Publish_Flood": 3,
                     "MQTT-Malformed_Data": 4, "benign": 5, 
@@ -159,6 +160,8 @@ label_L2_mapping = {"MQTT-DDoS-Connect_Flood": 0, "MQTT-DDoS-Publish_Flood": 1,
                     "arp_spoofing": 8}
 train_label_L2 = training_data.pop("label_L2").map(label_L2_mapping)
 test_label_L2 = test_data.pop("label_L2").map(label_L2_mapping)
+# train_label_L2 = training_data.pop("label_L1").map(label_L1_mapping)
+# test_label_L2 = test_data.pop("label_L1").map(label_L1_mapping)
 
 
 print("Scaling data...")
@@ -175,7 +178,7 @@ train_label_L2 = torch.tensor(train_label_L2.to_numpy()).long().to(device)
 test_label_L2 = torch.tensor(test_label_L2.to_numpy()).long().to(device)
 
 # 创建模型实例并移动到设备 
-mlp = MLP(layer_sizes=(9, 32, 32, 9)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
+mlp = MLP(layer_sizes=(9, 32, 32, 4)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
 # P = ltn.Predicate(LogitsToPredicate(mlp))
 # Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
 # SatAgg = ltn.fuzzy_ops.SatAgg()
@@ -275,12 +278,14 @@ class_names = [
     'Recon-OS_Scan',
     'arp_spoofing'
 ]
-
+class_names_L1 = ["MQTT", "Benign", "Recon", "ARP_Spoofing"]
 # Print metrics
 print_metrics(test_loader, mlp, class_names)
+# print_metrics(test_loader, mlp, class_names_L1)
+
 
 # Save confusion matrix
-save_confusion_matrix(test_loader, mlp, class_names, filename="4-9.png")
+# save_confusion_matrix(test_loader, mlp, class_names, filename="4-9.png")
 
 
 # L2 to L1 mapping
@@ -332,4 +337,4 @@ def compute_l1_metrics(loader, model, class_names):
     print(report)
 
 # Example usage
-compute_l1_metrics(test_loader, mlp, class_names)
+# compute_l1_metrics(test_loader, mlp, class_names)
