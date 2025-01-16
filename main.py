@@ -176,3 +176,43 @@ import pandas as pd
 # print("\nBalanced dataset saved as 'balanced_dataset_l.csv'.")
 
 #######################################data statistics################################################
+# Load the datasets
+file_path1 = '/home/zyang44/Github/baseline_cicIOT/CICEVSE/Power Consumption/EVSE-B-PowerCombined.csv'
+file_path2 = '/home/zyang44/Github/baseline_cicIOT/IoV_power_L.csv'
+data1 = pd.read_csv(file_path1)
+data2 = pd.read_csv(file_path2)
+
+# Get unique attack types in the same order
+attack_types = data1['Attack'].unique()
+
+# Compute statistics for 'current_mA' for both datasets
+attack_stats1 = {attack: data1[data1['Attack'] == attack]['current_mA'].describe() for attack in attack_types}
+attack_stats2 = {attack: data2[data2['Attack'] == attack]['current_mA'].describe() for attack in attack_types}
+
+# Print the statistics for all attack types in both datasets
+for attack in attack_types:
+    print(f"\n{attack} 'current_mA' statistics for dataset 1:")
+    print(attack_stats1[attack])
+    print(f"\n{attack} 'current_mA' statistics for dataset 2:")
+    print(attack_stats2[attack])
+
+# Plot the statistics for all attack types in both datasets
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 16))
+
+# Boxplot for each attack type in dataset 1
+ax1.boxplot([data1[data1['Attack'] == attack]['current_mA'] for attack in attack_types], labels=attack_types)
+ax1.set_xlabel("Attack Type", fontsize=12)
+ax1.set_ylabel("current_mA", fontsize=12)
+ax1.set_title("Dataset 1 (all): Distribution of 'current_mA' for Different Attack Types", fontsize=14)
+ax1.grid(True)
+
+# Boxplot for each attack type in dataset 2
+ax2.boxplot([data2[data2['Attack'] == attack]['current_mA'] for attack in attack_types], labels=attack_types)
+ax2.set_xlabel("Attack Type", fontsize=12)
+ax2.set_ylabel("current_mA", fontsize=12)
+ax2.set_title("Dataset 2 (5k each class): Distribution of 'current_mA' for Different Attack Types", fontsize=14)
+ax2.grid(True)
+
+# Save and show plot
+plt.tight_layout()
+plt.savefig("comparison_current_mA_attack_types.png", dpi=300)
