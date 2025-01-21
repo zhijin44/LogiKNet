@@ -241,8 +241,6 @@ for epoch in range(1):
                 valid_forall_expressions.append(Forall(variable, P(variable, label)))
         
         
-        
-
         sat_agg = SatAgg(*valid_forall_expressions)
         loss = 1. - sat_agg     # loss = -torch.mean(sat_agg)
         loss.backward()
