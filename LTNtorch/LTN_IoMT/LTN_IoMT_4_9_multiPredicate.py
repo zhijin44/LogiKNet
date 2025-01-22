@@ -376,6 +376,7 @@ test_loader = DataLoaderMulti(test_data, (test_label_L1, test_label_L2), batch_s
 print("Create train and test loader done.")
 print("Start training...")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0015)
+criterion = torch.nn.CrossEntropyLoss()
 
 for epoch in range(30):
     train_loss = 0.0
@@ -434,6 +435,11 @@ for epoch in range(30):
             Forall([x_ARP_Spoofing, x_arp_spoofing], Implies(P(x_ARP_Spoofing, l_ARP_Spoofing), P(x_arp_spoofing, l_arp_spoofing)), p = 5),
             Forall([x_Recon, x_Recon_OS_Scan, x_Recon_Port_Scan], Implies(P(x_Recon, l_Recon), And(P(x_Recon_OS_Scan, l_Recon_OS_Scan), P(x_Recon_Port_Scan, l_Recon_Port_Scan))), p = 5),
         ) # the satisfaction level over the current batch
+
+        # cross-entropy loss
+        # outputs = mlp(data, training=True)
+
+        # loss = criterion(outputs, label_L2)
         loss = 1. - sat_agg
         loss.backward()
         optimizer.step()

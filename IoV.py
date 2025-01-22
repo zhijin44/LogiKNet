@@ -117,25 +117,25 @@ from sklearn.model_selection import train_test_split
 
 # Load the balanced dataset
 file_path = '/home/zyang44/Github/baseline_cicIOT/IoV_power_L.csv'  # Replace with your actual file path
-# selected_columns = ['shunt_voltage', 'bus_voltage_V', 'current_mA', 'power_mW', 'Attack']
-selected_columns = ['shunt_voltage', 'bus_voltage_V', 'current_mA', 'power_mW', 'Attack-Group']
-balanced_data = pd.read_csv(file_path)
+selected_columns = ['shunt_voltage', 'bus_voltage_V', 'current_mA', 'power_mW', 'State', 'Attack', 'Attack-Group']
+balanced_data = pd.read_csv(file_path)[selected_columns]
 
+state_mapping = {'idle': 0, 'charging': 1}
 attack_mapping = {'syn-flood': 0, 'tcp-flood': 1, 'none': 2, 'cryptojacking': 3, 'syn-stealth': 4, 'vuln-scan': 5, 'Backdoor': 6}
 attack_group_mapping = {'DoS': 0, 'none': 1, 'host-attack': 2, 'recon': 3}
-state_mapping = {'idle': 0, 'charging': 1}
 # Map the State and Attack columns
 balanced_data['State'] = balanced_data['State'].map(state_mapping)
+balanced_data['Attack'] = balanced_data['Attack'].map(attack_mapping)
 balanced_data['Attack-Group'] = balanced_data['Attack-Group'].map(attack_group_mapping)
-# balanced_data['Attack'] = balanced_data['Attack'].map(attack_mapping)
-
-# numerical_ranges = balanced_data.describe().loc[['min', 'max']]
+balanced_data.pop('Attack-Group')
 
 # Split the data into train (70%) and test (30%) sets
 train_data, test_data = train_test_split(balanced_data, test_size=0.3, random_state=42, stratify=balanced_data['Attack'])
+# train_data, test_data = train_test_split(balanced_data, test_size=0.3, random_state=42, stratify=balanced_data['Attack-Group'])
+
 # Extract the Attack column as the label
-# train_label, test_label = train_data.pop('Attack'), test_data.pop('Attack')
-train_label, test_label = train_data.pop('Attack-Group'), test_data.pop('Attack-Group')
+train_label, test_label = train_data.pop('Attack'), test_data.pop('Attack')
+# train_label, test_label = train_data.pop('Attack-Group'), test_data.pop('Attack-Group')
 
 print("Scaling data...")
 scaler = StandardScaler()
@@ -150,7 +150,7 @@ train_label = torch.tensor(train_label.to_numpy()).long().to(device)
 test_label = torch.tensor(test_label.to_numpy()).long().to(device)
 
 # 创建模型实例并移动到设备 
-mlp = MLP(layer_sizes=(5, 32, 32, 4)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
+mlp = MLP(layer_sizes=(5, 32, 32, 7)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
 # create train and test loader (train_sex_labels, train_color_labels)
 batch_size = 64
 train_loader = DataLoader(train_data, train_label, batch_size, shuffle=True)
@@ -159,7 +159,7 @@ test_loader = DataLoader(test_data, test_label, batch_size, shuffle=False)
 print("Training model...")
 criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(mlp.parameters(), lr=0.001)
-for epoch in range(35):
+for epoch in range(30):
     running_loss = 0.0
     mlp.train()  # Set model to training mode
     for data, labels in train_loader:
@@ -169,7 +169,7 @@ for epoch in range(35):
         outputs = mlp(data, training=True)
         
         # Calculate loss using CrossEntropyLoss
-        loss = criterion(outputs, labels)
+        loss = criterion(outputs, labels) 
         
         # Backward pass and optimization
         loss.backward()
@@ -207,6 +207,6 @@ def print_metrics(loader, model, class_names):
     print("Classification Report:\n")
     print(report)
 
-# class_names = list(attack_mapping.keys())
-class_names = list(attack_group_mapping.keys())
+class_names = list(attack_mapping.keys())
+# class_names = list(attack_group_mapping.keys())
 print_metrics(test_loader, mlp, class_names)

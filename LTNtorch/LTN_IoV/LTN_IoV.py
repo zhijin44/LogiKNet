@@ -38,8 +38,6 @@ def compute_sat_level(loader):
         x_vuln_scan = ltn.Variable("x_vuln_scan", data[labels == 5]) 
         x_Backdoor = ltn.Variable("x_Backdoor", data[labels == 6])
 
-        x_cryptojacking_current = ltn.Variable("x_cryptojacking_current", data[labels == 3])
-
         # rules - single class exclusive
         valid_forall_expressions = []
         variables_labels = [
@@ -151,12 +149,17 @@ def plot_confusion_matrix(loader, model, class_names, filename="LTN_IoV_confMat.
 
 #####################Preprocess#################################
 file_path = '/home/zyang44/Github/baseline_cicIOT/IoV_power_L.csv'
-balanced_data = pd.read_csv(file_path)
+selected_columns = ['shunt_voltage', 'bus_voltage_V', 'current_mA', 'power_mW', 'State', 'Attack', 'Attack-Group']
+balanced_data = pd.read_csv(file_path)[selected_columns]
 
-attack_mapping = {'syn-flood': 0, 'tcp-flood': 1, 'none': 2, 'cryptojacking': 3, 'syn-stealth': 4, 'vuln-scan': 5, 'Backdoor': 6}
 state_mapping = {'idle': 0, 'charging': 1}
+attack_mapping = {'syn-flood': 0, 'tcp-flood': 1, 'none': 2, 'cryptojacking': 3, 'syn-stealth': 4, 'vuln-scan': 5, 'Backdoor': 6}
+attack_group_mapping = {'DoS': 0, 'none': 1, 'host-attack': 2, 'recon': 3}
+# Map the State and Attack columns
 balanced_data['State'] = balanced_data['State'].map(state_mapping)
 balanced_data['Attack'] = balanced_data['Attack'].map(attack_mapping)
+balanced_data['Attack-Group'] = balanced_data['Attack-Group'].map(attack_group_mapping)
+balanced_data.pop('Attack-Group')
 
 # Split the data into train (70%) and test (30%) sets
 train_data, test_data = train_test_split(balanced_data, test_size=0.3, random_state=42, stratify=balanced_data['Attack'])
@@ -198,19 +201,22 @@ mlp = MLP(layer_sizes=(5, 32, 64, 7)).to(device)
 P = ltn.Predicate(LogitsToPredicate(mlp))
 # P_1 = ltn.Predicate(LogitsToPredicate(mlp))
 
-batch_size = 64
+batch_size = 256
 train_loader = DataLoader(train_data, train_label, batch_size, shuffle=True)
 test_loader = DataLoader(test_data, test_label, batch_size, shuffle=False)
 
 print("Start training...")
+criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
+alpha = 0  # Scaling factor for axiom_loss
+beta = 1   # Scaling factor for data_loss
 # # Single optimizer for all parameters
 # optimizer = torch.optim.Adam([
 #     {'params': P.parameters()},
 #     {'params': P_1.parameters()}
 # ], lr=0.001)
 
-for epoch in range(1):
+for epoch in range(50):
     train_loss = 0.0
 
     for batch_idx, (data, labels) in enumerate(train_loader):
@@ -242,7 +248,12 @@ for epoch in range(1):
         
         
         sat_agg = SatAgg(*valid_forall_expressions)
-        loss = 1. - sat_agg     # loss = -torch.mean(sat_agg)
+        axiom_loss = (1. - sat_agg)
+
+        outputs = mlp(data, training=True)
+        data_loss = criterion(outputs, labels)
+        # print(f"Data loss: {data_loss:.4f}, Axiom loss: {axiom_loss:.4f}")
+        loss = alpha * axiom_loss + beta * data_loss
         loss.backward()
         optimizer.step()
         train_loss += loss.item()
