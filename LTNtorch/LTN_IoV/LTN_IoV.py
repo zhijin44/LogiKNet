@@ -5,10 +5,10 @@ import ltn
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, classification_report
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
+from PIL import Image
 from utils import MLP, LogitsToPredicate, DataLoader
 import custom_fuzzy_ops as custom_fuzzy_ops
 import logging
@@ -151,6 +151,7 @@ def plot_confusion_matrix(loader, model, class_names, filename="LTN_IoV_confMat.
 file_path = '/home/zyang44/Github/baseline_cicIOT/IoV_power_L.csv'
 selected_columns = ['shunt_voltage', 'bus_voltage_V', 'current_mA', 'power_mW', 'State', 'Attack', 'Attack-Group']
 balanced_data = pd.read_csv(file_path)[selected_columns]
+balanced_data = balanced_data.groupby('Attack', group_keys=False).apply(lambda x: x.sample(frac=1/3))
 
 state_mapping = {'idle': 0, 'charging': 1}
 attack_mapping = {'syn-flood': 0, 'tcp-flood': 1, 'none': 2, 'cryptojacking': 3, 'syn-stealth': 4, 'vuln-scan': 5, 'Backdoor': 6}
@@ -197,26 +198,23 @@ l_syn_flood, l_tcp_flood, l_none, l_cryptojacking, l_syn_stealth, l_vuln_scan, l
 print("LTN setting done.")
 
 #####################Training#################################
-mlp = MLP(layer_sizes=(5, 32, 64, 7)).to(device)
+mlp = MLP(layer_sizes=(5, 32, 64, 64, 64, 32, 7)).to(device)
 P = ltn.Predicate(LogitsToPredicate(mlp))
 # P_1 = ltn.Predicate(LogitsToPredicate(mlp))
 
-batch_size = 256
+batch_size = 64
 train_loader = DataLoader(train_data, train_label, batch_size, shuffle=True)
 test_loader = DataLoader(test_data, test_label, batch_size, shuffle=False)
 
 print("Start training...")
 criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(P.parameters(), lr=0.001)
-alpha = 0  # Scaling factor for axiom_loss
+alpha = 1  # Scaling factor for axiom_loss
 beta = 1   # Scaling factor for data_loss
-# # Single optimizer for all parameters
-# optimizer = torch.optim.Adam([
-#     {'params': P.parameters()},
-#     {'params': P_1.parameters()}
-# ], lr=0.001)
 
-for epoch in range(50):
+train_accs = []
+test_accs = []
+for epoch in range(100):
     train_loss = 0.0
 
     for batch_idx, (data, labels) in enumerate(train_loader):
@@ -261,6 +259,8 @@ for epoch in range(50):
 
     train_sat, test_sat = compute_sat_level(train_loader), compute_sat_level(test_loader)
     train_acc, test_acc = compute_accuracy(train_loader), compute_accuracy(test_loader)
+    train_accs.append(train_acc)
+    test_accs.append(test_acc)
     print(f"Epoch {epoch}: Train loss: {train_loss:.4f}, Train SAT: {train_sat:.4f}, Test SAT: {test_sat:.4f}, Train Acc: {train_acc:.4f}, Test Acc: {test_acc:.4f}")
     logging.info(f"Epoch {epoch}: Train loss: {train_loss:.4f}, Train SAT: {train_sat:.4f}, Test SAT: {test_sat:.4f}, Train Acc: {train_acc:.4f}, Test Acc: {test_acc:.4f}")
 
@@ -290,3 +290,18 @@ def print_metrics(loader, model, class_names):
 class_names = list(attack_mapping.keys())
 report = print_metrics(test_loader, mlp, class_names)
 logging.info(f"\n {report}")
+
+# to plot the convergence of the training and testing accuracy (on the saved plot)
+# 2. to plot the convergence of the training and testing accuracy
+def plot_convergence(train_accs, test_accs, filename="LTN_IoV_convergence.png"):
+    plt.plot(train_accs, label='Train Accuracy')
+    plt.plot(test_accs, label='Test Accuracy')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    # plt.ylim(40, 65)  # Set the y-axis limits
+    plt.legend()
+    plt.savefig(filename, dpi=300)
+    plt.close()
+
+plot_convergence(train_accs, test_accs, filename="LTN_IoV_convergence_small.png")
+logging.info(f"LTN_convergence_small_a1b1: \n {train_accs} \n {test_accs}")

@@ -7,7 +7,18 @@ import matplotlib.pyplot as plt
 warnings.filterwarnings('ignore')
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report, confusion_matrix, ConfusionMatrixDisplay
+import logging
+import sys
 
+# Set up logging
+log_file = "/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoV/training_log.txt"
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S',
+                    handlers=[
+                        logging.FileHandler(log_file),
+                        logging.StreamHandler(sys.stdout)  # This allows printing to both console and log file
+                    ])
 
 class MLP(torch.nn.Module):
     """
@@ -119,6 +130,7 @@ from sklearn.model_selection import train_test_split
 file_path = '/home/zyang44/Github/baseline_cicIOT/IoV_power_L.csv'  # Replace with your actual file path
 selected_columns = ['shunt_voltage', 'bus_voltage_V', 'current_mA', 'power_mW', 'State', 'Attack', 'Attack-Group']
 balanced_data = pd.read_csv(file_path)[selected_columns]
+# balanced_data = balanced_data.groupby('Attack', group_keys=False).apply(lambda x: x.sample(frac=1/3))
 
 state_mapping = {'idle': 0, 'charging': 1}
 attack_mapping = {'syn-flood': 0, 'tcp-flood': 1, 'none': 2, 'cryptojacking': 3, 'syn-stealth': 4, 'vuln-scan': 5, 'Backdoor': 6}
@@ -159,18 +171,18 @@ test_loader = DataLoader(test_data, test_label, batch_size, shuffle=False)
 print("Training model...")
 criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(mlp.parameters(), lr=0.001)
-for epoch in range(30):
+
+train_accs = []
+test_accs = []
+for epoch in range(100):
     running_loss = 0.0
     mlp.train()  # Set model to training mode
     for data, labels in train_loader:
         optimizer.zero_grad()
-
         # Forward pass through MLP to get logits
         outputs = mlp(data, training=True)
-        
         # Calculate loss using CrossEntropyLoss
         loss = criterion(outputs, labels) 
-        
         # Backward pass and optimization
         loss.backward()
         optimizer.step()
@@ -181,6 +193,8 @@ for epoch in range(30):
     # Calculate accuracy after each epoch
     train_acc = compute_accuracy(train_loader)
     test_acc = compute_accuracy(test_loader)
+    train_accs.append(train_acc) 
+    test_accs.append(test_acc)
     print(f"Epoch [{epoch+1}] | Loss: {running_loss/len(train_loader):.4f} | "
           f"Train Acc {train_acc:.4f} | Test Acc {test_acc:.4f}")
 
@@ -210,3 +224,18 @@ def print_metrics(loader, model, class_names):
 class_names = list(attack_mapping.keys())
 # class_names = list(attack_group_mapping.keys())
 print_metrics(test_loader, mlp, class_names)
+
+# 2. to plot the convergence of the training and testing accuracy
+def plot_convergence(train_accs, test_accs, filename=None):
+    plt.figure()
+    plt.plot(train_accs, label='Train Accuracy')
+    plt.plot(test_accs, label='Test Accuracy')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    # plt.ylim(40, 65)  # Set the y-axis limits (commented out to avoid restricting the plot)
+    plt.legend()
+    plt.savefig(filename, dpi=300)
+    plt.close()
+
+plot_convergence(train_accs, test_accs, "IoV_convergence")
+logging.info(f"\n IoV_convergence: \n {train_accs} \n {test_accs}")
