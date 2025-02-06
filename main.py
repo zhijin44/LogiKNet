@@ -148,32 +148,32 @@ import pandas as pd
 # plt.close(fig)  # Close the figure to free memory
 ##########################################################################################
 
-# Load the dataset
-file_path = '/home/zyang44/Github/baseline_cicIOT/CICEVSE/Power Consumption/EVSE-B-PowerCombined.csv'  # Replace with your actual file path
-data = pd.read_csv(file_path)
+# # Load the dataset
+# file_path = '/home/zyang44/Github/baseline_cicIOT/CICEVSE/Power Consumption/EVSE-B-PowerCombined.csv'  # Replace with your actual file path
+# data = pd.read_csv(file_path)
 
-# Use only columns 1-6
-selected_columns = ['shunt_voltage', 'bus_voltage_V', 'current_mA', 'power_mW', 'State', 'Attack', 'Attack-Group']
-subset_data = data[selected_columns]
+# # Use only columns 1-6
+# selected_columns = ['shunt_voltage', 'bus_voltage_V', 'current_mA', 'power_mW', 'State', 'Attack', 'Attack-Group']
+# subset_data = data[selected_columns]
 
-# Check unique classes in 'Attack' column
-print("Unique classes in 'Attack':", subset_data['Attack'].unique())
-# Check the number of rows for each unique class in 'Attack'
-# class_counts = subset_data['Attack'].value_counts()
-# print("\nNumber of rows for each unique class in 'Attack':")
-# print(class_counts)
+# # Check unique classes in 'Attack' column
+# print("Unique classes in 'Attack':", subset_data['Attack'].unique())
+# # Check the number of rows for each unique class in 'Attack'
+# # class_counts = subset_data['Attack'].value_counts()
+# # print("\nNumber of rows for each unique class in 'Attack':")
+# # print(class_counts)
 
-# Sample 500 rows per class
-balanced_data = subset_data.groupby('Attack').apply(lambda x: x.sample(n=7000, random_state=42)).reset_index(drop=True)
+# # Sample 500 rows per class
+# balanced_data = subset_data.groupby('Attack').apply(lambda x: x.sample(n=7000, random_state=42)).reset_index(drop=True)
 
-# Verify class distribution
-class_distribution = balanced_data['Attack'].value_counts()
-print("\nBalanced class distribution:")
-print(class_distribution)
+# # Verify class distribution
+# class_distribution = balanced_data['Attack'].value_counts()
+# print("\nBalanced class distribution:")
+# print(class_distribution)
 
-# Save the balanced dataset if needed
-balanced_data.to_csv('IoV_power_L.csv', index=False)
-print("\nBalanced dataset saved as 'IoV_power_L.csv'.")
+# # Save the balanced dataset if needed
+# balanced_data.to_csv('IoV_power_L.csv', index=False)
+# print("\nBalanced dataset saved as 'IoV_power_L.csv'.")
 
 #######################################data statistics################################################
 # # Load the datasets
