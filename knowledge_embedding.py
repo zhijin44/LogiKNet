@@ -106,7 +106,7 @@ SatAgg = ltn.fuzzy_ops.SatAgg()
 params = list(L.parameters())
 optimizer = torch.optim.Adam(params, lr=0.001)
 
-for epoch in range(1):
+for epoch in range(200):
     if epoch <= 200:
         p_exists = 1
     else:

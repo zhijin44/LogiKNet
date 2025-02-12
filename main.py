@@ -216,3 +216,18 @@ import pandas as pd
 # # Save and show plot
 # plt.tight_layout()
 # plt.savefig("comparison_current_mA_attack_types.png", dpi=300)
+
+
+
+
+import torch
+
+print(f"PyTorch version: {torch.__version__}")
+print(f"CUDA available: {torch.cuda.is_available()}")
+print(f"CUDA version: {torch.version.cuda}")
+
+# Test CUDA functionality
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+    x = torch.tensor([1.0, 2.0, 3.0]).to(device)
+    print(f"Tensor is on device: {x.device}")
