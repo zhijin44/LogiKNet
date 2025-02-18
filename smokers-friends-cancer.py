@@ -133,3 +133,67 @@ for epoch in range(1000):
     if epoch % 20 == 0:
         print(" epoch %d | loss %.4f | Train Sat %.3f | Phi1 Sat %.3f | Phi2 Sat %.3f" % (epoch, loss,
                     sat_agg, phi1(), phi2()))
+        
+
+import pandas as pd
+import numpy as np
+import math
+import matplotlib.pyplot as plt
+
+pd.options.display.max_rows=999
+pd.options.display.max_columns=999
+pd.set_option('display.width',1000)
+pd.options.display.float_format = '{:,.2f}'.format
+
+def plt_heatmap(df, vmin=None, vmax=None):
+    plt.pcolor(df, vmin=vmin, vmax=vmax)
+    plt.yticks(np.arange(0.5,len(df.index),1),df.index)
+    plt.xticks(np.arange(0.5,len(df.columns),1),df.columns)
+    plt.colorbar()
+
+pd.set_option('precision',2)
+
+df_smokes_cancer_facts = pd.DataFrame(
+        np.array([[(x in smokes), (x in cancer) if x in g1 else math.nan] for x in g]),
+        columns=["S(x)","C(x)"],
+        index=list('abcdefghijklmn'))
+df_friends_ah_facts = pd.DataFrame(
+        np.array([[((x,y) in friends) if x<y else math.nan for x in g1] for y in g1]),
+        index = list('abcdefgh'),
+        columns = list('abcdefgh'))
+df_friends_in_facts = pd.DataFrame(
+        np.array([[((x,y) in friends) if x<y else math.nan for x in g2] for y in g2]),
+        index = list('ijklmn'),
+        columns = list('ijklmn'))
+
+p = ltn.Variable("p", torch.stack([i.value for i in g.values()]))
+q = ltn.Variable("q", torch.stack([i.value for i in g.values()]))
+
+df_smokes_cancer = pd.DataFrame(
+        torch.stack([S(p).value, C(p).value], dim=1).detach().numpy(),
+        columns=["S(x)","C(x)"],
+        index=list('abcdefghijklmn'))
+
+pred_friends = F(p, q).value
+df_friends_ah = pd.DataFrame(
+        pred_friends[:8,:8].detach().numpy(),
+        index=list('abcdefgh'),
+        columns=list('abcdefgh'))
+df_friends_in = pd.DataFrame(
+        pred_friends[8:,8:].detach().numpy(),
+        index=list('ijklmn'),
+        columns=list('ijklmn'))
+plt.rcParams['font.size'] = 12
+plt.rcParams['axes.linewidth'] = 1
+
+plt.figure(figsize=(12,3))
+plt.subplot(131)
+plt_heatmap(df_smokes_cancer_facts, vmin=0, vmax=1)
+plt.subplot(132)
+plt.title("F(x,y) in Group 1")
+plt_heatmap(df_friends_ah_facts, vmin=0, vmax=1)
+plt.subplot(133)
+plt.title("F(x,y) in Group 2")
+plt_heatmap(df_friends_in_facts, vmin=0, vmax=1)
+#plt.savefig('ex_smokes_givenfacts.pdf')
+plt.show()

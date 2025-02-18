@@ -1,5 +1,6 @@
 import ltn
 import torch
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 
 # Nodes information
 raw_nodes = {
@@ -23,8 +24,8 @@ raw_nodes = {
 }
 # Convert raw_nodes to LTN constants
 embedding_size = 2
-# nodes = {k: ltn.Constant(torch.rand((embedding_size,)), trainable=True) for k, v in raw_nodes.items()}
-nodes = {k: ltn.Constant(torch.tensor(v)) for k, v in raw_nodes.items()}
+nodes = {k: ltn.Constant(torch.rand((embedding_size,)), trainable=True) for k, v in raw_nodes.items()}
+# nodes = {k: ltn.Constant(torch.tensor(v, device=device)) for k, v in raw_nodes.items()}
 
 
 # Links information
@@ -72,6 +73,7 @@ class MLP(torch.nn.Module):
         self.sigmoid = torch.nn.Sigmoid()
         self.linear_layers = torch.nn.ModuleList([torch.nn.Linear(layer_sizes[i - 1], layer_sizes[i])
                                                   for i in range(1, len(layer_sizes))])
+        self.to(device)
 
     def forward(self, *x):
         """
@@ -86,6 +88,7 @@ class MLP(torch.nn.Module):
             x = x[0]
         else:
             x = torch.cat(x, dim=1)
+        x = x.to(device)
         for layer in self.linear_layers[:-1]:
             x = self.elu(layer(x))
         out = self.sigmoid(self.linear_layers[-1](x))
@@ -103,12 +106,16 @@ Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
 SatAgg = ltn.fuzzy_ops.SatAgg()
 
 
+# define logical formula phi
+
+
+criterion = torch.nn.CrossEntropyLoss()
 params = list(L.parameters())
 optimizer = torch.optim.Adam(params, lr=0.001)
 
 for epoch in range(200):
     if epoch <= 200:
-        p_exists = 1
+        p_exists = 2
     else:
         p_exists = 6
     optimizer.zero_grad()
@@ -117,22 +124,21 @@ for epoch in range(200):
     y_ = ltn.Variable("y", torch.stack([i.value for i in nodes.values()]))
     
     sat_agg = SatAgg(
-        *[L(nodes[source], nodes[target]) for (source, target) in links] 
-    )
+        *[L(nodes[source], nodes[target]) for (source, target) in links],
 
-    sat_agg_anti_reflexive = SatAgg(
-        Forall([x_], Not(L(x_, x_)), p = 5)
-    )
-    sat_agg_symm = SatAgg(
+        # Link is anti-reflexive
+        Forall([x_], Not(L(x_, x_)), p = 5),
+        # Link is symmetric
         Forall([x_, y_], Implies(L(x_, y_), L(y_, x_)), p = 5)
     )
+
 
     loss = 1. - sat_agg
     loss.backward()
     optimizer.step()
 
-    # if epoch % 20 == 0:
-    #     print(" epoch %d | loss %.4f | Train Sat %.3f" % (epoch, loss, (sat_agg, sat_agg_anti_reflexive, sat_agg_symm)))
+    if epoch % 20 == 0:
+        print(" epoch %d | loss %.4f | Train Sat %.3f" % (epoch, loss, sat_agg))
 
 
 
@@ -141,10 +147,10 @@ for epoch in range(200):
 
 # for (x, y) in links:
 # print(L(one_node, another_node))
-print(L(nodes["Berlin"], nodes["Hamburg"]))
-print(L(nodes["Berlin"], nodes["Stuttgart"]))
-print(L(nodes["Berlin"], nodes["Hannover"]))
-print(SatAgg(L(nodes["Berlin"], nodes["Hamburg"]), L(nodes["Berlin"], nodes["Hannover"]), L(nodes["Berlin"], nodes["Stuttgart"])))
+# print(L(nodes["Berlin"], nodes["Hamburg"]))
+# print(L(nodes["Berlin"], nodes["Stuttgart"]))
+# print(L(nodes["Berlin"], nodes["Hannover"]))
+# print(SatAgg(L(nodes["Berlin"], nodes["Hamburg"]), L(nodes["Berlin"], nodes["Hannover"]), L(nodes["Berlin"], nodes["Stuttgart"])))
 # for (source, target) in links:
-#     print(L(nodes[source], nodes[target]))
-#     print(SatAgg(L(nodes[source], nodes[target])))
+#     print(L(nodes[source], nodes[target]).value)
+#     print(SatAgg(L(nodes[source], nodes[target])).data)
