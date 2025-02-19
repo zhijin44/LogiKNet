@@ -140,6 +140,12 @@ for epoch in range(200):
     if epoch % 20 == 0:
         print(" epoch %d | loss %.4f | Train Sat %.3f" % (epoch, loss, sat_agg))
 
+source = "Berlin"
+target = "Stuttgart"
+print(L(nodes[source], nodes[target]).value)
+# print the output of L when inputs links are not in the links
+not_in_links = [("Berlin", "Stuttgart"), ("Stuttgart", "Berlin"), ("Berlin", "Berlin"), ("Stuttgart", "Stuttgart")]
+invalid_link_sat = SatAgg(*[L(nodes[source], nodes[target]) for (source, target) in links])
 
 
 
