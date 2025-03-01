@@ -7485,3 +7485,124 @@ MQTT-DDoS-Publish_Flood       0.99      0.77      0.87      1000
 2025-01-14 23:19:52 - Weighted Accuracy: 0.729 
 
 
+2025-02-26 14:56:00,106 - epoch 0 | loss 0.8017 | Train Sat 0.228 | Test Sat 0.233 | Train Acc 0.338 | Test Acc 0.328
+2025-02-26 14:56:00,128 - Macro Recall: 0.3349, Macro Precision: 0.3012, Macro F1-Score: 0.2897
+2025-02-26 14:56:00,128 - Scores by Class:
+2025-02-26 14:56:00,128 - Class ARP_Spoofing: Recall: 0.783939, Precision: 0.620272, F1: 0.692568
+2025-02-26 14:56:00,128 - Class Benign: Recall: 0.049713, Precision: 0.371429, F1: 0.087690
+2025-02-26 14:56:00,128 - Class MQTT: Recall: 0.000000, Precision: 0.000000, F1: 0.000000
+2025-02-26 14:56:00,128 - Class Recon: Recall: 0.434034, Precision: 0.361465, F1: 0.394440
+2025-02-26 14:56:00,129 - Class TCP_IP-DDOS: Recall: 0.722753, Precision: 0.443142, F1: 0.549419
+2025-02-26 14:56:00,129 - Class TCP_IP-DOS: Recall: 0.019120, Precision: 0.011001, F1: 0.013966
+
+
+
+2025-02-26 14:57:37,404 - epoch 0 | loss 0.8058 | Train Sat 0.221 | Test Sat 0.223 | Train Acc 0.320 | Test Acc 0.308
+2025-02-26 14:57:53,764 - epoch 1 | loss 0.7615 | Train Sat 0.253 | Test Sat 0.258 | Train Acc 0.380 | Test Acc 0.372
+2025-02-26 14:58:10,667 - epoch 2 | loss 0.7336 | Train Sat 0.280 | Test Sat 0.283 | Train Acc 0.414 | Test Acc 0.399
+2025-02-26 14:58:26,589 - epoch 3 | loss 0.7092 | Train Sat 0.302 | Test Sat 0.301 | Train Acc 0.414 | Test Acc 0.391
+2025-02-26 14:58:43,862 - epoch 4 | loss 0.6880 | Train Sat 0.323 | Test Sat 0.323 | Train Acc 0.514 | Test Acc 0.505
+2025-02-26 14:59:01,824 - epoch 5 | loss 0.6662 | Train Sat 0.346 | Test Sat 0.342 | Train Acc 0.554 | Test Acc 0.537
+2025-02-26 14:59:19,644 - epoch 6 | loss 0.6407 | Train Sat 0.374 | Test Sat 0.372 | Train Acc 0.581 | Test Acc 0.557
+2025-02-26 14:59:37,424 - epoch 7 | loss 0.6111 | Train Sat 0.403 | Test Sat 0.403 | Train Acc 0.709 | Test Acc 0.704
+2025-02-26 14:59:55,070 - epoch 8 | loss 0.5866 | Train Sat 0.426 | Test Sat 0.428 | Train Acc 0.711 | Test Acc 0.709
+2025-02-26 15:00:12,872 - epoch 9 | loss 0.5632 | Train Sat 0.446 | Test Sat 0.449 | Train Acc 0.710 | Test Acc 0.710
+2025-02-26 15:00:30,649 - epoch 10 | loss 0.5483 | Train Sat 0.460 | Test Sat 0.464 | Train Acc 0.704 | Test Acc 0.698
+2025-02-26 15:00:48,439 - epoch 11 | loss 0.5347 | Train Sat 0.474 | Test Sat 0.480 | Train Acc 0.718 | Test Acc 0.707
+2025-02-26 15:01:06,212 - epoch 12 | loss 0.5218 | Train Sat 0.485 | Test Sat 0.477 | Train Acc 0.713 | Test Acc 0.703
+2025-02-26 15:01:23,868 - epoch 13 | loss 0.5131 | Train Sat 0.492 | Test Sat 0.499 | Train Acc 0.718 | Test Acc 0.716
+2025-02-26 15:01:41,702 - epoch 14 | loss 0.5030 | Train Sat 0.501 | Test Sat 0.504 | Train Acc 0.728 | Test Acc 0.702
+2025-02-26 15:01:59,519 - epoch 15 | loss 0.4955 | Train Sat 0.506 | Test Sat 0.510 | Train Acc 0.731 | Test Acc 0.701
+2025-02-26 15:02:17,352 - epoch 16 | loss 0.4894 | Train Sat 0.515 | Test Sat 0.513 | Train Acc 0.736 | Test Acc 0.706
+2025-02-26 15:02:35,301 - epoch 17 | loss 0.4812 | Train Sat 0.521 | Test Sat 0.527 | Train Acc 0.729 | Test Acc 0.723
+2025-02-26 15:02:53,135 - epoch 18 | loss 0.4773 | Train Sat 0.526 | Test Sat 0.522 | Train Acc 0.739 | Test Acc 0.719
+2025-02-26 15:03:10,925 - epoch 19 | loss 0.4715 | Train Sat 0.531 | Test Sat 0.533 | Train Acc 0.740 | Test Acc 0.720
+2025-02-26 15:03:27,255 - epoch 20 | loss 0.4676 | Train Sat 0.535 | Test Sat 0.539 | Train Acc 0.744 | Test Acc 0.742
+2025-02-26 15:03:43,250 - epoch 21 | loss 0.4639 | Train Sat 0.538 | Test Sat 0.548 | Train Acc 0.744 | Test Acc 0.743
+2025-02-26 15:03:59,056 - epoch 22 | loss 0.4600 | Train Sat 0.542 | Test Sat 0.538 | Train Acc 0.744 | Test Acc 0.743
+2025-02-26 15:04:15,105 - epoch 23 | loss 0.4579 | Train Sat 0.544 | Test Sat 0.549 | Train Acc 0.742 | Test Acc 0.721
+2025-02-26 15:04:31,091 - epoch 24 | loss 0.4534 | Train Sat 0.549 | Test Sat 0.544 | Train Acc 0.745 | Test Acc 0.733
+2025-02-26 15:04:46,973 - epoch 25 | loss 0.4519 | Train Sat 0.550 | Test Sat 0.551 | Train Acc 0.746 | Test Acc 0.744
+2025-02-26 15:05:02,910 - epoch 26 | loss 0.4486 | Train Sat 0.551 | Test Sat 0.560 | Train Acc 0.746 | Test Acc 0.744
+2025-02-26 15:05:18,720 - epoch 27 | loss 0.4484 | Train Sat 0.555 | Test Sat 0.549 | Train Acc 0.748 | Test Acc 0.743
+2025-02-26 15:05:34,606 - epoch 28 | loss 0.4452 | Train Sat 0.556 | Test Sat 0.551 | Train Acc 0.743 | Test Acc 0.720
+2025-02-26 15:05:50,624 - epoch 29 | loss 0.4440 | Train Sat 0.557 | Test Sat 0.550 | Train Acc 0.748 | Test Acc 0.744
+2025-02-26 15:06:06,961 - epoch 30 | loss 0.4413 | Train Sat 0.560 | Test Sat 0.561 | Train Acc 0.747 | Test Acc 0.745
+2025-02-26 15:06:22,922 - epoch 31 | loss 0.4397 | Train Sat 0.561 | Test Sat 0.566 | Train Acc 0.746 | Test Acc 0.726
+2025-02-26 15:06:38,807 - epoch 32 | loss 0.4386 | Train Sat 0.561 | Test Sat 0.550 | Train Acc 0.747 | Test Acc 0.746
+2025-02-26 15:06:54,783 - epoch 33 | loss 0.4398 | Train Sat 0.563 | Test Sat 0.566 | Train Acc 0.747 | Test Acc 0.736
+2025-02-26 15:07:10,601 - epoch 34 | loss 0.4351 | Train Sat 0.564 | Test Sat 0.565 | Train Acc 0.748 | Test Acc 0.746
+2025-02-26 15:07:26,557 - epoch 35 | loss 0.4361 | Train Sat 0.565 | Test Sat 0.559 | Train Acc 0.747 | Test Acc 0.736
+2025-02-26 15:07:42,543 - epoch 36 | loss 0.4353 | Train Sat 0.566 | Test Sat 0.563 | Train Acc 0.750 | Test Acc 0.745
+2025-02-26 15:07:58,553 - epoch 37 | loss 0.4352 | Train Sat 0.567 | Test Sat 0.572 | Train Acc 0.748 | Test Acc 0.736
+2025-02-26 15:08:14,546 - epoch 38 | loss 0.4338 | Train Sat 0.568 | Test Sat 0.563 | Train Acc 0.749 | Test Acc 0.746
+2025-02-26 15:08:30,295 - epoch 39 | loss 0.4312 | Train Sat 0.569 | Test Sat 0.569 | Train Acc 0.750 | Test Acc 0.746
+2025-02-26 15:08:46,207 - epoch 40 | loss 0.4306 | Train Sat 0.569 | Test Sat 0.572 | Train Acc 0.748 | Test Acc 0.747
+2025-02-26 15:09:02,073 - epoch 41 | loss 0.4287 | Train Sat 0.570 | Test Sat 0.576 | Train Acc 0.753 | Test Acc 0.727
+2025-02-26 15:09:18,038 - epoch 42 | loss 0.4293 | Train Sat 0.571 | Test Sat 0.570 | Train Acc 0.751 | Test Acc 0.747
+2025-02-26 15:09:34,061 - epoch 43 | loss 0.4269 | Train Sat 0.572 | Test Sat 0.568 | Train Acc 0.754 | Test Acc 0.749
+2025-02-26 15:09:49,906 - epoch 44 | loss 0.4288 | Train Sat 0.574 | Test Sat 0.571 | Train Acc 0.753 | Test Acc 0.749
+2025-02-26 15:10:05,862 - epoch 45 | loss 0.4266 | Train Sat 0.575 | Test Sat 0.565 | Train Acc 0.758 | Test Acc 0.749
+2025-02-26 15:10:21,703 - epoch 46 | loss 0.4257 | Train Sat 0.576 | Test Sat 0.569 | Train Acc 0.755 | Test Acc 0.737
+2025-02-26 15:10:37,675 - epoch 47 | loss 0.4243 | Train Sat 0.576 | Test Sat 0.577 | Train Acc 0.756 | Test Acc 0.749
+2025-02-26 15:10:53,438 - epoch 48 | loss 0.4243 | Train Sat 0.577 | Test Sat 0.565 | Train Acc 0.756 | Test Acc 0.750
+2025-02-26 15:11:09,338 - epoch 49 | loss 0.4232 | Train Sat 0.577 | Test Sat 0.567 | Train Acc 0.758 | Test Acc 0.749
+2025-02-26 15:11:25,387 - epoch 50 | loss 0.4221 | Train Sat 0.579 | Test Sat 0.569 | Train Acc 0.756 | Test Acc 0.724
+2025-02-26 15:11:41,181 - epoch 51 | loss 0.4222 | Train Sat 0.580 | Test Sat 0.580 | Train Acc 0.757 | Test Acc 0.750
+2025-02-26 15:11:57,092 - epoch 52 | loss 0.4220 | Train Sat 0.580 | Test Sat 0.572 | Train Acc 0.756 | Test Acc 0.750
+2025-02-26 15:12:12,748 - epoch 53 | loss 0.4210 | Train Sat 0.578 | Test Sat 0.575 | Train Acc 0.759 | Test Acc 0.749
+2025-02-26 15:12:28,802 - epoch 54 | loss 0.4211 | Train Sat 0.580 | Test Sat 0.574 | Train Acc 0.760 | Test Acc 0.749
+2025-02-26 15:12:44,692 - epoch 55 | loss 0.4190 | Train Sat 0.581 | Test Sat 0.572 | Train Acc 0.757 | Test Acc 0.749
+2025-02-26 15:13:00,636 - epoch 56 | loss 0.4208 | Train Sat 0.580 | Test Sat 0.573 | Train Acc 0.760 | Test Acc 0.740
+2025-02-26 15:13:18,279 - epoch 57 | loss 0.4195 | Train Sat 0.581 | Test Sat 0.577 | Train Acc 0.759 | Test Acc 0.749
+2025-02-26 15:13:35,972 - epoch 58 | loss 0.4199 | Train Sat 0.582 | Test Sat 0.575 | Train Acc 0.760 | Test Acc 0.750
+2025-02-26 15:13:53,777 - epoch 59 | loss 0.4175 | Train Sat 0.582 | Test Sat 0.580 | Train Acc 0.758 | Test Acc 0.750
+2025-02-26 15:14:11,450 - epoch 60 | loss 0.4169 | Train Sat 0.582 | Test Sat 0.574 | Train Acc 0.752 | Test Acc 0.738
+2025-02-26 15:14:29,310 - epoch 61 | loss 0.4182 | Train Sat 0.584 | Test Sat 0.577 | Train Acc 0.757 | Test Acc 0.740
+2025-02-26 15:14:47,182 - epoch 62 | loss 0.4170 | Train Sat 0.583 | Test Sat 0.575 | Train Acc 0.757 | Test Acc 0.750
+2025-02-26 15:15:04,113 - epoch 63 | loss 0.4166 | Train Sat 0.583 | Test Sat 0.576 | Train Acc 0.759 | Test Acc 0.740
+2025-02-26 15:15:20,136 - epoch 64 | loss 0.4159 | Train Sat 0.584 | Test Sat 0.575 | Train Acc 0.757 | Test Acc 0.750
+2025-02-26 15:15:36,053 - epoch 65 | loss 0.4162 | Train Sat 0.584 | Test Sat 0.576 | Train Acc 0.758 | Test Acc 0.740
+2025-02-26 15:15:52,000 - epoch 66 | loss 0.4153 | Train Sat 0.584 | Test Sat 0.580 | Train Acc 0.761 | Test Acc 0.749
+2025-02-26 15:16:07,807 - epoch 67 | loss 0.4159 | Train Sat 0.584 | Test Sat 0.577 | Train Acc 0.757 | Test Acc 0.740
+2025-02-26 15:16:23,785 - epoch 68 | loss 0.4148 | Train Sat 0.585 | Test Sat 0.583 | Train Acc 0.756 | Test Acc 0.750
+2025-02-26 15:16:39,658 - epoch 69 | loss 0.4150 | Train Sat 0.584 | Test Sat 0.574 | Train Acc 0.755 | Test Acc 0.749
+2025-02-26 15:16:55,597 - epoch 70 | loss 0.4144 | Train Sat 0.585 | Test Sat 0.577 | Train Acc 0.757 | Test Acc 0.751
+2025-02-26 15:17:11,617 - epoch 71 | loss 0.4146 | Train Sat 0.586 | Test Sat 0.584 | Train Acc 0.757 | Test Acc 0.750
+2025-02-26 15:17:27,414 - epoch 72 | loss 0.4153 | Train Sat 0.586 | Test Sat 0.575 | Train Acc 0.751 | Test Acc 0.732
+2025-02-26 15:17:43,467 - epoch 73 | loss 0.4147 | Train Sat 0.586 | Test Sat 0.589 | Train Acc 0.755 | Test Acc 0.740
+2025-02-26 15:17:59,393 - epoch 74 | loss 0.4141 | Train Sat 0.586 | Test Sat 0.581 | Train Acc 0.756 | Test Acc 0.740
+2025-02-26 15:18:15,395 - epoch 75 | loss 0.4129 | Train Sat 0.586 | Test Sat 0.582 | Train Acc 0.756 | Test Acc 0.740
+2025-02-26 15:18:32,175 - epoch 76 | loss 0.4134 | Train Sat 0.587 | Test Sat 0.581 | Train Acc 0.756 | Test Acc 0.740
+2025-02-26 15:18:49,938 - epoch 77 | loss 0.4119 | Train Sat 0.587 | Test Sat 0.581 | Train Acc 0.757 | Test Acc 0.749
+2025-02-26 15:19:07,563 - epoch 78 | loss 0.4128 | Train Sat 0.587 | Test Sat 0.574 | Train Acc 0.750 | Test Acc 0.718
+2025-02-26 15:19:23,790 - epoch 79 | loss 0.4131 | Train Sat 0.587 | Test Sat 0.583 | Train Acc 0.755 | Test Acc 0.749
+2025-02-26 15:19:39,819 - epoch 80 | loss 0.4122 | Train Sat 0.589 | Test Sat 0.577 | Train Acc 0.756 | Test Acc 0.750
+2025-02-26 15:19:56,238 - epoch 81 | loss 0.4127 | Train Sat 0.588 | Test Sat 0.587 | Train Acc 0.756 | Test Acc 0.731
+2025-02-26 15:20:14,043 - epoch 82 | loss 0.4118 | Train Sat 0.589 | Test Sat 0.582 | Train Acc 0.756 | Test Acc 0.749
+2025-02-26 15:20:31,739 - epoch 83 | loss 0.4123 | Train Sat 0.589 | Test Sat 0.584 | Train Acc 0.756 | Test Acc 0.740
+2025-02-26 15:20:48,428 - epoch 84 | loss 0.4123 | Train Sat 0.588 | Test Sat 0.589 | Train Acc 0.756 | Test Acc 0.749
+2025-02-26 15:21:04,455 - epoch 85 | loss 0.4106 | Train Sat 0.588 | Test Sat 0.589 | Train Acc 0.757 | Test Acc 0.752
+2025-02-26 15:21:20,294 - epoch 86 | loss 0.4111 | Train Sat 0.589 | Test Sat 0.585 | Train Acc 0.756 | Test Acc 0.742
+2025-02-26 15:21:36,246 - epoch 87 | loss 0.4117 | Train Sat 0.588 | Test Sat 0.578 | Train Acc 0.768 | Test Acc 0.757
+2025-02-26 15:21:52,176 - epoch 88 | loss 0.4116 | Train Sat 0.589 | Test Sat 0.580 | Train Acc 0.766 | Test Acc 0.747
+2025-02-26 15:22:08,182 - epoch 89 | loss 0.4099 | Train Sat 0.589 | Test Sat 0.589 | Train Acc 0.755 | Test Acc 0.740
+2025-02-26 15:22:24,095 - epoch 90 | loss 0.4112 | Train Sat 0.590 | Test Sat 0.578 | Train Acc 0.756 | Test Acc 0.749
+2025-02-26 15:22:40,160 - epoch 91 | loss 0.4101 | Train Sat 0.589 | Test Sat 0.590 | Train Acc 0.756 | Test Acc 0.750
+2025-02-26 15:22:56,233 - epoch 92 | loss 0.4112 | Train Sat 0.590 | Test Sat 0.591 | Train Acc 0.757 | Test Acc 0.752
+2025-02-26 15:23:12,225 - epoch 93 | loss 0.4107 | Train Sat 0.590 | Test Sat 0.576 | Train Acc 0.768 | Test Acc 0.752
+2025-02-26 15:23:28,197 - epoch 94 | loss 0.4099 | Train Sat 0.589 | Test Sat 0.584 | Train Acc 0.758 | Test Acc 0.752
+2025-02-26 15:23:44,022 - epoch 95 | loss 0.4105 | Train Sat 0.590 | Test Sat 0.573 | Train Acc 0.758 | Test Acc 0.750
+2025-02-26 15:24:00,046 - epoch 96 | loss 0.4100 | Train Sat 0.588 | Test Sat 0.584 | Train Acc 0.756 | Test Acc 0.743
+2025-02-26 15:24:15,970 - epoch 97 | loss 0.4109 | Train Sat 0.591 | Test Sat 0.579 | Train Acc 0.766 | Test Acc 0.751
+2025-02-26 15:24:32,009 - epoch 98 | loss 0.4102 | Train Sat 0.590 | Test Sat 0.584 | Train Acc 0.753 | Test Acc 0.739
+2025-02-26 15:24:48,002 - epoch 99 | loss 0.4107 | Train Sat 0.590 | Test Sat 0.592 | Train Acc 0.771 | Test Acc 0.759
+2025-02-26 15:25:05,177 - epoch 100 | loss 0.4108 | Train Sat 0.590 | Test Sat 0.582 | Train Acc 0.763 | Test Acc 0.752
+2025-02-26 15:25:05,198 - Macro Recall: 0.7473, Macro Precision: 0.7542, Macro F1-Score: 0.7495
+2025-02-26 15:25:05,198 - Scores by Class:
+2025-02-26 15:25:05,199 - Class ARP_Spoofing: Recall: 0.747610, Precision: 0.736347, F1: 0.741935
+2025-02-26 15:25:05,199 - Class Benign: Recall: 0.766730, Precision: 0.713523, F1: 0.739171
+2025-02-26 15:25:05,199 - Class MQTT: Recall: 0.934990, Precision: 0.981928, F1: 0.957884
+2025-02-26 15:25:05,199 - Class Recon: Recall: 0.906310, Precision: 0.979339, F1: 0.941410
+2025-02-26 15:25:05,199 - Class TCP_IP-DDOS: Recall: 0.621415, Precision: 0.540765, F1: 0.578292
+2025-02-26 15:25:05,199 - Class TCP_IP-DOS: Recall: 0.506692, Precision: 0.573593, F1: 0.538071

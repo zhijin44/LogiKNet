@@ -9,6 +9,8 @@ from utils import MLP, LogitsToPredicate, DataLoader
 import logging
 import sys
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 # Set up logging
 log_file = "/home/zyang44/Github/baseline_cicIOT/LTNtorch/LTN_IoMT/training_log.txt"
 logging.basicConfig(level=logging.INFO, 
@@ -96,8 +98,8 @@ def compute_sat_level(loader):
 
 
 #################################DATA PREPROCESSING#########################################
-processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_100k_train.csv'
-processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_10k_test.csv'
+processed_train_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_30k_train.csv'
+processed_test_file = '/home/zyang44/Github/baseline_cicIOT/CIC_IoMT/6classes/6classes_3k_test.csv'
 
 # 加载数据集
 train_data = pd.read_csv(processed_train_file)
@@ -120,9 +122,22 @@ train_data_scaled = scaler.fit_transform(train_data)
 test_data_scaled = scaler.transform(test_data)
 
 # 定义设备并移动数据和标签到设备
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-train_data = torch.tensor(train_data_scaled).float().to(device)
-test_data = torch.tensor(test_data_scaled).float().to(device)
+# 特征列名称
+X_columns = [
+    'Header_Length', 'Protocol Type', 'Duration', 'Rate', 'Srate', 
+    # 'Drate',
+    # 'fin_flag_number', 'syn_flag_number', 'rst_flag_number', 'psh_flag_number',
+    # 'ack_flag_number', 'ece_flag_number', 'cwr_flag_number', 'ack_count',
+    # 'syn_count', 'fin_count', 'rst_count', 'HTTP', 'HTTPS', 'DNS', 'Telnet',
+    # 'SMTP', 'SSH', 'IRC', 'TCP', 'UDP', 'DHCP', 'ARP', 'ICMP', 'IGMP', 
+    'IPv','LLC', 
+    'Tot sum', 'Min', 'Max', 'AVG', 'Std', 'Tot size', 'IAT', 'Number',
+    'Magnitue', 'Radius', 'Covariance',
+    # 'Variance', 'Weight'
+]
+X_indices = [train_data.columns.get_loc(col) for col in X_columns]
+train_data = torch.tensor(train_data_scaled[:, X_indices]).float().to(device)
+test_data = torch.tensor(test_data_scaled[:, X_indices]).float().to(device)
 train_labels = torch.tensor(train_labels.to_numpy()).long().to(device)
 test_labels = torch.tensor(test_labels.to_numpy()).long().to(device)
 
@@ -139,7 +154,7 @@ l_E = ltn.Constant(torch.tensor([0, 0, 0, 0, 1, 0]).to(device))
 l_F = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 1]).to(device))
 
 # 创建模型实例并移动到设备
-mlp = MLP(layer_sizes=(45, 64, 32, 6)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
+mlp = MLP(layer_sizes=(18, 32, 32, 6)).to(device)  # 输出的数值可以被理解为模型对每个类别的信心水平
 P = ltn.Predicate(LogitsToPredicate(mlp))
 
 # we define the connectives, quantifiers, and the SatAgg
@@ -159,7 +174,7 @@ print("Create train and test loader done.")
 print("Start training...")
 optimizer = torch.optim.Adam(P.parameters(), lr=0.0001)
 
-for epoch in range(10):
+for epoch in range(101):
     train_loss = 0.0
     for batch_idx, (data, labels) in enumerate(train_loader):
         optimizer.zero_grad()
