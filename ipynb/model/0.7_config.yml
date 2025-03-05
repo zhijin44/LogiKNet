@@ -1,6 +1,38 @@
 affine_trainable: false
 auto_save: true
-base_fun_name: silu
+base_fun_name: !!python/object:torch.nn.modules.activation.SiLU
+  _backward_hooks: !!python/object/apply:collections.OrderedDict
+  - []
+  _backward_pre_hooks: !!python/object/apply:collections.OrderedDict
+  - []
+  _buffers: !!python/object/apply:collections.OrderedDict
+  - []
+  _forward_hooks: !!python/object/apply:collections.OrderedDict
+  - []
+  _forward_hooks_always_called: !!python/object/apply:collections.OrderedDict
+  - []
+  _forward_hooks_with_kwargs: !!python/object/apply:collections.OrderedDict
+  - []
+  _forward_pre_hooks: !!python/object/apply:collections.OrderedDict
+  - []
+  _forward_pre_hooks_with_kwargs: !!python/object/apply:collections.OrderedDict
+  - []
+  _is_full_backward_hook: null
+  _load_state_dict_post_hooks: !!python/object/apply:collections.OrderedDict
+  - []
+  _load_state_dict_pre_hooks: !!python/object/apply:collections.OrderedDict
+  - []
+  _modules: !!python/object/apply:collections.OrderedDict
+  - []
+  _non_persistent_buffers_set: !!set {}
+  _parameters: !!python/object/apply:collections.OrderedDict
+  - []
+  _state_dict_hooks: !!python/object/apply:collections.OrderedDict
+  - []
+  _state_dict_pre_hooks: !!python/object/apply:collections.OrderedDict
+  - []
+  inplace: false
+  training: true
 ckpt_path: ./model
 device: cuda:0
 grid: 5
@@ -8,7 +40,7 @@ grid_eps: 0.02
 grid_range:
 - -1
 - 1
-k: 5
+k: 3
 mult_arity: 2
 round: 0
 sb_trainable: true
@@ -18,69 +50,52 @@ symbolic.funs_name.0:
 - - '0'
   - '0'
   - '0'
-  - x
+- - '0'
   - '0'
-- - x
   - '0'
-  - x
-  - x
-  - x
-- - x
+- - '0'
   - '0'
-  - x
-  - x
-  - x
-- - x
   - '0'
-  - x
-  - x
+- - '0'
   - '0'
-- - x
   - '0'
-  - x
-  - x
+- - '0'
+  - '0'
   - '0'
 symbolic.funs_name.1:
 - - '0'
-  - x
-  - x
-  - x
-  - x
+  - '0'
+  - '0'
+  - '0'
 - - '0'
-  - x
-  - x
-  - x
-  - x
+  - '0'
+  - '0'
+  - '0'
 - - '0'
-  - x
-  - x
-  - x
-  - x
+  - '0'
+  - '0'
+  - '0'
 - - '0'
-  - x
-  - x
-  - x
-  - x
+  - '0'
+  - '0'
+  - '0'
 - - '0'
-  - x
-  - x
-  - x
-  - x
+  - '0'
+  - '0'
+  - '0'
 - - '0'
-  - x
-  - x
-  - x
-  - x
+  - '0'
+  - '0'
+  - '0'
 - - '0'
-  - x
-  - x
-  - x
-  - x
-symbolic_enabled: true
+  - '0'
+  - '0'
+  - '0'
+symbolic_enabled: false
 width:
-- - 5
+- - 3
   - 0
-- - 5
-  - 0
+- - 3
+  - 1
 - - 7
   - 0
