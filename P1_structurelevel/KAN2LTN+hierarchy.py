@@ -8,7 +8,7 @@ from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, classification_report
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
-from utils import MLP, LogitsToPredicate, DataLoaderMulti
+from utils import MLP, LogitsToPredicate, DataLoaderMulti, DataLoader
 import custom_fuzzy_ops as custom_fuzzy_ops
 import logging
 import sys

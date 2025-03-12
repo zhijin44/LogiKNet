@@ -2,8 +2,6 @@ import torch
 import numpy as np
 
 
-
-# we define predicate P
 class MLP(torch.nn.Module):
     """
     This model returns the logits for the classes given an input example. It does not compute the softmax, so the output
@@ -59,8 +57,6 @@ class LogitsToPredicate(torch.nn.Module):
         return out
     
 
-
-# define utility classes and functions
 
 # this is a standard PyTorch DataLoader to load the dataset for the training and testing of the model
 class DataLoader(object):
