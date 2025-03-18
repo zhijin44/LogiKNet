@@ -1,5 +1,6 @@
 import torch
 import numpy as np
+import kan
 
 
 class MLP(torch.nn.Module):
@@ -124,8 +125,3 @@ class DataLoaderMulti(object):
             label_L2 = self.label_L2[idxlist[start_idx:end_idx]]
 
             yield data, label_L1, label_L2
-
-
-
-
-

@@ -57,7 +57,6 @@ class LogitsToPredicate(torch.nn.Module):
         return out
     
 
-
 # this is a standard PyTorch DataLoader to load the dataset for the training and testing of the model
 class DataLoader(object):
     def __init__(self,
@@ -95,7 +94,6 @@ class DataLoader(object):
             yield data, labels
 
 
-
 class DataLoaderMulti(object):
     def __init__(self,
                  data,
@@ -125,6 +123,66 @@ class DataLoaderMulti(object):
 
             yield data, label_L1, label_L2
 
+
+class MultiKANModel(torch.nn.Module):
+    def __init__(self, kan):
+        """
+        Wrap an already built MultKAN instance.
+        Args:
+            kan: a MultKAN model (which has attributes such as act_fun, symbolic_fun, node_bias, node_scale,
+                 subnode_bias, subnode_scale, depth, width, mult_homo, mult_arity, input_id, symbolic_enabled, etc.)
+        """
+        super(MultiKANModel, self).__init__()
+        self.kan = kan
+
+    def forward(self, x, training=False, singularity_avoiding=False, y_th=10.):
+        # Select input features according to input_id
+        x = x[:, self.kan.input_id.long()]
+        # Loop through each layer
+        for l in range(self.kan.depth):
+            # Get outputs from the numerical branch (KANLayer) of current layer
+            x_numerical, preacts, postacts_numerical, postspline = self.kan.act_fun[l](x)
+            # Get output from the symbolic branch if enabled
+            if self.kan.symbolic_enabled:
+                x_symbolic, postacts_symbolic = self.kan.symbolic_fun[l](x, singularity_avoiding=singularity_avoiding, y_th=y_th)
+            else:
+                x_symbolic = 0.
+            # Sum the numerical and symbolic outputs
+            x = x_numerical + x_symbolic
+
+            # Subnode affine transformation
+            x = self.kan.subnode_scale[l][None, :] * x + self.kan.subnode_bias[l][None, :]
+
+            # Process multiplication nodes
+            dim_sum = self.kan.width[l+1][0]
+            dim_mult = self.kan.width[l+1][1]
+            if dim_mult > 0:
+                if self.kan.mult_homo:
+                    for i in range(self.kan.mult_arity-1):
+                        if i == 0:
+                            x_mult = x[:, dim_sum::self.kan.mult_arity] * x[:, dim_sum+1::self.kan.mult_arity]
+                        else:
+                            x_mult = x_mult * x[:, dim_sum+i+1::self.kan.mult_arity]
+                else:
+                    for j in range(dim_mult):
+                        acml_id = dim_sum + int(np.sum(self.kan.mult_arity[l+1][:j]))
+                        for i in range(self.kan.mult_arity[l+1][j]-1):
+                            if i == 0:
+                                x_mult_j = x[:, [acml_id]] * x[:, [acml_id+1]]
+                            else:
+                                x_mult_j = x_mult_j * x[:, [acml_id+i+1]]
+                        if j == 0:
+                            x_mult = x_mult_j
+                        else:
+                            x_mult = torch.cat([x_mult, x_mult_j], dim=1)
+                # Concatenate sum and mult parts
+                x = torch.cat([x[:, :dim_sum], x_mult], dim=1)
+
+            # Node affine transformation
+            x = self.kan.node_scale[l][None, :] * x + self.kan.node_bias[l][None, :]
+
+        # Final x corresponds to the logits output of the whole model
+        return x
 
 
 
