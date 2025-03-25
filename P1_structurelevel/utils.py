@@ -101,8 +101,8 @@ class DataLoaderMulti(object):
                  batch_size=1,
                  shuffle=True):
         self.data = data
-        self.label_L1 = labels[0]
-        self.label_L2 = labels[1]
+        self.label_L1 = labels[:,0]
+        self.label_L2 = labels[:,1]
         self.batch_size = batch_size
         self.shuffle = shuffle
 
