@@ -1,1 +1,2 @@
 *.csv filter=lfs diff=lfs merge=lfs -text
+P2_featurelevel/model/* filter=lfs diff=lfs merge=lfs -text
