@@ -3,12 +3,17 @@ import numpy as np
 import pandas as pd
 import torch.nn.functional as F
 import os
-import ltn
-import ltn.fuzzy_ops
 import torch
-import os
 from kan import KAN
+import time
+import warnings
+warnings.filterwarnings(
+    "ignore",
+    "CUDA initialization: Unexpected error from cudaGetDeviceCount"
+)
 
+
+################################setup######################################
 def load_csv_data(input_folder: str,
                   train_fname: str,
                   test_fname: str):
@@ -23,6 +28,7 @@ def load_csv_data(input_folder: str,
     train_df = pd.read_csv(train_path)
     test_df  = pd.read_csv(test_path)
     return train_df, test_df
+
 
 def extract_features_labels(df: pd.DataFrame):
     """
@@ -39,7 +45,7 @@ class DataLoader(object):
     def __init__(self,
                  data,
                  labels,
-                 batch_size=1,
+                 batch_size=64,
                  shuffle=True):
         self.data = data
         self.labels = labels
@@ -70,57 +76,6 @@ class DataLoader(object):
             ############################################################
             yield data, labels
 
-##############################Load data######################################
-# Define device
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-# Load data
-input_folder = '/home/zyang44/Github/baseline_cicIOT/P1_structurelevel/efficiency/input_files'
-train_fname = 'logiKNet_train_35945.csv'
-test_fname = 'logiKNet_test_3994.csv'
-
-train_df, test_df = load_csv_data(input_folder, train_fname, test_fname)
-# Extract features and labels   
-X_train, y_train = extract_features_labels(train_df)
-X_test, y_test = extract_features_labels(test_df)
-
-dataset_numeric = {
-    'train_input': torch.tensor(X_train, dtype=torch.float32, device=device),
-    'train_label': torch.tensor(y_train, dtype=torch.long, device=device),
-    'test_input': torch.tensor(X_test, dtype=torch.float32, device=device),
-    'test_label': torch.tensor(y_test, dtype=torch.long, device=device)
-}
-
-train_loader = DataLoader(
-    dataset_numeric['train_input'],
-    dataset_numeric['train_label'], 
-    batch_size=len(X_train), 
-    shuffle=True
-    )
-test_loader = DataLoader(
-    dataset_numeric['test_input'],
-    dataset_numeric['test_label'],
-    batch_size=len(X_test), 
-    shuffle=False
-    )
-
-################################Logic and setup######################################
-# define the connectives, quantifiers, and the SatAgg
-Not = ltn.Connective(ltn.fuzzy_ops.NotStandard())
-And = ltn.Connective(ltn.fuzzy_ops.AndProd())   # And = ltn.Connective(custom_fuzzy_ops.AndProd())
-Or = ltn.Connective(ltn.fuzzy_ops.OrProbSum())
-Forall = ltn.Quantifier(ltn.fuzzy_ops.AggregPMeanError(p=2), quantifier="f")
-Exists = ltn.Quantifier(ltn.fuzzy_ops.AggregPMean(p=2), quantifier="e")
-Implies = ltn.Connective(ltn.fuzzy_ops.ImpliesReichenbach())
-SatAgg = ltn.fuzzy_ops.SatAgg()
-
-# define ltn constants
-l_MQTT_DDoS_Connect_Flood = ltn.Constant(torch.tensor([1, 0, 0, 0, 0, 0]))
-l_MQTT_DDoS_Publish_Flood = ltn.Constant(torch.tensor([0, 1, 0, 0, 0, 0]))
-l_MQTT_DoS_Connect_Flood = ltn.Constant(torch.tensor([0, 0, 1, 0, 0, 0]))
-l_MQTT_DoS_Publish_Flood = ltn.Constant(torch.tensor([0, 0, 0, 1, 0, 0]))
-l_MQTT_Malformed_Data = ltn.Constant(torch.tensor([0, 0, 0, 0, 1, 0]))
-l_Benign = ltn.Constant(torch.tensor([0, 0, 0, 0, 0, 1]))
 
 class LogitsToPredicate(torch.nn.Module):
     """
@@ -238,7 +193,6 @@ class MultiKANModel(torch.nn.Module):
         return x
 
 
-###############################load model and testing########################################
 def save_model(model, model_save_folder, model_name):
     """
     Save the model to disk.
@@ -295,6 +249,44 @@ def compute_sat_levels(loader, P):
 	return sat_level
 
 
+##############################Load data######################################
+# Define device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# device = torch.device("cpu")  # Use CPU for this example
+print(f"\n Using device: {device} \n")
+
+# Load data
+input_folder = '/home/zyang44/Github/baseline_cicIOT/P1_structurelevel/efficiency/input_files'
+train_fname = 'logiKNet_train_35945.csv'
+test_fname = 'logiKNet_test_3994.csv'
+
+train_df, test_df = load_csv_data(input_folder, train_fname, test_fname)
+# Extract features and labels   
+X_train, y_train = extract_features_labels(train_df)
+X_test, y_test = extract_features_labels(test_df)
+
+dataset_numeric = {
+    'train_input': torch.tensor(X_train, dtype=torch.float32, device=device),
+    'train_label': torch.tensor(y_train, dtype=torch.long, device=device),
+    'test_input': torch.tensor(X_test, dtype=torch.float32, device=device),
+    'test_label': torch.tensor(y_test, dtype=torch.long, device=device)
+}
+
+train_loader = DataLoader(
+    dataset_numeric['train_input'],
+    dataset_numeric['train_label'], 
+    batch_size=len(X_train), 
+    shuffle=True
+    )
+test_loader = DataLoader(
+    dataset_numeric['test_input'],
+    dataset_numeric['test_label'],
+    # batch_size=len(X_test),
+    shuffle=False
+    )
+
+
+###############################load model and testing########################################
 model_state_folder = '/home/zyang44/Github/baseline_cicIOT/P1_structurelevel/efficiency/model_weights'
 
 # load all four models
@@ -310,20 +302,27 @@ logiKNet_infer = load_model_state(logiKNet_infer, model_state_folder, 'logiKNet.
 hierarchical_logiKNet_infer = KAN(width=[18, 10, 6], grid=5, k=3, seed=42, device=device)
 hierarchical_logiKNet_infer = load_model_state(hierarchical_logiKNet_infer, model_state_folder, 'hierarchical_logiKNet.pt')
 
+model_list = {
+    'mlp': mlp_infer,
+    'logic_mlp': logicmlp_infer,
+    'logiKNet': logiKNet_infer,
+    'hierarchical_logiKNet': hierarchical_logiKNet_infer
+}
 
 # test the models 
-def test_model(model, loader, name="model"):
+def test_model(model, loader, model_name=""):
+    start_time = time.perf_counter()
+
     model.eval()
     with torch.no_grad():
         for data, labels in loader:
             logits = model(data)
             preds = torch.argmax(logits, dim=1)
-            print(f"[{name}] Predictions: {preds}, Labels: {labels}")
-            acc = compute_accuracy(loader, model)
-            print(f"[{name}] Test accuracy: {acc.item():.4f}")
-            break
+
+    end_time = time.perf_counter()
+    print(f"[{model_name}] Inference time: {end_time - start_time:.4f} seconds")
 
 
-# test one of them as an example
-test_model(hierarchical_logiKNet_infer, test_loader, name="hierarchical_logiKNet")
+for model_name, model in model_list.items():
+    test_model(model, test_loader, model_name)
 
