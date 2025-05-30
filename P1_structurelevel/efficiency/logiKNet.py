@@ -325,4 +325,3 @@ def test_model(model, loader, model_name=""):
 
 for model_name, model in model_list.items():
     test_model(model, test_loader, model_name)
-
