@@ -281,7 +281,7 @@ train_loader = DataLoader(
 test_loader = DataLoader(
     dataset_numeric['test_input'],
     dataset_numeric['test_label'],
-    # batch_size=len(X_test),
+    # batch_size=32,
     shuffle=False
     )
 
@@ -314,10 +314,20 @@ def test_model(model, loader, model_name=""):
     start_time = time.perf_counter()
 
     model.eval()
+    batch_times = []
     with torch.no_grad():
         for data, labels in loader:
+            batch_start = time.perf_counter()
             logits = model(data)
             preds = torch.argmax(logits, dim=1)
+            batch_end = time.perf_counter()
+            batch_times.append(batch_end - batch_start)
+
+    if batch_times:
+        mean_time = sum(batch_times) / len(batch_times)
+        print(f"[{model_name}] Mean batch inference time: {mean_time:.4f} seconds")
+    else:
+        print(f"[{model_name}] No batches to measure.") 
 
     end_time = time.perf_counter()
     print(f"[{model_name}] Inference time: {end_time - start_time:.4f} seconds")
