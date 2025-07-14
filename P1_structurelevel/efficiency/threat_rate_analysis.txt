@@ -1,0 +1,143 @@
+Comprehensive Threat Rate Analysis Results
+================================================================================
+
+Intermit Interval: 1
+------------------------------
+Model: mlp
+  Threat Rate: 0.442115 (44.21%)
+  Total Cases: 3994
+  Sampled Cases: 3994
+  Sampling Rate: 1.0000 (100.0%)
+  Total Malicious: 3291
+  Missed Malicious: 1455
+
+Model: logic_mlp
+  Threat Rate: 0.387116 (38.71%)
+  Total Cases: 3994
+  Sampled Cases: 3994
+  Sampling Rate: 1.0000 (100.0%)
+  Total Malicious: 3291
+  Missed Malicious: 1274
+
+Model: logiKNet
+  Threat Rate: 0.243999 (24.40%)
+  Total Cases: 3994
+  Sampled Cases: 3994
+  Sampling Rate: 1.0000 (100.0%)
+  Total Malicious: 3291
+  Missed Malicious: 803
+
+Model: hierarchical_logiKNet
+  Threat Rate: 0.234883 (23.49%)
+  Total Cases: 3994
+  Sampled Cases: 3994
+  Sampling Rate: 1.0000 (100.0%)
+  Total Malicious: 3291
+  Missed Malicious: 773
+
+
+Intermit Interval: 2
+------------------------------
+Model: mlp
+  Threat Rate: 0.722577 (72.26%)
+  Total Cases: 3994
+  Sampled Cases: 1998
+  Sampling Rate: 0.5003 (50.0%)
+  Total Malicious: 3291
+  Missed Malicious: 2378
+
+Model: logic_mlp
+  Threat Rate: 0.693710 (69.37%)
+  Total Cases: 3994
+  Sampled Cases: 1998
+  Sampling Rate: 0.5003 (50.0%)
+  Total Malicious: 3291
+  Missed Malicious: 2283
+
+Model: logiKNet
+  Threat Rate: 0.624430 (62.44%)
+  Total Cases: 3994
+  Sampled Cases: 1998
+  Sampling Rate: 0.5003 (50.0%)
+  Total Malicious: 3291
+  Missed Malicious: 2055
+
+Model: hierarchical_logiKNet
+  Threat Rate: 0.620480 (62.05%)
+  Total Cases: 3994
+  Sampled Cases: 1998
+  Sampling Rate: 0.5003 (50.0%)
+  Total Malicious: 3291
+  Missed Malicious: 2042
+
+
+Intermit Interval: 3
+------------------------------
+Model: mlp
+  Threat Rate: 0.814342 (81.43%)
+  Total Cases: 3994
+  Sampled Cases: 1332
+  Sampling Rate: 0.3335 (33.4%)
+  Total Malicious: 3291
+  Missed Malicious: 2680
+
+Model: logic_mlp
+  Threat Rate: 0.795199 (79.52%)
+  Total Cases: 3994
+  Sampled Cases: 1332
+  Sampling Rate: 0.3335 (33.4%)
+  Total Malicious: 3291
+  Missed Malicious: 2617
+
+Model: logiKNet
+  Threat Rate: 0.746885 (74.69%)
+  Total Cases: 3994
+  Sampled Cases: 1332
+  Sampling Rate: 0.3335 (33.4%)
+  Total Malicious: 3291
+  Missed Malicious: 2458
+
+Model: hierarchical_logiKNet
+  Threat Rate: 0.743847 (74.38%)
+  Total Cases: 3994
+  Sampled Cases: 1332
+  Sampling Rate: 0.3335 (33.4%)
+  Total Malicious: 3291
+  Missed Malicious: 2448
+
+
+Intermit Interval: 5
+------------------------------
+Model: mlp
+  Threat Rate: 0.888788 (88.88%)
+  Total Cases: 3994
+  Sampled Cases: 800
+  Sampling Rate: 0.2003 (20.0%)
+  Total Malicious: 3291
+  Missed Malicious: 2925
+
+Model: logic_mlp
+  Threat Rate: 0.879976 (88.00%)
+  Total Cases: 3994
+  Sampled Cases: 800
+  Sampling Rate: 0.2003 (20.0%)
+  Total Malicious: 3291
+  Missed Malicious: 2896
+
+Model: logiKNet
+  Threat Rate: 0.849894 (84.99%)
+  Total Cases: 3994
+  Sampled Cases: 800
+  Sampling Rate: 0.2003 (20.0%)
+  Total Malicious: 3291
+  Missed Malicious: 2797
+
+Model: hierarchical_logiKNet
+  Threat Rate: 0.848070 (84.81%)
+  Total Cases: 3994
+  Sampled Cases: 800
+  Sampling Rate: 0.2003 (20.0%)
+  Total Malicious: 3291
+  Missed Malicious: 2791
+
+
