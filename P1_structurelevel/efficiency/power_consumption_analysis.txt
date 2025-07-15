@@ -1,0 +1,75 @@
+Comprehensive Power Consumption Analysis Results
+================================================================================
+
+Intermittent Interval: 1
+------------------------------
+Model: mlp
+  Power Consumption: 6310.30 mW
+
+Model: logic_mlp
+  Power Consumption: 6190.90 mW
+
+Model: logiKNet
+  Power Consumption: 5884.20 mW
+
+Model: hierarchical_logiKNet
+  Power Consumption: 5892.20 mW
+
+
+Intermittent Interval: 2
+------------------------------
+Model: mlp
+  Power Consumption: 5347.61 mW
+  Power Savings: 15.3%
+
+Model: logic_mlp
+  Power Consumption: 5299.78 mW
+  Power Savings: 14.4%
+
+Model: logiKNet
+  Power Consumption: 5262.38 mW
+  Power Savings: 10.6%
+
+Model: hierarchical_logiKNet
+  Power Consumption: 5264.06 mW
+  Power Savings: 10.7%
+
+
+Intermittent Interval: 3
+------------------------------
+Model: mlp
+  Power Consumption: 5181.74 mW
+  Power Savings: 17.9%
+
+Model: logic_mlp
+  Power Consumption: 5149.85 mW
+  Power Savings: 16.8%
+
+Model: logiKNet
+  Power Consumption: 5124.92 mW
+  Power Savings: 12.9%
+
+Model: hierarchical_logiKNet
+  Power Consumption: 5126.04 mW
+  Power Savings: 13.0%
+
+
+Intermittent Interval: 5
+------------------------------
+Model: mlp
+  Power Consumption: 5049.04 mW
+  Power Savings: 20.0%
+
+Model: logic_mlp
+  Power Consumption: 5029.91 mW
+  Power Savings: 18.8%
+
+Model: logiKNet
+  Power Consumption: 5014.95 mW
+  Power Savings: 14.8%
+
+Model: hierarchical_logiKNet
+  Power Consumption: 5015.63 mW
+  Power Savings: 14.9%
+
+

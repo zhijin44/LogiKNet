@@ -40,6 +40,7 @@ Intermit Interval: 2
 ------------------------------
 Model: mlp
   Threat Rate: 0.722577 (72.26%)
+  Threat Rate Up: 1.63x (vs persistent mode)
   Total Cases: 3994
   Sampled Cases: 1998
   Sampling Rate: 0.5003 (50.0%)
@@ -48,6 +49,7 @@ Model: mlp
 
 Model: logic_mlp
   Threat Rate: 0.693710 (69.37%)
+  Threat Rate Up: 1.79x (vs persistent mode)
   Total Cases: 3994
   Sampled Cases: 1998
   Sampling Rate: 0.5003 (50.0%)
@@ -56,6 +58,7 @@ Model: logic_mlp
 
 Model: logiKNet
   Threat Rate: 0.624430 (62.44%)
+  Threat Rate Up: 2.56x (vs persistent mode)
   Total Cases: 3994
   Sampled Cases: 1998
   Sampling Rate: 0.5003 (50.0%)
@@ -64,6 +67,7 @@ Model: logiKNet
 
 Model: hierarchical_logiKNet
   Threat Rate: 0.620480 (62.05%)
+  Threat Rate Up: 2.64x (vs persistent mode)
   Total Cases: 3994
   Sampled Cases: 1998
   Sampling Rate: 0.5003 (50.0%)
@@ -75,6 +79,7 @@ Intermit Interval: 3
 ------------------------------
 Model: mlp
   Threat Rate: 0.814342 (81.43%)
+  Threat Rate Up: 1.84x (vs persistent mode)
   Total Cases: 3994
   Sampled Cases: 1332
   Sampling Rate: 0.3335 (33.4%)
@@ -83,6 +88,7 @@ Model: mlp
 
 Model: logic_mlp
   Threat Rate: 0.795199 (79.52%)
+  Threat Rate Up: 2.05x (vs persistent mode)
   Total Cases: 3994
   Sampled Cases: 1332
   Sampling Rate: 0.3335 (33.4%)
@@ -91,6 +97,7 @@ Model: logic_mlp
 
 Model: logiKNet
   Threat Rate: 0.746885 (74.69%)
+  Threat Rate Up: 3.06x (vs persistent mode)
   Total Cases: 3994
   Sampled Cases: 1332
   Sampling Rate: 0.3335 (33.4%)
@@ -99,6 +106,7 @@ Model: logiKNet
 
 Model: hierarchical_logiKNet
   Threat Rate: 0.743847 (74.38%)
+  Threat Rate Up: 3.17x (vs persistent mode)
   Total Cases: 3994
   Sampled Cases: 1332
   Sampling Rate: 0.3335 (33.4%)
@@ -110,6 +118,7 @@ Intermit Interval: 5
 ------------------------------
 Model: mlp
   Threat Rate: 0.888788 (88.88%)
+  Threat Rate Up: 2.01x (vs persistent mode)
   Total Cases: 3994
   Sampled Cases: 800
   Sampling Rate: 0.2003 (20.0%)
@@ -118,6 +127,7 @@ Model: mlp
 
 Model: logic_mlp
   Threat Rate: 0.879976 (88.00%)
+  Threat Rate Up: 2.27x (vs persistent mode)
   Total Cases: 3994
   Sampled Cases: 800
   Sampling Rate: 0.2003 (20.0%)
@@ -126,6 +136,7 @@ Model: logic_mlp
 
 Model: logiKNet
   Threat Rate: 0.849894 (84.99%)
+  Threat Rate Up: 3.48x (vs persistent mode)
   Total Cases: 3994
   Sampled Cases: 800
   Sampling Rate: 0.2003 (20.0%)
@@ -134,6 +145,7 @@ Model: logiKNet
 
 Model: hierarchical_logiKNet
   Threat Rate: 0.848070 (84.81%)
+  Threat Rate Up: 3.61x (vs persistent mode)
   Total Cases: 3994
   Sampled Cases: 800
   Sampling Rate: 0.2003 (20.0%)
