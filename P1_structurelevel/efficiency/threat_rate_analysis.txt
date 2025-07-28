@@ -1,0 +1,77 @@
+Detection Failure Rate Analysis
+========================================
+Model                Detection Failure Rate
+----------------------------------------
+mlp                  0.0732       (7.32%)
+logic_mlp            0.0757       (7.57%)
+logiKNet             0.0431       (4.31%)
+hierarchical_logiKNet 0.0359       (3.59%)
+
+Detection Failure Rate Dictionary:
+{'mlp': 0.07323002127013066, 'logic_mlp': 0.07566089334548769, 'logiKNet': 0.04314797933758736, 'hierarchical_logiKNet': 0.035855363111516256}
+
+Malicious Prevalence in Original Dataset: 0.8240 (82.40%)
+
+Threat Rate Analysis
+========================================
+Prevalence   Model                Threat Rate 
+----------------------------------------
+0.100        mlp                  0.0073       (0.73%)
+0.100        logic_mlp            0.0076       (0.76%)
+0.100        logiKNet             0.0043       (0.43%)
+0.100        hierarchical_logiKNet 0.0036       (0.36%)
+0.200        mlp                  0.0146       (1.46%)
+0.200        logic_mlp            0.0151       (1.51%)
+0.200        logiKNet             0.0086       (0.86%)
+0.200        hierarchical_logiKNet 0.0072       (0.72%)
+0.300        mlp                  0.0220       (2.20%)
+0.300        logic_mlp            0.0227       (2.27%)
+0.300        logiKNet             0.0129       (1.29%)
+0.300        hierarchical_logiKNet 0.0108       (1.08%)
+0.500        mlp                  0.0366       (3.66%)
+0.500        logic_mlp            0.0378       (3.78%)
+0.500        logiKNet             0.0216       (2.16%)
+0.500        hierarchical_logiKNet 0.0179       (1.79%)
+0.824        mlp                  0.0603       (6.03%)
+0.824        logic_mlp            0.0623       (6.23%)
+0.824        logiKNet             0.0356       (3.56%)
+0.824        hierarchical_logiKNet 0.0295       (2.95%)
+
+Intermittent Detection Failure Rate Analysis
+============================================================
+
+Interval: 1
+--------------------------------------------------
+Model                Detection Failure Threat Rate  Mode
+--------------------------------------------------
+mlp                  0.0732           (7.32%) 0.0366       (3.66%) [Persistent]
+logic_mlp            0.0757           (7.57%) 0.0378       (3.78%) [Persistent]
+logiKNet             0.0431           (4.31%) 0.0216       (2.16%) [Persistent]
+hierarchical_logiKNet 0.0359           (3.59%) 0.0179       (1.79%) [Persistent]
+
+Interval: 2
+--------------------------------------------------
+Model                Detection Failure Threat Rate  Mode
+--------------------------------------------------
+mlp                  0.5351           (53.51%) 0.2675       (26.75%) [Intermittent]
+logic_mlp            0.5363           (53.63%) 0.2682       (26.82%) [Intermittent]
+logiKNet             0.5226           (52.26%) 0.2613       (26.13%) [Intermittent]
+hierarchical_logiKNet 0.5184           (51.84%) 0.2592       (25.92%) [Intermittent]
+
+Interval: 3
+--------------------------------------------------
+Model                Detection Failure Threat Rate  Mode
+--------------------------------------------------
+mlp                  0.6895           (68.95%) 0.3447       (34.47%) [Intermittent]
+logic_mlp            0.6898           (68.98%) 0.3449       (34.49%) [Intermittent]
+logiKNet             0.6803           (68.03%) 0.3402       (34.02%) [Intermittent]
+hierarchical_logiKNet 0.6776           (67.76%) 0.3388       (33.88%) [Intermittent]
+
+Interval: 5
+--------------------------------------------------
+Model                Detection Failure Threat Rate  Mode
+--------------------------------------------------
+mlp                  0.8143           (81.43%) 0.4072       (40.72%) [Intermittent]
+logic_mlp            0.8149           (81.49%) 0.4075       (40.75%) [Intermittent]
+logiKNet             0.8092           (80.92%) 0.4046       (40.46%) [Intermittent]
+hierarchical_logiKNet 0.8077           (80.77%) 0.4038       (40.38%) [Intermittent]
