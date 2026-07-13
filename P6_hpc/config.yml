@@ -1,0 +1,64 @@
+# ============================================================================
+# Configuration for the re-anchored HPC congestion-monitoring case study.
+# Dataset: "Monet - Blue Waters Network Dataset" (Illinois Data Bank,
+#          DOI 10.13012/B2IDB-2921318_V1), Jan 1 - May 31 2017,
+#          27,648 nodes on a 24 x 24 x 24 Cray Gemini 3D torus,
+#          LDMS/gpcdr counters sampled every 60 s.
+# ============================================================================
+
+torus:
+  dims: [24, 24, 24]        # X, Y, Z extent of the 3D torus (24^3 = 27,648 nodes)
+  wrap: true                # torus wrap-around when computing coordinate distance
+
+data:
+  # Value stored in the released CSV/parquet is (percent x 1e6); divide to get %.
+  pts_scale: 1.0e6
+  # Which stall metric drives congestion. Monet uses credit-stall and inq-stall
+  # separately; the paper's Percent-Time-Stalled (PTs) corresponds to credit-stall.
+  metric: credit           # one of: credit | inq
+  # Per-node PTs aggregation across the node's directional links for the
+  # scalar/whole-node analysis. Directional analysis overrides this per axis.
+  node_agg: max            # one of: max | mean
+
+# Monet congestion severity bands on average PTs (%), reused verbatim by the paper.
+congestion_bands:
+  Neg:  [0, 5]
+  Low:  [5, 15]
+  Med:  [15, 25]
+  High: [25, 100]
+
+# Logic-guided clustering thresholds. These reference values are taken from
+# Monet [28] / data-mining results [30] and match the paper's Section V-B.
+thresholds:
+  th_close: 2              # delta: neighbourhood radius in hops (coordinate distance)
+  th_similarity: 4.0       # theta: PTs difference (%) above which two nodes must differ
+  min_cluster_size: 20     # sigma: clusters smaller than this are filtered out
+
+clustering:
+  k: 16                    # number of clusters for the fixed-K methods (LogiK-Net, K-means)
+  directions: [X, Y, Z]    # directional congestion analyses to run (Fig. 14)
+
+logiknet:
+  hidden: [64, 64]
+  lr: 0.001
+  epochs: 300
+  p_forall: 2
+  p_exists: 2
+  seed: 0
+
+experiment:
+  seeds: [0, 1, 2, 3, 4]   # multi-seed for mean +/- std (addresses reviewer statistical-rigor point)
+
+# Monet's own synthetic-benchmark parameters (Appendix D of the NSDI paper),
+# reused here for the Route-A ground-truth evaluation.
+synthetic:
+  n_samples: 100
+  regions_min: 1
+  regions_max: 8
+  cuboid_min: 3
+  cuboid_max: 9
+  stall_min: 20.0          # %
+  stall_max: 50.0          # %
+  noise_mu: 0.0
+  noise_sigma: 2.5
+  significance_pts: 5.0    # regions with PTs < this (%) treated as insignificant
