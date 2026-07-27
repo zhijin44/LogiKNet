@@ -13,9 +13,20 @@ import numpy as np
 from sklearn.metrics import (silhouette_score, davies_bouldin_score,
                              calinski_harabasz_score,
                              adjusted_rand_score, normalized_mutual_info_score)
+from sklearn.preprocessing import StandardScaler
 
 from torus import coord_distance, neighbor_pairs
-from baselines import feature_matrix
+
+
+def feature_matrix(tab, pts_col="PTs", coord_weight=1.0, pts_weight=1.0):
+    """Standardised (x, y, z, PTs) feature matrix (moved here from the removed
+    baselines.py). Used by the internal-validity indices."""
+    X = np.stack([tab["x"].values, tab["y"].values, tab["z"].values,
+                  tab[pts_col].values], axis=1).astype(float)
+    Xs = StandardScaler().fit_transform(X)
+    Xs[:, :3] *= coord_weight
+    Xs[:, 3] *= pts_weight
+    return Xs
 
 
 # --------------------------------------------------------------------------
@@ -91,6 +102,23 @@ def point_level_agreement(true_labels, pred_labels):
     or against Monet output treated as a reference)."""
     return {"ARI": float(adjusted_rand_score(true_labels, pred_labels)),
             "NMI": float(normalized_mutual_info_score(true_labels, pred_labels))}
+
+
+# --------------------------------------------------------------------------
+# Region segmentation (binary: is the flagged congestion node-set correct?)
+# --------------------------------------------------------------------------
+def region_segmentation(true_binary, pred_binary):
+    """Node-level precision/recall/F1/IoU of the predicted congestion region
+    against the (synthetic) ground-truth region. Inputs are 0/1 per node."""
+    t = np.asarray(true_binary).astype(bool)
+    p = np.asarray(pred_binary).astype(bool)
+    tp = int((t & p).sum()); fp = int((~t & p).sum()); fn = int((t & ~p).sum())
+    prec = tp / (tp + fp) if (tp + fp) else (1.0 if tp == 0 and fp == 0 else 0.0)
+    rec = tp / (tp + fn) if (tp + fn) else 1.0
+    f1 = 2 * prec * rec / (prec + rec) if (prec + rec) else 0.0
+    iou = tp / (tp + fp + fn) if (tp + fp + fn) else 1.0
+    return {"precision": prec, "recall": rec, "f1": f1, "iou": iou,
+            "tp": tp, "fp": fp, "fn": fn}
 
 
 # --------------------------------------------------------------------------

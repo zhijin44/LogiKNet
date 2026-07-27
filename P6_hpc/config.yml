@@ -35,7 +35,7 @@ thresholds:
   min_cluster_size: 20     # sigma: clusters smaller than this are filtered out
 
 clustering:
-  k: 16                    # number of clusters for the fixed-K methods (LogiK-Net, K-means)
+  k: 24                    # number of K-means clusters (matches the reported results and figures)
   directions: [X, Y, Z]    # directional congestion analyses to run (Fig. 14)
 
 logiknet:
