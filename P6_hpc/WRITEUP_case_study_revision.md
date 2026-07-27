@@ -59,46 +59,91 @@ truly congested, FP flagged but background, FN missed, TN correct background.
 
 ## 5. Results
 
-Configuration for both tables: k = 24 clusters, seed = 0, N = 25 congested + 25
-quiet synthetic snapshots (each a 24³ = 13,824-node torus instance). Congested
-snapshots contain 1–8 planted cuboid regions (side 3–9, stall 20–50%, additive
-Gaussian noise σ = 2.5); quiet snapshots contain none.
+Reported at **k = 24, seed = 0**. Each snapshot is a 24³ = 13,824-node torus
+instance; congested snapshots contain 1–8 planted cuboid regions (side 3–9, stall
+20–50%, Gaussian noise σ = 2.5), quiet snapshots contain none. The primary run
+uses **N = 100 congested + 100 quiet** snapshots (a quick N = 25 run is logged in
+§7).
 
-**Table R1 — Differentiation (congested vs non-congested), over all 50 snapshots.**
+**Table R1 — Differentiation (congested vs non-congested), N = 100 + 100 = 200 snapshots.**
 
 | metric | value |
 |---|---|
-| accuracy | 1.00 |
-| detection rate (TPR) | 1.00 |
+| accuracy | 0.99 |
+| detection rate (TPR) | 0.98 |
 | false-alarm rate (FPR) | 0.00 |
 
-**Table R2 — Region correctness, mean ± std over the 25 congested snapshots.**
+Two of the 100 congested snapshots are missed (TPR 0.98): in each, the planted
+region never crossed the High band, so no seed forms — the residual-recall limit
+of §6. (At N = 25 none are missed: accuracy 1.00.)
 
-| variant | precision | recall | F1 | IoU |
-|---|---|---|---|---|
-| K-means → LTN labeler | 1.000 | 0.75 ± 0.21 | 0.84 | 0.75 ± 0.21 |
-| **+ region growth** | **1.000** | **0.85 ± 0.19** | **0.90** | **0.85 ± 0.19** |
+**Table R2 — Region correctness, mean ± std over the congested snapshots.**
+
+| variant | N | precision | recall | F1 | IoU |
+|---|---|---|---|---|---|
+| K-means → LTN labeler (seeds) | 100 | 1.000 | 0.725 ± 0.246 | 0.813 | 0.725 ± 0.246 |
+| **+ region growth (floor 15)** | 100 | **1.000** | **0.829 ± 0.230** | **0.884** | **0.829 ± 0.230** |
+| + region growth (floor 20) | 100 | 1.000 | 0.825 ± 0.229 | 0.882 | 0.825 ± 0.229 |
+
+Precision stays exactly 1.0 in every setting. At matched N = 100, region growth
+lifts recall/IoU by ~0.10 (seeds 0.725 → grow 0.829). The growth floor barely
+matters on synthetic data (0.829 vs 0.825) because the region→background edge is
+sharp and the `th_similarity` brake stops growth there regardless.
 
 _Reference: [28] report ~0.81 overlap for their region-growing on this generator._
-_Recall/IoU carry ~0.2 std across random draws; for the final paper, average over
-a larger N (e.g. 100) and several seeds for a stable point estimate._
+_Recall/IoU carry ~0.2 std across random draws; average over several seeds for a
+tighter point estimate in the camera-ready._
 
 **Qualitative (real, 2017-03-14 11:58 CDT).** The detector fires and localises a
 congestion region on the X-direction links (mean PTs ≈ 30%); region growth
-expands the ~72-node High-band core to ~333 nodes by absorbing the surrounding
-Medium-band skirt. See `figures/congestion_0314_grow.png`.
+expands the 72-node High-band core to 333 nodes at growth-floor 15, or 192 at
+growth-floor 20 (tighter around the core). See `figures/congestion_0314_grow.png`
+and `figures/congestion_0314_grow20.png`.
 
 ## 6. Interpretation & threats to validity
 
 - **Precision 1.0 by design.** The `High ∧ Homogeneous` gate only fires on
   clusters that are both severe and internally consistent, so background is never
-  mislabelled; region growth then trades none of that precision for +10 points of
-  recall because the `th_similarity` brake stops growth at the congestion edge.
-- **Residual recall gap (~9%).** Confined to snapshots where no cluster ever
-  crossed the High band, so no seed forms; these are inherently undetectable by a
-  High-band-seeded method and would require lowering the seeding threshold.
+  mislabelled; region growth then trades none of that precision for ~+0.10 recall
+  (0.725 → 0.829 at N = 100) because the `th_similarity` brake stops growth at the
+  edge.
+- **Residual gaps have two sources.** (i) At the node level, ~17% of congested
+  nodes (region edges) remain unrecovered even after growth. (ii) At the snapshot
+  level, ~2% of congested snapshots (Table R1) contain no High-band cluster at
+  all, so no seed forms and nothing is detected. Both stem from High-band seeding;
+  lowering the seeding threshold would trade precision for recall.
 - **Synthetic vs real geometry.** The synthetic model plants compact cuboids;
   real congestion here is *directional* (spread along X rings with a PTs
   gradient). Scoring is therefore synthetic-only; the real snapshot demonstrates
   the method fires and localises sensibly, consistent with the HOTI'19 finding
   that X-direction links show the longest-lasting high-PTs congestion.
+
+## 7. Reproducibility log (verbatim runs, k = 24, seed = 0)
+
+Commands run from `P6_hpc/`. Real-snapshot line is qualitative (no ground truth).
+
+```
+$ python run_step2.py --config config.yml                    # seeds only, N = 25
+  Differentiation: {TP:25, FP:0, TN:25, FN:0}  accuracy=1.000  TPR=1.000  FPR=0.000
+  Region:  precision 1.000±0.000  recall 0.754±0.210  f1 0.842  iou 0.754±0.210
+
+$ python run_step2.py --config config.yml --n-each 100        # seeds only, N = 100
+  Differentiation: {TP:98, FP:0, TN:100, FN:2}  accuracy=0.990  TPR=0.980  FPR=0.000
+  Region:  precision 1.000±0.000  recall 0.725±0.246  f1 0.813  iou 0.725±0.246
+
+$ python run_step2.py --config config.yml --grow --n-each 100 \
+      --real snapshots/snap_1489510680.csv:1489510680          # grow floor 15, N = 100
+  Differentiation: {TP:98, FP:0, TN:100, FN:2}  accuracy=0.990  TPR=0.980  FPR=0.000
+  Region:  precision 1.000±0.000  recall 0.829±0.230  f1 0.884  iou 0.829±0.230
+  Real snap: congested=True | flagged 333 | nodes PTs>=High 137 | cluster mean 30.6%
+
+$ python run_step2.py --config config.yml --grow --growth-floor 20 --n-each 100 \
+      --real snapshots/snap_1489510680.csv:1489510680          # grow floor 20, N = 100
+  Differentiation: {TP:98, FP:0, TN:100, FN:2}  accuracy=0.990  TPR=0.980  FPR=0.000
+  Region:  precision 1.000±0.000  recall 0.825±0.229  f1 0.882  iou 0.825±0.229
+  Real snap: congested=True | flagged 192 | nodes PTs>=High 137 | cluster mean 30.6%
+```
+
+Note: differentiation is identical for floor 15 and 20 — growth expands existing
+seeds and never changes whether a snapshot fired, so it cannot affect the
+congested/quiet decision.

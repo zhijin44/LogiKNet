@@ -64,22 +64,25 @@ strongest), `snap_1489559700` (03-15 01:35 CDT).
 
 ## Results (synthetic ground truth; k=24, seed=0)
 
-Config: N = 25 congested + 25 quiet synthetic snapshots (each a 24³ = 13,824-node
+Primary run: N = 100 congested + 100 quiet snapshots (each a 24³ = 13,824-node
 torus instance).
 
-Differentiation (congested vs non-congested), over all 50 snapshots:
-**accuracy 1.00** (TPR 1.00, FPR 0.00).
+Differentiation (congested vs non-congested), over all 200 snapshots:
+**accuracy 0.99** (TPR 0.98, FPR 0.00) — 2/100 congested snapshots have no
+High-band seed and are missed. (At N = 25: accuracy 1.00.)
 
-Region correctness, mean ± std over the 25 congested snapshots:
+Region correctness, mean ± std over the congested snapshots:
 
-| variant | precision | recall | F1 | IoU |
-|---|---|---|---|---|
-| seeds (K-means → LTN labeler) | 1.000 | 0.75 ± 0.21 | 0.84 | 0.75 ± 0.21 |
-| **+ region growth** | **1.000** | **0.85 ± 0.19** | **0.90** | **0.85 ± 0.19** |
+| variant | N | precision | recall | F1 | IoU |
+|---|---|---|---|---|---|
+| seeds (K-means → LTN labeler) | 100 | 1.000 | 0.725 ± 0.246 | 0.813 | 0.725 ± 0.246 |
+| **+ region growth (floor 15)** | 100 | **1.000** | **0.829 ± 0.230** | **0.884** | **0.829 ± 0.230** |
+| + region growth (floor 20) | 100 | 1.000 | 0.825 ± 0.229 | 0.882 | 0.825 ± 0.229 |
 
 Precision is 1.0 throughout (the strict `High ∧ Homogeneous` gate never flags
-background); region growth lifts recall/IoU by ~10 points at no precision cost.
-For reference, Monet's own synthetic benchmark reported ~0.81 overlap.
+background); region growth lifts recall/IoU by ~0.10 at no precision cost
+(matched N = 100: seeds 0.725 → grow 0.829). For reference, Monet's own synthetic
+benchmark reported ~0.81 overlap.
 
 > Note: recall/IoU carry ~0.2 std across random draws, so for the final paper
 > run a larger N (e.g. `--n-each 100`) and average over a few seeds for a stable
@@ -107,6 +110,12 @@ python run_step2.py --config config.yml --grow \
     --real snapshots/snap_1489510680.csv:1489510680          # + real qualitative
 python make_figure.py snapshots/snap_1489510680.csv:1489510680 \
     --title "2017-03-14 11:58 CDT" --grow --out figures/congestion_0314_grow.png
+```
+
+```bash
+python make_figure.py snapshots/snap_1489510680.csv:1489510680 \
+    --title "2017-03-14 11:58 CDT" --grow --growth-floor 20 \
+    --out figures/congestion_0314_grow20.png
 ```
 
 ## Dependencies
