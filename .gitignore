@@ -8,3 +8,6 @@ P2_featurelevel/model/
 P6_hpc/17data
 */.DS_Store
 __pycache__
+.idea
+.venv
+.vscode
