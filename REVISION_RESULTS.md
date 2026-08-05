@@ -27,18 +27,18 @@ that will be transcribed into the paper.
 | Block | Experiment | Protocol | Seeds | Status |
 |---|---|---|---|---|
 | P5 | Attn-LogiK-Net full vs. no-logic | 6-class / 18-feat | 5 | **done** |
-| P1 | Model comparison (Fig. `P1-all-model`) | 13-class / 9-feat | 5 | *pending* |
+| P1 | Model comparison (Fig. `P1-all-model`) | 6-class / 18-feat | 5 | *harness ready* |
 | P2 | Feature-count comparison (14/16/18) | per-set | 5 | *pending* |
 | P1 | Reliability-score figure | 13-class / 9-feat | 1 | not scheduled |
 | P2 | Data-size comparison (S/M/L) | per-size | 1 | not scheduled |
 
 **Agreed metric scope for the pending re-runs:** all three groups —
 Predictive + Calibration + Hierarchical (see §1).
-**Agreed protocol:** P1 and P2 are retrained at their *original* settings
-(13-class/9-feature for P1; native feature sets for P2). P5 remains a separate
-6-class ablation. `CHILD_TO_PARENT_4_9` must be re-added to `eval_metrics.py`
-(referenced in `P5_attention/INTEGRATION.md` §2 but absent from the current file,
-which only defines `CHILD_TO_PARENT_6`).
+**Agreed protocol:** P1 and P2 are retrained at their *original* settings.
+P1 turns out to share P5's 6-class / 18-feature setup, so `CHILD_TO_PARENT_6`
+covers both and no new mapping is needed (see §3). P1 trains on
+`logiKNet_train_35945.csv` — the original 90/10 split — whereas P5 used the
+10,000-row subsample, so the two are **not** directly comparable to each other.
 
 ---
 
@@ -226,80 +226,104 @@ accuracy-neutrality claim.
 Target: `Results.tex` Fig. `P1-all-model`, and the `[TODO]` cells in
 `Major-Revision-Response.tex` §Reviewer 1 / Comment 1(b).
 
-**Protocol (to preserve).** `P1_structurelevel/KAN2LTN+hierarchy.py`:
-9 features, 13 outputs (4 coarse L1 classes 0–3 + 9 fine L2 classes 4–12),
-`MLP(layer_sizes=(9, 64, 32, 13))`, Adam lr `1.5e-3`.
+**Harness:** `P1_structurelevel/run_multiseed_p1.py`
+**Figure:** `P1_structurelevel/plot_p1_performance.ipynb`
+`KAN_2_LTN_hierarchy.ipynb` is left untouched as the record of the original logic.
 
-**Hierarchy mapping required.** The 13 outputs mix both levels, so
-`CHILD_TO_PARENT_4_9` is *not* a plain 6-class analogue:
+> **Correction to an earlier version of this file.** P1 was previously recorded
+> here as a 13-class / 9-feature setup requiring a new `CHILD_TO_PARENT_4_9`
+> mapping. That was read off `KAN2LTN+hierarchy.py`, which is a *different*
+> experiment. The notebook behind Fig. `P1-all-model` is
+> **6-class / 18-feature**, identical to P5: `label_L2` 0–5, `label_L1` =
+> MQTT(0)/Benign(1). `CHILD_TO_PARENT_6` applies unchanged and no new mapping
+> is needed.
 
-```
-label_L1_mapping = {"MQTT": 0, "Benign": 1, "Recon": 2, "ARP_Spoofing": 3}
-label_L2_mapping = {"MQTT-DDoS-Connect_Flood": 4, "MQTT-DDoS-Publish_Flood": 5,
-                    "MQTT-DoS-Connect_Flood": 6,  "MQTT-DoS-Publish_Flood": 7,
-                    "MQTT-Malformed_Data": 8,     "Benign(fine)": 9,
-                    "Recon-OS_Scan": 10, "Recon-Port_Scan": 11,
-                    "ARP_Spoofing(fine)": 12}
-CHILD_TO_PARENT_4_9 = {4:0, 5:0, 6:0, 7:0, 8:0, 9:1, 10:2, 11:2, 12:3}
-```
+### 3.1 Protocol (from `KAN_2_LTN_hierarchy.ipynb`)
 
-Decide and record: is the 13-way argmax evaluated against `label_L2` only
-(classes 4–12, as `compute_accuracy` does), or over all 13? This changes
-`macro_f1` and `macro_fpr` materially and must match what the paper's existing
-numbers meant.
+| Item | Value |
+|---|---|
+| Data | `logiKNet_train_35945.csv` / `logiKNet_test_3994.csv` (90/10 split of `filtered_train_l_2_6.csv`) |
+| Features | 18 (`X_COLUMNS`) |
+| Classes | 6 (`label_L2` 0–5); 0–4 → MQTT, 5 → Benign |
+| Optimiser | Adam, lr `1e-3`, **full batch** |
+| Epochs | 401 (0–400), same for every variant |
+| KAN | `grid=5, k=3` |
+| Scaling | `StandardScaler` fit on train only |
+| Seeds | `[0,1,2,3,4]` (original single run used seed 42) |
 
-### 3.1 Results table — TO FILL
+### 3.2 Model roster
 
-| Model | Attn | KAN | Logic | Accuracy | Macro-F1 | Macro recall | Macro FPR | AUROC | ECE | Brier | Reliability | Hier-F1 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| MLP | – | – | – | | | | | | | | | |
-| Logic-MLP | – | – | ✓ | | | | | | | | | |
-| KAN (no logic) | – | ✓ | – | | | | | | | | | |
-| Logic-KAN | – | ✓ | ✓ | | | | | | | | | |
-| H-Logic-KAN | – | ✓ | ✓ | | | | | | | | | |
-| H-Logic-KAN* | – | ✓ | ✓ | | | | | | | | | |
-| Attn-LogiK-Net (no logic) | ✓ | ✓ | – | | | | | | | | | |
-| Attn-LogiK-Net (full) | ✓ | ✓ | ✓ | | | | | | | | | |
-
-*(The two Attn rows here would be the 13-class re-run, not the §2 6-class
-numbers. Do not mix protocols in one table.)*
-
-### 3.2 Per-class recall — TO FILL
-
-| Class | MLP | Logic-MLP | Logic-KAN | H-Logic-KAN | H-Logic-KAN* |
+| Key | Paper name | Macro | Backbone | Width | Loss |
 |---|---|---|---|---|---|
-| MQTT-DDoS-Connect_Flood | | | | | |
-| MQTT-DDoS-Publish_Flood | | | | | |
-| MQTT-DoS-Connect_Flood | | | | | |
-| MQTT-DoS-Publish_Flood | | | | | |
-| MQTT-Malformed_Data | | | | | |
-| Benign | | | | | |
-| Recon-OS_Scan | | | | | |
-| Recon-Port_Scan | | | | | |
-| ARP_Spoofing | | | | | |
+| `mlp` | MLP | — | MLP | `[18,10,6]` | cross-entropy |
+| `logic_mlp` | Logic-MLP | — | MLP | `[18,10,6]` | LTN, flat rules |
+| `kan` | KAN (no logic) | — | KAN | `[18,10,6]` | cross-entropy |
+| `logic_kan` | Logic-KAN | `\logickan` | KAN | `[18,10,6]` | LTN, flat rules |
+| `h_logic_kan` | H-Logic-KAN | `\hlogickan` | KAN | `[18,10,6]` | LTN + hierarchy |
+| `h_logic_kan_star` | H-Logic-KAN* | `\hlogickanp` | KAN | `[18,6,6,6]` | LTN + hierarchy |
 
-### 3.3 Significance — TO FILL
+"Flat rules" = the six per-class `Forall` (notebook cell 10).
+"+ hierarchy" = those six plus `Forall(x_MQTT, Not(P(x_MQTT, l_Benign)))` (cell 13).
 
-| Comparison | Metric | W | p | McNemar (sig. seeds) |
+**Width discrepancy, resolved.** Notebook cell 13 builds `KAN([18,6,6,6])` for
+H-LogiKNet, but `efficiency/logiKNet.py:302` reloads `hierarchical_logiKNet.pt`
+as `KAN([18,10,6])` — and `load_state_dict` must match, so `[18,10,6]` is what
+actually trained; the notebook cell was edited after the run. Confirmed by the
+author: **H-Logic-KAN = `[18,10,6]`** (one hidden layer), **H-Logic-KAN* =
+`[18,6,6,6]`** (the deeper architectural variant). Without this the two models
+would be identical and the figure's two curves unjustifiable.
+
+`kan` (KAN trained with plain cross-entropy) did not previously exist. It is the
+cell that separates the KAN contribution from the logic contribution — the exact
+question Reviewer #1 raised.
+
+### 3.3 Results table — TO FILL
+
+Generated as LaTeX by the last cell of `plot_p1_performance.ipynb`.
+
+| Model | Hier. | KAN | Logic | Accuracy | Macro-F1 | Macro recall | Macro FPR | AUROC | ECE | Brier |
+|---|---|---|---|---|---|---|---|---|---|---|
+| MLP | – | – | – | | | | | | | |
+| Logic-MLP | – | – | ✓ | | | | | | | |
+| KAN (no logic) | – | ✓ | – | | | | | | | |
+| Logic-KAN | – | ✓ | ✓ | | | | | | | |
+| H-Logic-KAN | ✓ | ✓ | ✓ | | | | | | | |
+| H-Logic-KAN* | ✓ | ✓ | ✓ | | | | | | | |
+
+### 3.4 Hierarchical evaluation (separate) — TO FILL
+
+Written to `p1_multiseed/hierarchical.json`.
+
+| Model | R(w=0.25) | R(w=0.5) | R(w=0.75) | Hier-F1 |
 |---|---|---|---|---|
-| H-Logic-KAN vs. MLP | macro-F1 | | | |
-| H-Logic-KAN vs. Logic-MLP | macro-F1 | | | |
-| Logic-KAN vs. Logic-MLP | macro-F1 | | | |
-| H-Logic-KAN vs. Logic-KAN | macro-F1 | | | |
+| MLP | | | | |
+| Logic-MLP | | | | |
+| KAN (no logic) | | | | |
+| Logic-KAN | | | | |
+| H-Logic-KAN | | | | |
+| H-Logic-KAN* | | | | |
 
-### 3.4 Reliability partial-credit sweep — TO FILL
+Reminder from §1.3: the `R(w=0.5)` and `Hier-F1` columns will be identical.
+Report the equivalence, not two "independent" numbers.
 
-| Model | partial=0.25 | partial=0.50 | partial=0.75 |
-|---|---|---|---|
-| MLP | | | |
-| H-Logic-KAN | | | |
-| Attn-LogiK-Net (full) | | | |
+Single-run values in the current paper, for regression-checking:
+`R_MLP = 0.7615`, `R_H-Logic-KAN = 0.8671` (`Results.tex`, Fig.
+`P1-reliability-score` caption). Final test accuracies in the existing logs:
+MLP `0.6134`, Logic-KAN `0.782`, H-Logic-KAN* `0.766`.
 
-Single-run values in the current paper, for regression-checking the re-run:
-`R_MLP = 0.7615`, `R_H-Logic-KAN = 0.8671`
-(`Results.tex` Fig. `P1-reliability-score` caption).
+### 3.5 Per-class recall — TO FILL
 
----
+Printed by the harness; stored per run in `run__{key}__seed{n}.json`.
+
+### 3.6 Significance — TO FILL
+
+Written to `p1_multiseed/significance.json`. Pairs tested: H-Logic-KAN vs
+{MLP, Logic-MLP, Logic-KAN, KAN}, Logic-KAN vs {Logic-MLP, KAN}, Logic-MLP vs
+MLP, H-Logic-KAN* vs H-Logic-KAN. Metrics: accuracy, macro-F1, macro recall,
+reliability. Wilcoxon across seeds + McNemar per seed.
+
+See §6.1: with 5 seeds every Wilcoxon p-value is ≥ 0.0625, so none of these can
+reach p < 0.05 no matter how large the gap.
 
 ## 4. P2 — Feature-count comparison (PENDING)
 
