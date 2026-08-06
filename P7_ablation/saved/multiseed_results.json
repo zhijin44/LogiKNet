@@ -9,31 +9,21 @@
   "converge": {
     "kan_star_ce": 600,
     "logic_kan_star": 800,
-    "h_logic_kan_star": 800
+    "h_logic_kan_star": 800,
+    "logic_mlp_hier": 800
   },
   "margin": 0.05,
   "epochs": {
     "kan_star_ce": 630,
     "logic_kan_star": 840,
-    "h_logic_kan_star": 840
+    "h_logic_kan_star": 840,
+    "logic_mlp_hier": 840
   },
   "kan_width": [
-    [
-      18,
-      0
-    ],
-    [
-      6,
-      0
-    ],
-    [
-      6,
-      0
-    ],
-    [
-      6,
-      0
-    ]
+    18,
+    6,
+    6,
+    6
   ],
   "lr": 0.001,
   "train_path": "/Users/zhijinyang/Documents/VSCode/LogiKNet/P7_ablation/../P1_structurelevel/efficiency/input_files/logiKNet_train_10000.csv",
@@ -404,6 +394,128 @@
           0.8837005508262393
         ]
       }
+    },
+    "logic_mlp_hier": {
+      "name": "Logic-MLP",
+      "backward": "hier",
+      "epochs": 840,
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "accuracy": {
+        "mean": 0.6988482724086129,
+        "std": 0.033454148052381845,
+        "values": [
+          0.7193289934902354,
+          0.7323485227841763,
+          0.6467200801201802,
+          0.6875312969454181,
+          0.7083124687030545
+        ]
+      },
+      "macro_f1": {
+        "mean": 0.6898813218088103,
+        "std": 0.037375270060809956,
+        "values": [
+          0.71241517318138,
+          0.7306237630646099,
+          0.6352196647491456,
+          0.6715219659905752,
+          0.699626042058341
+        ]
+      },
+      "weighted_f1": {
+        "mean": 0.6895115131302496,
+        "std": 0.038126065791341916,
+        "values": [
+          0.7124997097981747,
+          0.7309121907151032,
+          0.6336077769855426,
+          0.6709391188665125,
+          0.6995987692859154
+        ]
+      },
+      "macro_recall": {
+        "mean": 0.7006976192949936,
+        "std": 0.031467081632618174,
+        "values": [
+          0.7199663269091213,
+          0.7326393075579123,
+          0.6519938519765758,
+          0.6895965687448616,
+          0.7092920412864968
+        ]
+      },
+      "macro_fpr": {
+        "mean": 0.0601113595205473,
+        "std": 0.006612510410374277,
+        "values": [
+          0.0560613583208465,
+          0.05348356490134825,
+          0.07040858305995787,
+          0.06235904380197746,
+          0.05824424751860643
+        ]
+      },
+      "macro_auroc": {
+        "mean": 0.9420604849307417,
+        "std": 0.01913580750369584,
+        "values": [
+          0.9505861936343788,
+          0.9516465193856424,
+          0.9078572917455144,
+          0.949469443205983,
+          0.9507429766821889
+        ]
+      },
+      "ece": {
+        "mean": 0.065648303302933,
+        "std": 0.022682021117779765,
+        "values": [
+          0.05985852181314528,
+          0.0748709991357896,
+          0.09706232427774694,
+          0.035084792350791504,
+          0.06136487893719165
+        ]
+      },
+      "brier": {
+        "mean": 0.4218079846514181,
+        "std": 0.04422691702499162,
+        "values": [
+          0.39666059994661645,
+          0.4002453355989026,
+          0.5005901999053083,
+          0.40747367432432124,
+          0.404070113481942
+        ]
+      },
+      "reliability": {
+        "mean": 0.8061592388582873,
+        "std": 0.023499417287193177,
+        "values": [
+          0.8198547821732599,
+          0.8263645468202303,
+          0.7671507260891337,
+          0.8024536805207811,
+          0.814972458688032
+        ]
+      },
+      "hierarchical_f1": {
+        "mean": 0.8061592388582873,
+        "std": 0.023499417287193177,
+        "values": [
+          0.8198547821732599,
+          0.8263645468202303,
+          0.7671507260891337,
+          0.8024536805207811,
+          0.814972458688032
+        ]
+      }
     }
   },
   "significance": {
@@ -551,6 +663,54 @@
         "p_value": 0.125,
         "name_a": "H-Logic-KAN*",
         "name_b": "KAN* (no logic)"
+      },
+      {
+        "metric": "accuracy",
+        "model_a": "h_logic_kan_star",
+        "model_b": "logic_mlp_hier",
+        "n": 5,
+        "mean_a": 0.814321482223335,
+        "mean_b": 0.6988482724086129,
+        "statistic": 0.0,
+        "p_value": 0.0625,
+        "name_a": "H-Logic-KAN*",
+        "name_b": "Logic-MLP"
+      },
+      {
+        "metric": "macro_f1",
+        "model_a": "h_logic_kan_star",
+        "model_b": "logic_mlp_hier",
+        "n": 5,
+        "mean_a": 0.8140491358950245,
+        "mean_b": 0.6898813218088103,
+        "statistic": 0.0,
+        "p_value": 0.0625,
+        "name_a": "H-Logic-KAN*",
+        "name_b": "Logic-MLP"
+      },
+      {
+        "metric": "macro_recall",
+        "model_a": "h_logic_kan_star",
+        "model_b": "logic_mlp_hier",
+        "n": 5,
+        "mean_a": 0.8155816173009093,
+        "mean_b": 0.7006976192949936,
+        "statistic": 0.0,
+        "p_value": 0.0625,
+        "name_a": "H-Logic-KAN*",
+        "name_b": "Logic-MLP"
+      },
+      {
+        "metric": "reliability",
+        "model_a": "h_logic_kan_star",
+        "model_b": "logic_mlp_hier",
+        "n": 5,
+        "mean_a": 0.8891086629944918,
+        "mean_b": 0.8061592388582873,
+        "statistic": 0.0,
+        "p_value": 0.0625,
+        "name_a": "H-Logic-KAN*",
+        "name_b": "Logic-MLP"
       }
     ],
     "mcnemar": [
@@ -718,6 +878,61 @@
         "seed": 4,
         "name_a": "H-Logic-KAN*",
         "name_b": "KAN* (no logic)"
+      },
+      {
+        "b01": 183,
+        "b10": 569,
+        "statistic": 197.10771276595744,
+        "p_value": 8.933387851445822e-45,
+        "model_a": "h_logic_kan_star",
+        "model_b": "logic_mlp_hier",
+        "seed": 0,
+        "name_a": "H-Logic-KAN*",
+        "name_b": "Logic-MLP"
+      },
+      {
+        "b01": 149,
+        "b10": 489,
+        "statistic": 180.1269592476489,
+        "p_value": 4.546738905805182e-41,
+        "model_a": "h_logic_kan_star",
+        "model_b": "logic_mlp_hier",
+        "seed": 1,
+        "name_a": "H-Logic-KAN*",
+        "name_b": "Logic-MLP"
+      },
+      {
+        "b01": 193,
+        "b10": 865,
+        "statistic": 425.5586011342155,
+        "p_value": 1.5051149671448493e-94,
+        "model_a": "h_logic_kan_star",
+        "model_b": "logic_mlp_hier",
+        "seed": 2,
+        "name_a": "H-Logic-KAN*",
+        "name_b": "Logic-MLP"
+      },
+      {
+        "b01": 222,
+        "b10": 726,
+        "statistic": 266.88713080168776,
+        "p_value": 5.412025765600526e-60,
+        "model_a": "h_logic_kan_star",
+        "model_b": "logic_mlp_hier",
+        "seed": 3,
+        "name_a": "H-Logic-KAN*",
+        "name_b": "Logic-MLP"
+      },
+      {
+        "b01": 181,
+        "b10": 585,
+        "statistic": 212.02219321148826,
+        "p_value": 4.973823706998689e-48,
+        "model_a": "h_logic_kan_star",
+        "model_b": "logic_mlp_hier",
+        "seed": 4,
+        "name_a": "H-Logic-KAN*",
+        "name_b": "Logic-MLP"
       }
     ],
     "note": "Wilcoxon is paired across seeds; with n=5 the smallest attainable two-sided p is 0.0625, so p<0.05 is unreachable regardless of effect size. p-values are uncorrected."
@@ -746,6 +961,14 @@
       0.8830769230769231,
       0.9277519379844961,
       0.8611664295874822
+    ],
+    "logic_mlp_hier": [
+      0.37836257309941523,
+      0.6992570579494799,
+      0.8979655712050079,
+      0.7612307692307693,
+      0.6613953488372093,
+      0.8059743954480798
     ]
   }
 }

@@ -67,7 +67,7 @@ sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(HERE, '..', 'P1_structurelevel'))   # utils.py
 sys.path.insert(0, os.path.join(HERE, '..', 'P5_attention'))        # eval_metrics.py
 
-from utils import LogitsToPredicate, MultiKANModel, DataLoader        # noqa: E402
+from utils import LogitsToPredicate, MultiKANModel, MLP, DataLoader   # noqa: E402
 from kan import KAN                                                   # noqa: E402
 import ltn                                                            # noqa: E402
 import ltn.fuzzy_ops                                                  # noqa: E402
@@ -100,23 +100,33 @@ GRID, K = 5, 3
 LR = 1e-3
 SEEDS = [0, 1, 2, 3, 4]
 
+MLP_WIDTH = [IN_FEATURES, 6, 6, N_CLASSES]   # depth-matched to KAN_WIDTH
+
 # key -> (display name, backward module)
 VARIANTS = {
     'kan_star_ce':      ('KAN* (no logic)', 'none'),
     'logic_kan_star':   ('Logic-KAN*',      'flat'),
     'h_logic_kan_star': ('H-Logic-KAN*',    'hier'),
+    # C1 forward-axis row: the SAME backward module as h_logic_kan_star, but an
+    # MLP forward path. NOT the paper's Section IV-A Logic-MLP, which is
+    # MLP(18,10,6) with the FLAT rule set -- different model, same label in the
+    # C1 table (the caption states the control).
+    'logic_mlp_hier':   ('Logic-MLP',       'hier'),
 }
+BACKBONE = {'kan_star_ce': 'kan', 'logic_kan_star': 'kan',
+            'h_logic_kan_star': 'kan', 'logic_mlp_hier': 'mlp'}
 
 # Convergence epochs measured in C2_backward_ablation.ipynb (single run, seed 42),
-# read off the test-accuracy plateau. Same treatment as P5's run_multiseed.ipynb:
 # the fixed budget is CONVERGE x (1 + MARGIN).
 CONVERGE = {
     'kan_star_ce':      600,
     'logic_kan_star':   800,
     'h_logic_kan_star': 800,
+    'logic_mlp_hier':   800,
 }
 MARGIN = 0.05                     # set to 0.0 if CONVERGE already IS the budget
-EPOCHS = {k: int(round(v * (1 + MARGIN))) for k, v in CONVERGE.items()}
+EPOCHS = {k: (None if v is None else int(round(v * (1 + MARGIN))))
+          for k, v in CONVERGE.items()}
 
 PARTIAL = 0.5
 PARTIAL_SWEEP = (0.25, 0.5, 0.75)   # reviewer: "the 0.5 partial credit is ad hoc"
@@ -126,6 +136,7 @@ SIG_PAIRS = [
     ('logic_kan_star',   'kan_star_ce'),      # does the logic tensor help?
     ('h_logic_kan_star', 'logic_kan_star'),   # does the hierarchy rule help?
     ('h_logic_kan_star', 'kan_star_ce'),      # full backward vs. none
+    ('h_logic_kan_star', 'logic_mlp_hier'),   # C1 forward axis: KAN vs MLP
 ]
 SIG_METRICS = ['accuracy', 'macro_f1', 'macro_recall', 'reliability']
 
@@ -213,7 +224,9 @@ class LTNRules:
 # --------------------------------------------------------------------------- #
 #  Build + train
 # --------------------------------------------------------------------------- #
-def build_model(seed, device):
+def build_model(key, seed, device):
+    if BACKBONE[key] == 'mlp':
+        return MLP(layer_sizes=tuple(MLP_WIDTH)).to(device)
     kan = KAN(width=KAN_WIDTH, grid=GRID, k=K, seed=seed, device=device,
               auto_save=False, save_act=False)
     return MultiKANModel(kan).to(device)
@@ -247,7 +260,7 @@ def train_ltn(model, train_loader, epochs, rules, hierarchical):
 def train_variant(key, seed, train_loader, rules, device, epochs):
     _, backward = VARIANTS[key]
     set_seed(seed)
-    model = build_model(seed, device)
+    model = build_model(key, seed, device)
     if backward == 'none':
         return train_ce(model, train_loader, epochs)
     return train_ltn(model, train_loader, epochs, rules,
@@ -275,6 +288,8 @@ def save_run(save_dir, key, seed, model, res, scaler, epochs, elapsed):
         'variant': key, 'backward': VARIANTS[key][1], 'seed': seed,
         'epochs': epochs, 'seconds': round(elapsed, 1),
         'config': {'IN_FEATURES': IN_FEATURES, 'N_CLASSES': N_CLASSES,
+                   'BACKBONE': BACKBONE[key],
+                   'WIDTH': MLP_WIDTH if BACKBONE[key] == 'mlp' else KAN_WIDTH,
                    'KAN_WIDTH': KAN_WIDTH, 'GRID': GRID, 'K': K,
                    'X_columns': X_COLUMNS, 'BENIGN_L2': BENIGN_L2,
                    'label_L2_names': LABEL_L2_NAMES},
@@ -482,6 +497,13 @@ def main():
     args = ap.parse_args()
 
     epochs_by_key = dict(EPOCHS)
+    missing_budget = [k for k in args.variants
+                      if epochs_by_key.get(k) is None and not args.aggregate_only]
+    if missing_budget and not args.fast:
+        raise SystemExit(
+            f'no measured epoch budget for {missing_budget}.\n'
+            'Run the pilot cell in C2_backward_ablation.ipynb, read plateau@ off\n'
+            'the accuracy trace, and set CONVERGE[...] in this file.')
     if args.fast:
         args.seeds = [0]
         epochs_by_key = {k: 20 for k in VARIANTS}

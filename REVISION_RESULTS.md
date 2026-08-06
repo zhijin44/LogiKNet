@@ -27,6 +27,7 @@ that will be transcribed into the paper.
 | Block | Experiment | Protocol | Seeds | Status |
 |---|---|---|---|---|
 | P5 | Attn-LogiK-Net full vs. no-logic | 6-class / 18-feat | 5 | **done** |
+| P7 | C2 backward ablation (KAN\* block) | 6-class / 18-feat, train 10k | 5 | **done** |
 | P1 | Model comparison (Fig. `P1-all-model`) | 6-class / 18-feat | 5 | *harness ready* |
 | P2 | Feature-count comparison (14/16/18) | per-set | 5 | *pending* |
 | P1 | Reliability-score figure | 13-class / 9-feat | 1 | not scheduled |
@@ -218,6 +219,172 @@ accuracy-neutrality claim.
    non-attention rows are `[TODO]` in the response table. This claim is
    load-bearing for R1 #1 and cannot ship until §3 is filled in.
 5. `MARGIN` docstring/README inconsistency (×1.10 vs actual ×1.05) — see §2.
+
+---
+
+## 2B. P7 — C2 backward-module ablation (DONE)
+
+Fills the KAN block of `tab: ablation-backward` (Results.tex §V-C).
+Harness: `P7_ablation/run_multiseed_c2.py`. Pilot: `P7_ablation/C2_backward_ablation.ipynb`.
+
+**Protocol.** 10,000 train / 3,994 test, 18 features, 6 classes.
+Forward module held fixed at KAN `[18,6,6,6]`, grid 5, k 3 — deliberately the
+same backbone as inside P5's `AttentionKANModel`, so this block and P5's
+attention block differ by exactly the attention encoder. Adam lr `1e-3`,
+full batch, seeds `[0,1,2,3,4]`.
+
+**Epoch budget.** Per-variant convergence × 1.05 (same treatment as P5;
+verified the formula reproduces P5's 625→656 and 843→885 exactly):
+KAN\* 600→**630**, Logic-KAN\* 800→**840**, H-Logic-KAN\* 800→**840**.
+Convergence read off the test-accuracy plateau in a single seed-42 pilot, then
+held constant across all seeds.
+
+**Source.** `P7_ablation/saved/multiseed_results.{txt,json}`,
+`hierarchical.json`, checkpoints `saved/models/{key}_seed{0..4}.pt`.
+
+### 2B.1 Mean ± std over 5 seeds
+
+| Metric | KAN\* (no logic) | Logic-KAN\* | H-Logic-KAN\* |
+|---|---|---|---|
+| accuracy | 0.8074 ± 0.0041 | **0.8162 ± 0.0068** | 0.8143 ± 0.0030 |
+| macro-F1 | 0.8071 ± 0.0040 | **0.8159 ± 0.0067** | 0.8140 ± 0.0030 |
+| macro recall | 0.8085 ± 0.0039 | **0.8174 ± 0.0066** | 0.8156 ± 0.0029 |
+| macro FPR ↓ | 0.0384 ± 0.0008 | **0.0367 ± 0.0014** | 0.0370 ± 0.0006 |
+| macro AUROC | 0.9711 ± 0.0011 | **0.9715 ± 0.0018** | 0.9709 ± 0.0010 |
+| ECE ↓ | 0.0191 ± 0.0042 | **0.0174 ± 0.0034** | 0.0212 ± 0.0061 |
+| Brier ↓ | 0.2773 ± 0.0055 | **0.2655 ± 0.0073** | 0.2700 ± 0.0046 |
+| reliability (w=0.5) | 0.8842 ± 0.0037 | **0.8900 ± 0.0053** | 0.8891 ± 0.0032 |
+| hierarchical-F1 | 0.8842 ± 0.0037 | **0.8900 ± 0.0053** | 0.8891 ± 0.0032 |
+
+`reliability@0.5 == hierarchical_f1` to every stored digit, for all three
+models — the identity in §1.3 confirmed a second time.
+
+### 2B.2 Partial-credit sweep
+
+| Model | R(0.25) | R(0.5) | R(0.75) |
+|---|---|---|---|
+| KAN\* | 0.8458 ± 0.0039 | 0.8842 ± 0.0037 | 0.9225 ± 0.0035 |
+| Logic-KAN\* | 0.8531 ± 0.0060 | 0.8900 ± 0.0053 | 0.9269 ± 0.0047 |
+| H-Logic-KAN\* | 0.8517 ± 0.0031 | 0.8891 ± 0.0032 | 0.9265 ± 0.0034 |
+
+Model ranking is invariant across w — the "0.5 is ad hoc" objection is answered
+empirically, not just algebraically.
+
+### 2B.3 Significance
+
+| Comparison | Metric | W | p | McNemar |
+|---|---|---|---|---|
+| Logic-KAN\* vs KAN\* | accuracy | 1.0 | 0.125 | 3/5 seeds |
+| Logic-KAN\* vs KAN\* | macro-F1 | 1.0 | 0.125 | — |
+| H-Logic-KAN\* vs Logic-KAN\* | accuracy | 5.0 | 0.625 | 1/5 seeds |
+| H-Logic-KAN\* vs KAN\* | accuracy | **0.0** | 0.0625 | 3/5 seeds |
+
+`W = 0` for H-Logic-KAN\* vs KAN\* means **all five seeds** ordered them the
+same way — the strongest result attainable at n=5. Logic-KAN\* has `W = 1`,
+i.e. one seed (seed 4) reversed.
+
+### 2B.4 Per-class recall (mean over seeds)
+
+| Class | KAN\* | Logic-KAN\* | H-Logic-KAN\* |
+|---|---|---|---|
+| MQTT-DDoS-Connect_Flood | 0.6348 | 0.6406 | 0.6412 |
+| MQTT-DDoS-Publish_Flood | 0.7575 | 0.7747 | 0.7709 |
+| MQTT-DoS-Connect_Flood | 0.8056 | 0.8094 | 0.8094 |
+| MQTT-DoS-Publish_Flood | 0.8831 | 0.8914 | 0.8831 |
+| MQTT-Malformed_Data | 0.9064 | 0.9203 | **0.9278** |
+| Benign | 0.8637 | 0.8680 | 0.8612 |
+
+### 2B.5 What the numbers say
+
+1. **The logic tensor does buy accuracy** — +0.9 pp over cross-entropy, plus the
+   best calibration in the table. This is *stronger* than the P5-only result
+   suggested, where logic looked accuracy-neutral.
+2. **The hierarchy rule buys stability, not accuracy.** H-Logic-KAN\* is
+   0.2 pp *below* Logic-KAN\* (p = 0.625, inside one std), but its seed-to-seed
+   std is less than half (0.0030 vs 0.0068) and its advantage over no-logic is
+   unanimous across seeds. Consistent with its logical content: it constrains
+   only the MQTT/Benign boundary and says nothing about the five sub-classes.
+3. **⚠ The attention encoder does NOT help.** See §2C.
+
+---
+
+## 2C. Attention encoder: negative result, and how it is now framed
+
+**Status: resolved.** The response letter's claim that "both `\attnlogiknet{}`
+variants improve over the corresponding non-attention configurations" was
+falsified by the C2 ablation and has been **rewritten** (2026-08-05).
+
+### The measurement
+
+Both C2 blocks share an identical KAN configuration and rule set, so the
+comparison isolates the attention encoder exactly:
+
+Both blocks of Table C2 share the identical KAN backbone `[18,6,6,6]` and the
+identical rule set, so the comparison isolates the attention encoder exactly:
+
+| Backward module | Without attention | With attention | Δ |
+|---|---|---|---|
+| None (cross-entropy) | KAN\* **0.8074 ± 0.0041** | Attn-LogiK-Net (no logic) 0.8030 ± 0.0112 | **−0.4 pp** |
+| Logic + hierarchy | H-Logic-KAN\* **0.8143 ± 0.0030** | Attn-LogiK-Net (full) 0.7855 ± 0.0333 | **−2.9 pp** |
+
+The attention encoder *reduces* accuracy in both configurations, and inflates
+the variance by 3–10×.
+
+`Major-Revision-Response.tex`, Reviewer #1 Comment #1(b), currently states:
+
+> "the attention encoder is where the additional predictive accuracy comes
+> from: both \attnlogiknet{} variants improve over the corresponding
+> non-attention \ourmethod{} configurations, confirming that cross-feature
+> interaction … is genuinely useful on this data"
+
+### The resolution adopted
+
+The accuracy claim was **dropped**, not softened. The attention encoder is now
+justified by what it demonstrably provides — an **extended input pipeline** —
+rather than by accuracy. Rationale: self-attention can only exploit structure
+present in the input, and CICIoMT2024 as used here presents each flow as a
+single flat vector, with no cross-record context to attend over. The null result
+is therefore *consistent with* the mechanism rather than evidence against it.
+
+Four deployment settings now argued in the letter, §(a):
+
+1. **Temporal windows** — tokenise W consecutive flows from one device. Needed
+   for classes a single flow cannot disambiguate: a low-rate DoS flow is
+   individually indistinguishable from benign, and DoS-vs-DDoS is a statement
+   about the *population* of flows.
+2. **Multi-device aggregation** — tokens are devices; the encoder learns which
+   device pairs co-vary. Recon and ARP-spoofing campaigns show as correlated
+   cross-device behaviour while each device looks unremarkable alone.
+3. **Multi-protocol fusion** — Wi-Fi / MQTT / Bluetooth feature blocks of
+   different arity as token groups, without padding to a common flat schema.
+4. **Variable feature sets** — the 18→16→14 pruning study needs no input-layer
+   re-architecting.
+
+The letter also now turns the negative result to the reviewer's advantage: a
+stronger attention-based forward module, placed in the identical protocol, does
+*not* overtake the KAN — which answers "are the gains an artifact of a weak
+reference point?" with a direct **no**.
+
+**Not done, optional:** `d_model=32, n_heads=4, n_layers=2` was never swept. A
+brief sweep would let the letter say the configuration was tuned rather than
+assumed. Worth doing if a reviewer presses on the negative result.
+
+### Naming in §IV-C (decided 2026-08-05)
+
+Sections IV-A/IV-B are micro-level studies where the `*` suffix distinguishes
+architectural variants. §IV-C is a high-level module comparison, so the rows
+drop both the asterisk and the architecture: **KAN**, **Logic-KAN**,
+**H-Logic-KAN**. The backbone is stated once in the protocol paragraph (all
+KAN-based rows use the two-hidden-layer configuration introduced as
+H-Logic-KAN\* in §IV-B) so the mapping stays traceable.
+
+### ⚠ Section renumbering side-effect
+
+Inserting §IV-C pushed **Implementation Efficiency from IV-C to IV-D**. Two
+places in the response letter cite `Sec.~IV-C-3` (the "Detection Failue" typo
+fix, and the threat-rate minor comment). The reviewer's *quoted* comments must
+keep the old numbering; **our own replies** must use IV-D-3. One has been fixed;
+check the threat-rate reply when it is written.
 
 ---
 
