@@ -22,7 +22,8 @@ def _load(spec, pts_scale):
     return DL.load_snapshot(path, timestamp=ts, metric="credit", pts_scale=pts_scale)
 
 
-def _draw_field(fig, ax, x, y, z, pts, floor, high_band, title, fs=1.0):
+def _draw_field(fig, ax, x, y, z, pts, floor, high_band, title, fs=1.0,
+                tfs=None):
     """Panel (a): the measured PTs field. `fs` scales all type, so a wider
     figure can be shrunk harder in LaTeX and still read at the same size."""
     bg = pts < floor
@@ -34,11 +35,12 @@ def _draw_field(fig, ax, x, y, z, pts, floor, high_band, title, fs=1.0):
     cb = fig.colorbar(sc, ax=ax, shrink=0.62, aspect=20, pad=0.03)
     cb.set_label("Percent Time Stalled (credit) %", fontsize=LBL_FS * fs)
     cb.ax.tick_params(labelsize=TICK_FS * fs)
-    ax.set_title(title, fontsize=TITLE_FS * fs, y=TITLE_Y)
+    ax.set_title(title, fontsize=tfs or TITLE_FS * fs, y=TITLE_Y)
     _style(ax, fs)
 
 
-def _draw_region(ax, x, y, z, res, title, grow, fs=1.0, legend=True):
+def _draw_region(ax, x, y, z, res, title, grow, fs=1.0, legend=True,
+                 tfs=None):
     """Region panel: labelled core, plus the nodes recovered by growth."""
     flagged = res["node_pred"] == 1
     core = res.get("node_seed", res["node_pred"]) == 1
@@ -56,7 +58,7 @@ def _draw_region(ax, x, y, z, res, title, grow, fs=1.0, legend=True):
         ax.scatter(x[flagged], y[flagged], z[flagged], s=18, c="crimson",
                    alpha=0.95, linewidths=0,
                    label=f"labelled congested ({int(flagged.sum())})")
-    ax.set_title(title, fontsize=TITLE_FS * fs, y=TITLE_Y)
+    ax.set_title(title, fontsize=tfs or TITLE_FS * fs, y=TITLE_Y)
     if legend:
         ax.legend(loc="upper left", fontsize=LBL_FS * fs, framealpha=0.9,
                   borderpad=0.3, handletextpad=0.2, labelspacing=0.25,
@@ -117,7 +119,8 @@ def make_figure_row(spec, title, out, k=24, high_band=25.0, th_similarity=4.0,
     replaced by one shared legend under the row."""
     tab = _load(spec, pts_scale)
     x, y, z, pts = tab.x.values, tab.y.values, tab.z.values, tab.PTs.values
-    fs = 2.0   # 1x4 is shrunk ~2x harder than 2x2 in LaTeX; scale type to match
+    fs = 2.0    # 1x4 is shrunk ~2x harder than 2x2 in LaTeX; scale type to match
+    tfs = TITLE_FS * fs * 0.7   # subtitles read large at this width; pull them back
 
     def run(grow, gf):
         return CL.kmeans_then_label(tab, k=k, high_band=high_band,
@@ -128,12 +131,12 @@ def make_figure_row(spec, title, out, k=24, high_band=25.0, th_similarity=4.0,
     axes = [fig.add_subplot(1, 4, i, projection="3d") for i in range(1, 5)]
 
     _draw_field(fig, axes[0], x, y, z, pts, floor, high_band,
-                "(a) PTs field", fs=fs)
+                "(a) PTs field", fs=fs, tfs=tfs)
 
     r_none = run(False, growth_floors[0])
     n0 = int((r_none["node_pred"] == 1).sum())
     _draw_region(axes[1], x, y, z, r_none, f"(b) Without growth ({n0})",
-                 grow=False, fs=fs, legend=False)
+                 grow=False, fs=fs, legend=False, tfs=tfs)
 
     handles = None
     for ax, gf, tag in zip(axes[2:], growth_floors, ("(c)", "(d)")):
@@ -141,7 +144,7 @@ def make_figure_row(spec, title, out, k=24, high_band=25.0, th_similarity=4.0,
         n = int((r["node_pred"] == 1).sum())
         _draw_region(ax, x, y, z, r,
                      f"{tag} Growth, floor {int(gf)} ({n})",
-                     grow=True, fs=fs, legend=False)
+                     grow=True, fs=fs, legend=False, tfs=tfs)
         handles = ax.get_legend_handles_labels()[0]
         print(f"  floor {int(gf)}: flagged {n}")
 
